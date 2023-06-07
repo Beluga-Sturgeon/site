@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<!--{{ url_for('static',filename='styles/indexStyles.css') }}-->
+<!--C:\Users\trexx\Documents\PYTHON CODE LOL\PersonalWebsite\Personal-platypus-website\code\static\styles\indexStyles.css -->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Resonance</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/teamStyles.css') }}">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
+        <link rel="icon" href="{{ url_for('static',filename='images/LOGONOTEXT.png') }}">
+        <script src="https://kit.fontawesome.com/1b4a129057.js" crossorigin="anonymous"></script>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/plugins/animation.gsap.min.js" integrity="sha512-5/OHwmQzDSBS0Ous4/hlYoWLHd06/d2r7LdKZQVBXOA6PvOqWVXtdboiLTU7lQTGyVoKVTNkwi0ol4gHGlw5ww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/plugins/debug.addIndicators.min.js" integrity="sha512-RvUydNGlqYJapy0t4AH8hDv/It+zKsv4wOQGb+iOnEfa6NnF2fzjXgRy+FDjSpMfC3sjokNUzsfYZaZ8QAwIxg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    </head>
+    <body class="preload">
+        <div id="loader-wrapper">
+            <div id="loader">
+                <canvas id="loadingCanvas"></canvas>
+                <script type="module" src="{{url_for('static', filename='js/loadingCanvas.js')}}"></script>
+            </div>
+        </div>
+        <script src="{{url_for('static', filename='js/loader.js')}}"></script>
+
+        <div class="header">
+            <a href="/home">
+                <img class="logo" src="{{ url_for('static',filename='images/LOGO.png') }}" alt="resonance">
+            </a>
+            <div class="NavBar">
+                <a href="/apps" class="btn">Apps</a>
+                <a href="/team" class="btn">Team</a>
+                <a href="/about" class="btn">About</a>
+                <a href="/#contact" class="btn">Contact</a>
+            </div>
+        </div>
+        <section id="Hero">
+            <div class="HeroHeader">
+                <h1 class="HeroText">
+                    The Team
+                </h1>
+                <h3 class="HeroSub">
+                    Resonance team >>>
+                </h3>
+            </div>
+    
+        </section>
+        <section id="team">
+            <div class="container">
+                <a href="https://GeneWica.herokuapp.com" target="_blank" rel="noreferrer noopener" class="cardContainingAnchor">
+                    <div class="card">
+                        <img src="https://genewica.herokuapp.com/static/images/profilepic.png" alt="">
+                        <h2>Founder</h2>
+                        <p>Gene Wicaksono</p>
+                        <p>"Save me, chainsaw man."</p>
+                    </div>
+                </a>
+                <a href="https://pycalc.com" target="_blank" rel="noreferrer noopener" class="cardContainingAnchor">
+                    <div class="card">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmRLRMXynnc7D6-xfdpeaoEUeon2FaU0XtPg&usqp=CAU" alt="">
+                        <h2>Co-Founder</h2>
+                        <p>Shreeniket Bendre</p>
+                        <p>"The best part is no part"</p>
+                    </div>
+                </a>
+                <a href="https://pycalc.com" target="_blank" rel="noreferrer noopener" class="cardContainingAnchor">
+                    <div class="card">
+                        <img src="https://cdn.discordapp.com/attachments/923765251709751336/964006459161583676/IMG_20211228_134200-removebg-preview.jpg" alt="">
+                        <h2>Co-Founder</h2>
+                        <p>Prithwis Das</p>
+                        <p>"Theorize to please thyself but create to please others"</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm3">
+                        <h5>Get started</h5>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/about">About</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-sm3">
+                        <h5>Support</h5>
+                        <ul>
+                            <li>
+                                <a href="/#contact">Contact us</a>
+                            </li>
+                        </ul>  
+                    </div>
+                    <div class="col-sm3">
+                        <h5>Legal</h5>
+                        <ul>
+                            <li>
+                                <a href="/legal">Our policy</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                © 2022 <a href="https://https://resonance-website.sentientplatypu.repl.co">Resonance</a>
+            </div>
+        </footer>
+
+
+
+
+
+
+
+
+    </body>
