@@ -31,8 +31,7 @@
 
         <div class="header">
             <a href="/home">
-                {# <img class="logo" src="{{ url_for('static',filename='images/LOGO.png') }}" alt="belugaSturgeon"> #}
-                Beluga Sturgeon Financial
+                <img class="logo" src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png" alt="belugaSturgeon">
             </a>
             <div class="NavBar">
                 <a href="/apps" class="btn">Apps</a>
@@ -43,88 +42,90 @@
             </div>
         </div>
 
-        <div class="lander">
-            <div class="recs">
-                <h3>Hot actions</h3>
-                <div class="actions">
-                    LIST OF THINGS
+        
+        <div class="lander" >
+            <div class="landerbox">
+                <div class="herobox">
+                    <h1>
+                        I like my money green like kiwi
+                    </h1>
                 </div>
+                <div class="recs">
+                    <h3>Hot actions</h3>
+                    <div class="actions">
+                        LIST OF THINGS
+                    </div>
+                </div>    
             </div>
-            <div class="herobox">
-                <h1>
-                    I like my money green like kiwi
-                </h1>
-            </div>
-
         </div>
 
 
-
-        <section id="about">
-            <div id="aboutContainer">
-                <img src="{{ url_for('static',filename='images/LOGONOTEXT.png') }}" alt="LOGO">
-                <div id="aboutText">
-                    <h2>About us.</h2>
-                    <p>
-                        We provide key financial services and consulting based upon well-designed trading models. Check out Lurker here PUT IN LINK
-                    </p>
-                    <a href="/about"><button class="aboutButton">More on us</button></a>
+        <section class="rest">
+            <div id="about">
+                <div id="aboutContainer">
+                    <img src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png" alt="LOGO">
+                    <div id="aboutText">
+                        <h2>About us.</h2>
+                        <p>
+                            We provide key financial services and consulting based upon well-designed trading models. Check out Lurker here PUT IN LINK
+                        </p>
+                        <a href="/about"><button class="aboutButton">More on us</button></a>
+                    </div>
                 </div>
             </div>
-        </section>
-
-
-
-
-        <section id="features">
-            <div class="headText">
-                <h2>Features</h2>
-                <p>The Beluga Sturgeon team guarantees to meet the standards of the current market.</p>
-            </div>
-            <div class="layout">
-                    <div class="card">
-                        <h3><i class="fa-solid fa-shield"></i>Secure</h3>
-                        <p>We prioritize the safety and security of all our users.</p>
-                    </div>
-                    <div class="card">
-                        <h3><i class="fa-solid fa-money-bill"></i> Free</h3>
-                        <p>The best way to make something accessible is to make it free.</p>
-                    </div>
-                    <div class="card">
-                        <h3><i class="fa-solid fa-face-smile-beam"></i>User-Friendly</h3>
-                        <p>UI that makes sense.</p>
-                    </div>
-                    <div class="card">
-                        <h3><i class="fa-solid fa-truck-fast"></i>Fast</h3>
-                        <p>Computation is done server side.</p>
-                    </div>
-            </div>
-        </section>
-
-
-
-        <section id="contact">
-            <div class="contactText">
-                <h2>Contact us</h2>
-                <h3>In <del>California</del> New York dreaming</h3>
-            </div>
-                <div class="contactFormContainer">
-                    <form class="ContactMeForm" action="/ContactMe/HandleData" method="POST" name="form">
-                        <div class="identity">
-                            <input autocomplete="off" type="text" id="name" placeholder="Name" name="name" required>
-                            <input autocomplete="off" type="text" id="email" placeholder="Email" name="email" required>
+    
+    
+            <div id="features">
+                <div class="headText">
+                    <h2>Features</h2>
+                    <p>The Beluga Sturgeon team guarantees to meet the standards of the current market.</p>
+                </div>
+                <div class="layout">
+                        <div class="card">
+                            <h3><i class="fa-solid fa-shield"></i>Secure</h3>
+                            <p>We prioritize the safety and security of all our users.</p>
                         </div>
-                        <input autocomplete="off" type="text" id="subject" placeholder="subject" name="subject" required>
-                        <textarea autocomplete="off" cols="30" rows="10" id="content" placeholder="message" name="content" required></textarea>
-                        <input type="submit" value="send" class="submitbutton">
-                    </form>
-                    <script>
-                        document.querySelector(".ContactMeForm").addEventListener("submit", function(e){
-                            alert("SENT");
-                        })
-                    </script>
-                </div> 
+                        <div class="card">
+                            <h3><i class="fa-solid fa-money-bill"></i> Free</h3>
+                            <p>The best way to make something accessible is to make it free.</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fa-solid fa-face-smile-beam"></i>User-Friendly</h3>
+                            <p>UI that makes sense.</p>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fa-solid fa-truck-fast"></i>Fast</h3>
+                            <p>Computation is done server side.</p>
+                        </div>
+                </div>
             </div>
+    
+    
+    
+            <div id="contact">
+                <div class="contactText">
+                    <h2>Contact us</h2>
+                    <h3>In <del>California</del> New York dreaming</h3>
+                </div>
+                    <div class="contactFormContainer">
+                        <form class="ContactMeForm" action="/ContactMe/HandleData" method="POST" name="form">
+                            <div class="identity">
+                                <input autocomplete="off" type="text" id="name" placeholder="Name" name="name" required>
+                                <input autocomplete="off" type="text" id="email" placeholder="Email" name="email" required>
+                            </div>
+                            <input autocomplete="off" type="text" id="subject" placeholder="subject" name="subject" required>
+                            <textarea autocomplete="off" cols="30" rows="10" id="content" placeholder="message" name="content" required></textarea>
+                            <input type="submit" value="send" class="submitbutton">
+                        </form>
+                        <script>
+                            document.querySelector(".ContactMeForm").addEventListener("submit", function(e){
+                                alert("SENT");
+                            })
+                        </script>
+                    </div> 
+                </div>
+            </div>
+    
         </section>
 
         <footer>

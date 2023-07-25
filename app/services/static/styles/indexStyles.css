@@ -5,8 +5,8 @@ html{
 }
 
 body {
-    background: linear-gradient(180deg, rgba(8, 2, 194, 0.848) 10.1%, #01001F 100%);
     overflow-x: hidden;
+    margin: 0px;
 }
 
 
@@ -62,8 +62,8 @@ body {
     height: 8vh;
     left: 0px;
     top: 0px;
-    background: #141414;
-    border-bottom: 1px solid #4545E6;
+    /* background: #141414;
+    border-bottom: 1px solid #4545E6; */
 }
 
 .logo {
@@ -75,13 +75,13 @@ body {
 
 @media (max-width: 762px) {
     img.logo {
-        content:url("../images/LOGONOTEXT.png")
+        content:url("https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png")
     }
 }
 
 @media (min-width: 762px) {
     img.logo {
-        content:url("../images/LOGO.png")
+        content:url("https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png")
     }
 }
 
@@ -134,8 +134,7 @@ h1 {
     font-family: 'Roboto Mono';
     font-style: normal;
     font-weight: 800;
-    font-size: 18px;
-    line-height: 22px;
+    font-size: 48px;
     color: #FFFFFF;
 }
 
@@ -169,34 +168,83 @@ a {
     font-family: 'Roboto Mono';
 }
 
-h1.HeroText {
-    margin-bottom: 0px;
-    justify-content: center;
-    text-align: center;
-    font-size: 4em;
-    line-height: 2em;
-    width: 100%;
+
+
+.lander {
+    background-image: url("https://wallpapercave.com/wp/wp5103645.jpg");
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+
+}
+
+
+
+
+.landerbox {
+    width: 95vw;
     position: relative;
-}
-
-
-h3.HeroSub{
-    width: 100%;
+    left: 2.5vw;
+    padding-top: 35vh;
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap-reverse;
     justify-content: center;
-    text-align: center;
-
-    position:relative;
-    top: 0vh;
 }
 
-.HeroHeader {
-    margin-bottom: 0px;
-    justify-content: center;
-    text-align: center;
-    width: 100%;
-    position:absolute;
-    top: 30vh;
+
+
+@media (max-width:891px) {
+    div.herobox {
+        width: 90vw;
+    }
+
+    div.recs {
+        width: 90vw;
+        margin-right: 5vw;
+    }
+
+    div.landerbox {
+        display: block;
+    }
+
+
 }
+
+.herobox {
+    width: 45vw;
+}
+
+.recs {
+    width: 40vw;
+    margin-right: 10vw;
+    backdrop-filter: blur(5px); /* Adjust the blur intensity as needed */
+    -webkit-backdrop-filter: blur(5px);
+    transition: 0.3s all;
+    border-radius: 10px;
+}
+
+
+
+section.rest {
+    background: linear-gradient(180deg, #014F7D 0%, #01001F 60%);
+    padding-bottom: 20vh;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -292,7 +340,7 @@ i {
 }
 
 
-section#contact {
+#contact {
     position: relative;
     margin-top: 20vh;
 }
@@ -415,9 +463,6 @@ section#contact {
 
 
 
-footer {
-    margin-top: 20vh;
-}
 
 footer .row {
     width: 70%;
