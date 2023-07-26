@@ -36,9 +36,12 @@
                     </h1>
                 </div>
                 <div class="recs">
-                    <h3>Hot actions</h3>
                     <div class="actions">
-                        LIST OF THINGS
+                        {% for x in hotactions%}
+                        <div class="item">
+                            <a href="/{{x['ticker']}}">{{x['ticker']}}</a>
+                        </div class="item">
+                        {% endfor %}
                     </div>
                 </div>    
             </div>

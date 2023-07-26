@@ -66,7 +66,8 @@ def forbidden(e):
 
 @app.route("/")
 def home():
-    return render_template("./index.html")
+    hotactions = [{"ticker":"NVDA"}, {"ticker":"NVDA"}, {"ticker":"NVDA"}, {"ticker":"NVDA"}, {"ticker":"NVDA"}]
+    return render_template("./index.html", hotactions=hotactions)
 
 @app.route("/home")
 def home2():
@@ -114,7 +115,7 @@ def HandleData():
     )
     msg.sender = constants.EMAIL
     mail.send(msg)
-    return redirect(url_for("ContactMe", sent=1))
+    return redirect(url_for("home"))
 
 
 if __name__ == '__main__':
