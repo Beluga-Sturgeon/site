@@ -9,6 +9,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/appsStyles.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
         <link rel="icon" href="{{ url_for('static',filename='images/LOGONOTEXT.png') }}">
         <script src="https://kit.fontawesome.com/1b4a129057.js" crossorigin="anonymous"></script>
@@ -28,7 +29,7 @@
         <script src="{{url_for('static', filename='js/loader.js')}}"></script>
 
         <div class="header">
-            <a href="/home">
+            <a href="/">
                 <img class="logo" src="{{ url_for('static',filename='images/LOGO.png') }}" alt="resonance">
             </a>
             <div class="NavBar">

@@ -9,6 +9,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/aboutUsStyles.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
         <link rel="icon" href="{{ url_for('static',filename='images/LOGONOTEXT.png') }}">
         <script src="https://kit.fontawesome.com/1b4a129057.js" crossorigin="anonymous"></script>
@@ -27,19 +28,7 @@
         </div>
         <script src="{{url_for('static', filename='js/loader.js')}}"></script>
 
-        <div class="header">
-            <a href="/home">
-                <img class="logo" src="{{ url_for('static',filename='images/LOGO.png') }}" alt="resonance">
-            </a>
-            <div class="NavBar">
-                <a href="/apps" class="btn">Apps</a>
-                <a href="/team" class="btn">Team</a>
-                <a href="/about" class="btn">About</a>
-                <a href="/#contact" class="btn">Contact</a>
-            </div>
-        </div>
-
-        <section id="Hero">
+        <div id="Hero">
             <div class="HeroHeader">
                 <h1 class="HeroText">
                     About us
@@ -48,7 +37,20 @@
                     Just for you &lt;3.
                 </h3>
             </div>
-        </section>
+        </div>
+
+        <div class="header">
+            <a href="/">
+                <img class="logo" src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png" alt="belugaSturgeon">
+            </a>
+            <div class="NavBar">
+                <a href="/apps" class="btn">Apps</a>
+                <a href="/team" class="btn">Team</a>
+                <a href="/about" class="btn">About</a>
+                <a href="/#contact" class="btn">Contact</a>
+                <a href="premium">Premium</a>
+            </div>
+        </div>
         
         <section id="inception" class="panel">
             <div class="container">
