@@ -231,11 +231,13 @@ section.rest {
     padding-bottom: 20vh;
 }
 
-
+.actions {
+    cursor: pointer;
+}
 
 
 .actions div.item a{
-    font-size: 18px;
+    font-size: 22px;
     font-family: 'Roboto Mono';
     text-decoration: none;
     color: white;
@@ -252,6 +254,7 @@ section.rest {
 
 .actions div.item:hover {
     height: 200px;
+    cursor: pointer;
 }
 
 

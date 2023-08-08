@@ -36,6 +36,40 @@
                     </h1>
                 </div>
                 <div class="recs">
+                    <div class="search-container">
+                        <form id="searchForm" onsubmit="toggleLoader();">
+                            <input type="search" name="searchedTicker" placeholder="ticker name" id="search" autocomplete="off">
+                            <button type="submit">Submit</button>
+                        </form>
+                        <script>
+                            $("#searchForm").submit(function(e) {
+                                e.preventDefault();
+                            });
+
+
+                            async function toggleLoader() {
+                                console.log("load toggled")
+                                var searchForm = document.getElementById("searchForm");
+                                var searchInput = document.getElementById("search");
+                                var submittedText = document.createElement("span");
+                                try {
+                                    const response = await fetch("/isTickerValidPage/" + searchInput.value.toUpperCase());
+                                    const valid = (await response.text()).toUpperCase() === "TRUE";
+                        
+                                    if (valid) {
+                                        window.location.href = "/data/" + searchInput.value;
+                                    } else {
+                                        submittedText.className = "submitted-text";
+                                        submittedText.textContent = searchInput.value + " is not a valid ticker!";
+                                        
+                                        searchForm.insertBefore(submittedText, searchInput.nextSibling);
+                                    }
+                                } catch (error) {
+                                    console.error("Error:", error);
+                                }
+                            }
+                        </script>
+                    </div>
                     <div class="actions">
                         {% for x in hotactions%}
                         <div class="item">

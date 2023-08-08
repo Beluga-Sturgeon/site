@@ -1,7 +1,10 @@
 section.panel {
     height: 110vh;
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(2px);
     width: 100vw;
+    opacity: 1;
+    transition: opacity 0.5s;
+    /* Set the background color of the panels to match the body background */
 }
 
 .panel .container {
@@ -42,3 +45,10 @@ section.panel {
     color: #4545E6;
 }
 
+.show {
+    display: block;
+}
+
+.hide {
+    display: none;
+}
