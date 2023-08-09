@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+#searchForm {
+    display: inline-block;
+}
+
+#search {
+    font-family: 'Roboto Mono';
+    height: 40px;
+    padding: 8px;
+    border-radius: 10px;
+    border: none;
+    background-color: transparent;
+    color: white;
+    backdrop-filter: blur(15px);
+    transition: all 0.3s;
+    font-size: 1em;
+}
+
+#search:focus {
+    outline: none;
+}
+
+#submit {
+    height: 40px;
+    padding: 8px 20px;
+    border-radius: 10px;
+    border: none;
+    backdrop-filter: blur(15px);
+    transition: all 0.3s;
+    font-size: 1em;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+#suggestions {
+    position: relative;
+    max-height: 150px;
+    overflow-y: auto;
+    width: 100%;
+    background-color: transparent;
+    transition: 0.3s all;
+    backdrop-filter: blur(15px);
+    transition: all 0.3s;
+    border-radius: 10px;
+}
+
+.suggestion {
+    transition: 0.3s all;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.suggestion:hover {
+    border: 1px #4545E6;
+    color: #4545E6;
+}
+
+.symbol {
+    font-family: 'Roboto Mono';
+    font-size: 1.5em;
+}
+
+.name,
+.exchange {
+    font-family: 'Roboto Mono';
+    font-size: 0.8em;
+    color: gray;
+}

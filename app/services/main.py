@@ -8,6 +8,8 @@ from urllib.request import urlopen
 import json
 import certifi
 from flask_cors import CORS, cross_origin
+from bs4 import BeautifulSoup
+import re
 server = gunicorn.SERVER
 
 
@@ -286,11 +288,181 @@ def human_format(num):
     return '{}{}'.format('{:f}'.format(num).rstrip('0').rstrip('.'), ['', 'K', 'M', 'B', 'T'][magnitude])
 
 
+def scrapeMarketStatus(soup:BeautifulSoup) ->str:
+    "Scrapes google finance page for the close and open date."
+    return re.sub("Disclaimer$", "", soup.find('div', {"class":"ygUjEc","jsname":"Vebqub"}).text)
+
+def scrapeCompanyName(soup:BeautifulSoup) ->str:
+    "Scrapes google finance page for the close and open date."
+    return re.sub("Disclaimer$", "", soup.find('div', {"class":"zzDege"}).text)
+  
+
+def getScrapingURL(ticker:str)->str:
+    """Finds exchanger ending for scraping on google finance. Example:\n 
+    >>> getScrapingURL('MSFT')
+    >>> https://www.google.com/finance/quote/MSFT:NASDAQ"""
+    data = requests.get(f'{constants.GOOGLE_FINANCE_URL}{ticker}', headers=constants.REQ_HEADER).text
+    soup = BeautifulSoup(data, 'lxml')
+    parentList = soup.find("ul", {"class":["sbnBtf xJvDsc ANokyb"]})
+    url = parentList.find("a")["href"] ##finds the first option link, and retuns it.
+    exchanger = url[url.index(":") + 1:]
+    return f"{constants.GOOGLE_FINANCE_URL}{ticker}:{exchanger}"
+
+
+def scrapeNews(soup:BeautifulSoup) -> dict:
+    """Scrapes the news articles off of {constants.GOOGLE_FINANCE_URL}{ticker} in the form of a dictionary
+    EXAPMLE:
+    {'articles': [{'date': '18 hours ago',
+               'link': 'https://www.cnbc.com/2022/07/20/microsoft-eases-up-on-hiring-as-economic-concerns-hit-more-of-the-tech-industry.html',
+               'publisher': 'CNBC',
+               'title': 'Microsoft eases up on hiring as economic concerns hit '
+                        'more of the tech \n'
+                        'industry'},
+              {'date': '2 days ago',
+               'link': 'https://www.barrons.com/articles/microsoft-stock-recession-analyst-price-target-51658230843',
+               'publisher': "Barron's",
+               'title': "Microsoft Stock Is a 'Good Place to Hide.' This "
+                        'Analyst CutsPrice Target \n'
+                        'Anyway.'},
+              {'date': '18 hours ago',
+               'link': 'https://www.bloomberg.com/news/articles/2022-07-20/microsoft-cuts-many-open-job-listings-in-weakening-economy',
+               'publisher': 'Bloomberg.com',
+               'title': 'Microsoft Cuts Many Open Job Listings in Weakening '
+                        'Economy'},
+              {'date': '16 hours ago',
+               'link': 'https://money.usnews.com/investing/news/articles/2022-07-20/microsoft-teams-down-for-thousands-of-users-downdetector',
+               'publisher': 'US News Money',
+               'title': 'Microsoft Teams Back up for Most Users After Global '
+                        'Outage'},
+              {'date': '1 week ago',
+               'link': 'https://seekingalpha.com/article/4523194-microsoft-buy-before-q4-earnings',
+               'publisher': 'Seeking Alpha',
+               'title': 'Microsoft Stock: A Buy Before Q4 Earnings '
+                        '(NASDAQ:MSFT)'},
+              {'date': '20 hours ago',
+               'link': 'https://www.tipranks.com/news/article/microsoft-stock-fx-headwinds-likely-to-persist-says-analyst/',
+               'publisher': 'TipRanks',
+               'title': 'Microsoft Stock: FX Headwinds Likely to Persist, Says '
+                        'Analyst'},
+              {'date': '1 day ago',
+               'link': 'https://finbold.com/citi-analyst-views-microsoft-as-a-solid-recession-proof-stock/',
+               'publisher': 'Finbold',
+               'title': 'Citi analyst views Microsoft as a solid '
+                        'recession-proof stock'}]}"""
+    newsBoxes = soup.find_all("div", {"class":["zLrlHb EA7tRd"]})
+    articles = []
+    if newsBoxes:
+        for element in newsBoxes:
+            article = {}
+            article["link"] = element.find("a")["href"]
+            article["publisher"] = element.find("div", {"class":"AYBNIb"}).text
+            article["date"] = re.sub("\n","",element.find("div", {"class":"HzW5e"}).text)
+            article["title"] = element.find("div", {"class":"F2KAFc"}).text
+            articles.append(article)
+        return {"articles":articles}
+    else:
+        newsBoxes = soup.find_all("div", {"class":"yY3Lee"})
+        for element in newsBoxes:
+            article = {}
+            article["link"] = element.find("a")["href"]
+            article["publisher"] = element.find("div", {"class":"sfyJob"}).text
+            article["date"] = re.sub("\n","",element.find("div", {"class":"Adak"}).text)
+            article["title"] = element.find("div", {"class":"Yfwt5"}).text
+            articles.append(article)
+        return {"articles":articles}
+
+
+def scrapeCompanyDesc(soup:BeautifulSoup) ->str:
+    try:
+        return re.sub("\. Wikipedia$","",soup.find("div", {"class":"bLLb2d"}).text)
+    except:
+        return "No Description available"
+
+def getFloat(num:str) ->float:
+    """Returns the float of a number containing symbols
+    >>> getFloat('$262.27')
+    >>> 262.27"""
+    return float(re.sub("[$,]", "", num))
+
+def scrapePrice(soup:BeautifulSoup):
+    return soup.find("div", {"class":["YMlKec fxKbKc"]}).text
+
+def scrapePrevClose(soup:BeautifulSoup):
+    return soup.find("div", {"class":"P6K39c"}).text
+
+def scrapeIncomeStatement(ticker:str) ->dict:
+    """returns values in {value:xx, change:xx}"""
+    incomeStatement = {}
+    fmp_url = f"https://financialmodelingprep.com/api/v3/income-statement/{ticker}?period=quarter&limit=120&apikey={constants.FMP_API_KEY}"
+    data = get_jsonparsed_data(fmp_url)
+
+    latest, older = data[-1], data[-2]
+
+    for key in latest.keys():
+        new, old = latest[key], older[key]
+        change = (new - old) / old
+        incomeStatement[key] = {"value":latest[key], "change":change}
+    return incomeStatement
 
 
 
+def scrapeBalanceSheet(ticker:str) ->dict:
+    """returns values in {value:xx, change:xx}"""
+    balanceSheet = {}
+    fmp_url = f"https://financialmodelingprep.com/api/v3/balance-sheet-statement/{ticker}?period=quarter&limit=120&apikey={constants.FMP_API_KEY}"
+    data = get_jsonparsed_data(fmp_url)
+
+    latest, older = data[-1], data[-2]
+
+    for key in latest.keys():
+        new, old = latest[key], older[key]
+        change = (new - old) / old
+        balanceSheet[key] = {"value":latest[key], "change":change}
+    return balanceSheet
+
+def scrapeCashFlow(soup:BeautifulSoup) ->dict:
+    """returns values in {value:xx, change:xx}"""
+    cashflow = {}
+    fmp_url = f"https://financialmodelingprep.com/api/v3/cash-flow-statement/{ticker}?period=quarter&limit=120&apikey={constants.FMP_API_KEY}"
+    data = get_jsonparsed_data(fmp_url)
+
+    latest, older = data[-1], data[-2]
+
+    for key in latest.keys():
+        new, old = latest[key], older[key]
+        change = (new - old) / old
+        cashflow[key] = {"value":latest[key], "change":change}
+    return cashflow
+
+def scrapeCompanyWebsite(soup:BeautifulSoup) ->str:
+    "Returns the URL for the company website"
+    container = soup.find("div", {"class":"v5gaBd Yickn"})
+    rows = container.find_all("div", {"class":"gyFHrc"})
+    for row in rows:
+        try:
+            if row.find("div", {"class":"mfs7Fc"}).text == "Website":
+                return row.find("a", {"class":"tBHE4e"})["href"]
+        except:
+            pass
+    return "NO URL"
+
+def scrapeCompanyLogo(companyWebsite:str):
+    "Returns link to company logo given company website url"
+    return constants.LOGO_CLEARBIT_URL + companyWebsite
 
 
+def getPriceChangeStr(current, open, label:str) ->str:
+    """Gves string that shows difference, and percent difference along wth a label.. Example:\n
+    >>> getPriceChangeStr(12, 10, 'difference'))\n
+    >>> '+2.00 (20.0%) difference'"""
+    diff = "+%.3g"%(current-open) if (current-open) >= 0 else "%.3g"%(current-open)
+    return diff + " (" + getPercentChange(current, open) + ") "+label
+
+def getPercentChange(current, previous) ->str:
+    """percent difference. Example:\n
+    >>> getPriceChangeStr(12, 10))\n
+    >>> '20.0%'"""
+    return "%.3g"%((current - previous)/previous * 100) + "%"
 
 
 
@@ -387,15 +559,17 @@ def HandleData():
 def search():
     args = request.args
     ticker = args.get("searchedTicker")
-    if isTickerValid(ticker):
-        return redirect(
-            url_for(
-                "data", 
-                companyTicker= ticker
-            )
-        )
-    else:
-        return redirect(url_for("tickerNotFound", InvalidTicker = ticker ))
+    fmp_url = (f"https://financialmodelingprep.com/api/v3/search?query={ticker}&limit=10&exchange=NASDAQ&apikey={constants.FMP_API_KEY}")
+    data = get_jsonparsed_data(fmp_url)
+    return data
+
+@app.route("/searchticker", methods=["GET"])
+def searchticker():
+    args = request.args
+    ticker = args.get("searchedTicker")
+    fmp_url = (f"https://financialmodelingprep.com/api/v3/search?query={ticker}&limit=10&exchange=NASDAQ&apikey={constants.FMP_API_KEY}")
+    data = get_jsonparsed_data(fmp_url)
+    return data
 
 @app.route("/isTickerValidPage/<string:ticker>")
 @cross_origin()
@@ -405,6 +579,39 @@ def isTickerValidPage(ticker:str) -> str:
         return constants.TRUE
     else:
         return constants.FALSE
+    
+
+@app.route("/getInfo/<string:ticker>")
+@cross_origin()
+def getInfo(ticker:str) -> dict:
+    """Prerequisite is that ticker must be valid. Use isTickerValid for this."""
+    scrapingURL = getScrapingURL(ticker)
+    data = requests.get(scrapingURL, headers=constants.REQ_HEADER).text
+    soup = BeautifulSoup(data, "lxml")
+    info_we_need = {
+        "companyName" : scrapeCompanyName(soup),
+        "currentValue" : {
+            "value" : scrapePrice(soup),
+            "change" : getPriceChangeStr(getFloat(scrapePrice(soup)), getFloat(scrapePrevClose(soup)), "Today")
+        },
+        "marketStatus" : scrapeMarketStatus(soup),
+        "companyDesc" : scrapeCompanyDesc(soup),
+        "companyLogoUrl" : scrapeCompanyLogo(scrapeCompanyWebsite(soup))
+    }
+    return info_we_need
+
+@app.route("/getFinancials/<string:ticker>")
+@cross_origin()
+def getFinancials(ticker:str) -> dict:
+    scrapingURL = getScrapingURL(ticker)
+    data = requests.get(scrapingURL, headers=constants.REQ_HEADER).text
+    soup = BeautifulSoup(data, "lxml")
+    financials = {
+        "incomeStatement": scrapeIncomeStatement(ticker),
+        "balanceSheet":scrapeBalanceSheet(soup),
+        "cashFlow":scrapeCashFlow(soup)
+    }
+    return financials
 
 @app.route("/tickerNotFound/<string:InvalidTicker>", methods=["GET"])
 def tickerNotFound(InvalidTicker):
