@@ -7,6 +7,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/dataStyles.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/loaderStyle.css') }}">
         <link rel="icon" href="{{ url_for('static',filename='images/ForesightLogoNoText.png') }}">
@@ -38,17 +39,15 @@
         <script src="{{url_for('static', filename='js/loader.js')}}"></script>
         <div class="header">
             <a href="/home">
-                <img class="logo" src="{{ url_for('static',filename='images/ForesightLogo.png') }}" alt="Foresight">
+                <img class="logo" src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png" alt="belugaSturgeon">
             </a>
-            <button id="hamburger" onclick="openNav()">☰</button>
-        </div>
-        <div id="mySidebar" class="sidebar">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-            <a href="/howItWorks">How It Works</a>
-            <a href="/legal">Legal</a>
-            <a href="https://resonancewebsite.herokuapp.com/#contact" target="_blank">Contact</a>
+            <div class="NavBar">
+                <a href="/apps" class="btn">Apps</a>
+                <a href="/team" class="btn">Team</a>
+                <a href="/about" class="btn">About</a>
+                <a href="/#contact" class="btn">Contact</a>
+                <a href="premium">Premium</a>
+            </div>
         </div>
         <div class="container">
             <div class="mainVisual">

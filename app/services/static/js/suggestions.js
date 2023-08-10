@@ -1,5 +1,6 @@
 const suggestionsContainer = document.getElementById("suggestions");
 const searchInput = document.getElementById("search");
+const searchForm = document.getElementById("searchForm");
 
 async function fetchSuggestions(query) {
     const response = await fetch(`https://financialmodelingprep.com/api/v3/search?query=${query}&limit=10&exchange=NASDAQ&apikey=b0446da02c01a0943a01730dc2343e34`);
@@ -24,6 +25,7 @@ function showSuggestions(query) {
                 suggestionElement.addEventListener("click", () => {
                     searchInput.value = suggestion.symbol;
                     suggestionsContainer.innerHTML = "";
+                    searchForm.requestSubmit();
                 });
 
                 suggestionsContainer.appendChild(suggestionElement);

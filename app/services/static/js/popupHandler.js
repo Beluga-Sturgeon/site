@@ -7,7 +7,7 @@ class possibleActions
 
 class constants
 {
-    static API_URL = "https://Foresightapi.herokuapp.com"
+    static API_URL = document.URL
 }
 
 function toggleBackground() {
@@ -21,7 +21,7 @@ function closeThePopup() {
     toggleBackground()
 }   
 
-function openThePopup(action) {
+async function openThePopup(action) {
     toggleBackground()
     let popup = document.getElementById("popup");
     $(popup).toggleClass("hidden");
@@ -29,16 +29,16 @@ function openThePopup(action) {
     let titleStr
     if (action == 0)
     {
-        dictionary = httpGet("/getFinancials/" + document.URL.split("/").pop()).incomeStatement;
+        dictionary = await httpGet("/getFinancials/" + document.URL.split("/").pop()).incomeStatement;
         titleStr = "Income Statement"
     } else if (action == 1)
     {
-        dictionary = httpGet("/getFinancials/" + document.URL.split("/").pop()).balanceSheet;
+        dictionary = await httpGet("/getFinancials/" + document.URL.split("/").pop()).balanceSheet;
         titleStr = "Balance Sheet"
     }
     else
     {
-        dictionary = httpGet("/getFinancials/" + document.URL.split("/").pop()).cashFlow;
+        dictionary = await httpGet("/getFinancials/" + document.URL.split("/").pop()).cashFlow;
         titleStr = "Cash Flow"
     }
     console.log(dictionary)
@@ -89,12 +89,12 @@ function createTableRow(label, value, change, isHeader=false)
     return row
 }
 
-function httpGet(urlAddOon)
+async function httpGet(urlAddOon)
 {
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open( "GET", constants.API_URL + urlAddOon, false ); // false for synchronous request
-    xmlHttp.send( null );
-    return JSON.parse(xmlHttp.response);
+    urllist = document.URL.split("/");
+    const response = await fetch(urllist.slice(0, urllist.length - 2).join("/") + urlAddOon);
+    const data = await response.json();
+    return data
 }
 
 console.log(createTableRow("USD", "VALUE", "Y/Y CHANGE"))
