@@ -212,7 +212,7 @@ def scrapeIncomeStatement(ticker:str) ->dict:
         new, old = latest[key], older[key]
         try:
             change = (new - old) / old
-            incomeStatement[key] = {"value":latest[key], "change":change}
+            incomeStatement[key] = {"value":human_format(latest[key]), "change":"%.2f"%(change)}
         except:
             pass
     return incomeStatement
@@ -231,7 +231,7 @@ def scrapeBalanceSheet(ticker:str) ->dict:
         new, old = latest[key], older[key]
         try:
             change = (new - old) / old
-            balanceSheet[key] = {"value":latest[key], "change":change}
+            balanceSheet[key] = {"value":human_format(latest[key]), "change":"%.2f"%(change)}
         except:
             pass
     return balanceSheet
@@ -248,7 +248,7 @@ def scrapeCashFlow(ticker:str) ->dict:
         new, old = latest[key], older[key]
         try:
             change = (new - old) / old
-            cashflow[key] = {"value":latest[key], "change":change}
+            cashflow[key] = {"value":human_format(latest[key]), "change":"%.2f"%(change)}
         except:
             pass
     return cashflow
@@ -459,7 +459,7 @@ def data(companyTicker:str):
         "balanceSheet":scrapeBalanceSheet(companyTicker),
         "cashFlow":scrapeCashFlow(companyTicker)
     },
-        newsList = getNews(companyTicker)
+        newsList = scrapeNews(companyTicker)
     )
 
 

@@ -155,7 +155,14 @@ a {
     font-family: 'Roboto Mono';
 }
 
-
+th, td {
+    font-family: 'Roboto Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 2vmin;
+    height: 5vmin;
+    vertical-align: center;
+}
 .HeroContainer {
     justify-content: center;
     text-align: center;

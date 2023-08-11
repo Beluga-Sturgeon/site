@@ -29,18 +29,19 @@ async function openThePopup(action) {
     let titleStr
     if (action == 0)
     {
-        dictionary = await httpGet("/getFinancials/" + document.URL.split("/").pop()).incomeStatement;
+        dictionary = (await httpGet("/getFinancials/" + document.URL.split("/").pop())).incomeStatement;
         titleStr = "Income Statement"
     } else if (action == 1)
     {
-        dictionary = await httpGet("/getFinancials/" + document.URL.split("/").pop()).balanceSheet;
+        dictionary = (await httpGet("/getFinancials/" + document.URL.split("/").pop())).balanceSheet;
         titleStr = "Balance Sheet"
     }
     else
     {
-        dictionary = await httpGet("/getFinancials/" + document.URL.split("/").pop()).cashFlow;
+        dictionary = (await httpGet("/getFinancials/" + document.URL.split("/").pop())).cashFlow;
         titleStr = "Cash Flow"
     }
+    console.log("THIS IS THE DICTIONARY BELOW:")
     console.log(dictionary)
 
     let title = popup.getElementsByTagName("h3")[0];

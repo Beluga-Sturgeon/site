@@ -230,7 +230,7 @@ img.companyLogo {
 
 .popup {
     width: 50vw;
-    height: auto;
+    height: 70vh;
     background: #262626;
     border-radius: 20px;
     position: fixed;
@@ -238,6 +238,7 @@ img.companyLogo {
     top: 10vh;
     left: 25vw;
     padding: 1.5%;
+    overflow-y: auto;
 }
 
 .X {
