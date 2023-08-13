@@ -281,15 +281,6 @@ img.companyLogo {
 
 }
 
-th, td {
-    font-family: 'Open Sans';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 2vmin;
-    height: 5vmin;
-    vertical-align: center;
-}
-
 th {
     color: #707070;
     text-align: right;

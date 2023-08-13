@@ -206,13 +206,19 @@ def scrapeIncomeStatement(ticker:str) ->dict:
     fmp_url = f"https://financialmodelingprep.com/api/v3/income-statement/{ticker}?period=quarter&limit=120&apikey={constants.FMP_API_KEY}"
     data = get_jsonparsed_data(fmp_url)
 
-    latest, older = data[-1], data[-2]
-
+    try:
+        latest, older = data[-1], data[-2]
+    except:
+        latest, older = data[-1], data[-1]
+        
     for key in latest.keys():
         new, old = latest[key], older[key]
         try:
             change = (new - old) / old
-            incomeStatement[key] = {"value":human_format(latest[key]), "change":"%.2f"%(change)}
+            if change > 0:
+                incomeStatement[key] = {"value":human_format(latest[key]), "change":"+%.2f%%"%(change)}
+            else:
+                incomeStatement[key] = {"value":human_format(latest[key]), "change":"%.2f%%"%(change)}
         except:
             pass
     return incomeStatement
@@ -225,13 +231,19 @@ def scrapeBalanceSheet(ticker:str) ->dict:
     fmp_url = f"https://financialmodelingprep.com/api/v3/balance-sheet-statement/{ticker}?period=quarter&limit=120&apikey={constants.FMP_API_KEY}"
     data = get_jsonparsed_data(fmp_url)
 
-    latest, older = data[-1], data[-2]
+    try:
+        latest, older = data[-1], data[-2]
+    except:
+        latest, older = data[-1], data[-1]
 
     for key in latest.keys():
         new, old = latest[key], older[key]
         try:
             change = (new - old) / old
-            balanceSheet[key] = {"value":human_format(latest[key]), "change":"%.2f"%(change)}
+            if change > 0:
+                balanceSheet[key] = {"value":human_format(latest[key]), "change":"+%.2f%%"%(change)}
+            else:
+                balanceSheet[key] = {"value":human_format(latest[key]), "change":"%.2f%%"%(change)}
         except:
             pass
     return balanceSheet
@@ -242,13 +254,19 @@ def scrapeCashFlow(ticker:str) ->dict:
     fmp_url = f"https://financialmodelingprep.com/api/v3/cash-flow-statement/{ticker}?period=quarter&limit=120&apikey={constants.FMP_API_KEY}"
     data = get_jsonparsed_data(fmp_url)
 
-    latest, older = data[-1], data[-2]
+    try:
+        latest, older = data[-1], data[-2]
+    except:
+        latest, older = data[-1], data[-1]
 
     for key in latest.keys():
         new, old = latest[key], older[key]
         try:
             change = (new - old) / old
-            cashflow[key] = {"value":human_format(latest[key]), "change":"%.2f"%(change)}
+            if change > 0:
+                cashflow[key] = {"value":human_format(latest[key]), "change":"+%.2f%%"%(change)}
+            else:
+                cashflow[key] = {"value":human_format(latest[key]), "change":"%.2f%%"%(change)}
         except:
             pass
     return cashflow
