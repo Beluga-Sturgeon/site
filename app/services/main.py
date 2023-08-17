@@ -450,6 +450,13 @@ def tickerNotFound(InvalidTicker):
     args = request.args
     return render_template("./TickerNotFound.html", InvalidTicker = InvalidTicker)
 
+@app.route("/getChangestr/<string:companyTicker>")
+def getChangestr(companyTicker:str):
+    scrapingURL = getScrapingURL(companyTicker)
+    data = requests.get(scrapingURL, headers=constants.REQ_HEADER).text
+    soup = BeautifulSoup(data, "lxml")
+    return scrapeMarketStatus(soup)
+
 @app.route("/data/<string:companyTicker>")
 def data(companyTicker:str):
     scrapingURL = getScrapingURL(companyTicker)
