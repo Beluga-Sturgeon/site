@@ -229,14 +229,14 @@ img.companyLogo {
 
 
 .popup {
-    width: 50vw;
+    width: 70vw;
     height: 70vh;
     background: #262626;
     border-radius: 20px;
     position: fixed;
     z-index: 3;
     top: 10vh;
-    left: 25vw;
+    left: 15vw;
     padding: 1.5%;
     overflow-y: auto;
 }

@@ -13,4 +13,12 @@ async function updatevals() {
 await updatevals();
 
 // Set up the interval to call the function every minute
-setInterval(await updatevals, 60000); // 60000 milliseconds = 1 minute
+setInterval(await updatevals, 60000); // 60000 milliseconds = 1 
+
+console.log("UPDATEEEE")
+
+
+window.onload = function() {
+    console.log("I AM READING THE SCRIPT");
+   document.getElementById('bodytext').innerHTML = "I AM READING THE SCRIPT";
+};

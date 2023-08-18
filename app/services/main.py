@@ -214,7 +214,7 @@ def scrapeIncomeStatement(ticker:str) ->dict:
     for key in latest.keys():
         new, old = latest[key], older[key]
         try:
-            change = (new - old) / old
+            change = (new - old) / old * 100
             if change > 0:
                 incomeStatement[key] = {"value":human_format(latest[key]), "change":"+%.2f%%"%(change)}
             else:
@@ -239,7 +239,7 @@ def scrapeBalanceSheet(ticker:str) ->dict:
     for key in latest.keys():
         new, old = latest[key], older[key]
         try:
-            change = (new - old) / old
+            change = (new - old) / old * 100 
             if change > 0:
                 balanceSheet[key] = {"value":human_format(latest[key]), "change":"+%.2f%%"%(change)}
             else:
@@ -262,7 +262,7 @@ def scrapeCashFlow(ticker:str) ->dict:
     for key in latest.keys():
         new, old = latest[key], older[key]
         try:
-            change = (new - old) / old
+            change = (new - old) / old * 100
             if change > 0:
                 cashflow[key] = {"value":human_format(latest[key]), "change":"+%.2f%%"%(change)}
             else:
