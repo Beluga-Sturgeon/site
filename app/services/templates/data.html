@@ -81,17 +81,17 @@
                         <p>
                             {{info['marketStatus']}}
                         </p>
-                        <div class="actionbox">
-                            <p >
-                                RECOMMENDED ACTION: <span class="action">HOLD</span>
-                            </p>
-                        </div>
                     </div>
                 </div>
                 <div class="graph" id="graph">
                     <h1 id="loadingText">Generating graph...</h1>
                 </div>
                 <script src="{{url_for('static', filename='js/stockChart.js')}}"></script>
+            </div>
+            <div class="actionbox">
+                <p >
+                    RECOMMENDED ACTION: <span class="action">HOLD</span>
+                </p>
             </div>
             <div class="companyInfo">
                 <div class="nameAndLogo">
