@@ -11,6 +11,7 @@
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/aboutUsStyles.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/suggestions.css') }}">
         <link rel="icon" href="{{ url_for('static',filename='images/LOGONOTEXT.png') }}">
         <script src="https://kit.fontawesome.com/1b4a129057.js" crossorigin="anonymous"></script>
 
@@ -43,6 +44,21 @@
             <a href="/">
                 <img class="logo" src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png" alt="belugaSturgeon">
             </a>
+
+            <div class="searchbox">
+                <form id="searchForm" onsubmit="handleSearchSubmit();">
+                    <input type="search" name="searchedTicker" placeholder="ticker name" id="search" autocomplete="off">
+                    <button type="submit" id="submit">Submit</button>
+                </form>
+                <div id="suggestions"></div>
+            </div>
+
+            <script>
+                $("#searchForm").submit(function(e) {
+                    e.preventDefault();
+                });
+            </script>
+            <script src="{{url_for('static', filename='js/suggestions.js')}}"></script>
             <div class="NavBar">
                 <a href="/apps" class="btn">Apps</a>
                 <a href="/team" class="btn">Team</a>

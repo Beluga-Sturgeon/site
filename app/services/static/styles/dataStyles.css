@@ -339,7 +339,7 @@ footer * {
     color: white;
 }
 
-footer .container {
+footer #container {
     width: 100%;
     justify-content: center;
     text-align: center;
@@ -385,3 +385,28 @@ footer .copyright{
 .copyright a:hover {
     color: #4545E6;
 }
+
+
+.actionbox {
+    justify-content: center;
+    position: relative;
+    height: 450px;
+    top: 150px;
+    background-color:#343434;
+    border-radius: 10px;
+    padding: 5px;
+    backdrop-filter: blur(10px);
+}
+
+.numbervalue {
+    color: white;
+}
+
+
+.actionbox .model  {
+    position: fixed;
+    bottom: 0px;
+    font-size: 12px;
+    color: white;
+}
+

@@ -56,3 +56,22 @@ $( "div.card" ).hover(
         $(this).children().css("color", "#707070")
     },
 );
+
+
+function actioncolor() {
+    const actionSpans = document.querySelectorAll(".action");
+    
+    actionSpans.forEach(function(span) {
+        const content = span.textContent.trim();
+        
+        if (content === "LONG") {
+            span.style.color = "#00FF19";
+        } else if (content === "HOLD") {
+            span.style.color = "yellow";
+        } else if (content === "SHORT") {
+            span.style.color = "#FF0000";
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", actioncolor());

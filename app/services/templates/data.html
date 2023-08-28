@@ -39,7 +39,7 @@
         </div>
         <script src="{{url_for('static', filename='js/loader.js')}}"></script>
         <div class="header">
-            <a href="/home">
+            <a href="/">
                 <img class="logo" src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png" alt="belugaSturgeon">
             </a>
 
@@ -89,10 +89,27 @@
                 <script src="{{url_for('static', filename='js/stockChart.js')}}"></script>
             </div>
             <div class="actionbox">
-                <p >
-                    RECOMMENDED ACTION: <span class="action">HOLD</span>
+                <p class="recommendedaction">
+                    RECOMMENDED ACTION: <span class="action">LONG</span>
                 </p>
+                <p class="annualizedreturn">
+                    Annualized Return: <span class="numbervalue">69420</span>
+                </p>
+                <p class="stdreturn">
+                    Standard Deviation of return: <span class="numbervalue">69420</span>
+                </p>
+                <p class="recommendedaction">
+                    Sharpe ratio: <span class="numbervalue">69420</span>
+                </p>
+                <p class="recommendedaction">
+                    Max drawdown: <span class="numbervalue">69420</span>
+                </p>
+
+                <p class="model">gbm_quant BETA</p>
             </div>
+            <script>
+                document.addEventListener("DOMContentLoaded", actioncolor());
+            </script>
             <div class="companyInfo">
                 <div class="nameAndLogo">
                     <h1>{{info['companyName']}}</h1>
@@ -159,7 +176,7 @@
             </table>
         </div>
         <footer>
-            <div class="container">
+            <div id="container">
                 <div class="row">
                     <div class="col-sm3">
                         <h5>Get started</h5>
