@@ -1,0 +1,3 @@
+[submodule "app/services/gbm-drl-quant"]
+	path = app/services/gbm-drl-quant
+	url = https://github.com/junyoung-sim/gbm-drl-quant.git

@@ -391,6 +391,7 @@ footer .copyright{
     justify-content: center;
     position: relative;
     height: 450px;
+    width: 350px;
     top: 150px;
     background-color:#343434;
     border-radius: 10px;

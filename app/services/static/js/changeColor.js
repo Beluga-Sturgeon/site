@@ -73,5 +73,3 @@ function actioncolor() {
         }
     });
 }
-
-document.addEventListener("DOMContentLoaded", actioncolor());

@@ -96,7 +96,7 @@
                     Annualized Return: <span class="numbervalue">69420</span>
                 </p>
                 <p class="stdreturn">
-                    Standard Deviation of return: <span class="numbervalue">69420</span>
+                    SD return: <span class="numbervalue">69420</span>
                 </p>
                 <p class="recommendedaction">
                     Sharpe ratio: <span class="numbervalue">69420</span>
@@ -107,9 +107,7 @@
 
                 <p class="model">gbm_quant BETA</p>
             </div>
-            <script>
-                document.addEventListener("DOMContentLoaded", actioncolor());
-            </script>
+            <script src="{{url_for('static', filename='js/changeColor.js')}}"></script>
             <div class="companyInfo">
                 <div class="nameAndLogo">
                     <h1>{{info['companyName']}}</h1>
