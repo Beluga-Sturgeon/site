@@ -73,3 +73,5 @@ function actioncolor() {
         }
     });
 }
+
+actioncolor()
