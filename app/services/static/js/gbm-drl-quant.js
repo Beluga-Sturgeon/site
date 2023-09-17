@@ -88,3 +88,30 @@ if (require.main === module) {
         .then(data => console.log(data))
         .catch(error => console.error(error));
 }
+
+
+async function updateActionBox() {
+    ticker = document.URL.split("/").pop();
+
+    data = await getData(ticker);
+
+    // Find the elements by their class names
+    const recommendedActionElement = document.querySelector('.recommendedaction .action');
+    const annualizedReturnElement = document.querySelector('.annualizedreturn .numbervalue');
+    const stdReturnElement = document.querySelector('.stdreturn .numbervalue');
+    const sharpeRatioElement = document.querySelector('.sharperatio .numbervalue');
+    const maxDrawdownElement = document.querySelector('.maxdrawdown .numbervalue');
+
+    // Update the elements with the data
+    recommendedActionElement.textContent = data.action;
+    annualizedReturnElement.textContent = data.e_a_r;
+    stdReturnElement.textContent = data.std;
+    sharpeRatioElement.textContent = data.sharperatio;
+    maxDrawdownElement.textContent = data.maxdrawdown;
+
+}
+
+// Call the updateActionBox function when your page is ready
+document.addEventListener("DOMContentLoaded", async () => {
+    await updateActionBox();
+  });

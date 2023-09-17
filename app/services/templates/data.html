@@ -90,23 +90,30 @@
             </div>
             <div class="actionbox">
                 <p class="recommendedaction">
-                    RECOMMENDED ACTION: <span class="action">LONG</span>
+                    RECOMMENDED ACTION: <span class="action">{{action}}</span>
                 </p>
                 <p class="annualizedreturn">
-                    Annualized Return: <span class="numbervalue">69420</span>
+                    Annualized Return: <span class="numbervalue">{{e_a_r}}</span>
                 </p>
                 <p class="stdreturn">
-                    SD return: <span class="numbervalue">69420</span>
+                    SD return: <span class="numbervalue">{{std}}</span>
                 </p>
                 <p class="recommendedaction">
-                    Sharpe ratio: <span class="numbervalue">69420</span>
+                    Sharpe ratio: <span class="numbervalue">{{sharperatio}}</span>
                 </p>
                 <p class="recommendedaction">
-                    Max drawdown: <span class="numbervalue">69420</span>
+                    Max drawdown: <span class="numbervalue">{{maxdrawdown}}</span>
                 </p>
 
                 <p class="model">gbm_quant BETA</p>
             </div>
+            <script>
+                var logData = {{ log.json_data | tojson | safe }};
+                var statsData = {{ stats.json_data | tojson | safe }};
+                console.log(logData);
+            </script>
+            <script src="{{url_for('static', filename='js/gbm-drl-quant.js')}}"></script>
+
             <script src="{{url_for('static', filename='js/changeColor.js')}}"></script>
             <div class="companyInfo">
                 <div class="nameAndLogo">

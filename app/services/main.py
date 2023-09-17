@@ -10,6 +10,9 @@ import certifi
 from flask_cors import CORS, cross_origin
 from bs4 import BeautifulSoup
 import re
+import pandas as pd
+import subprocess
+
 server = gunicorn.SERVER
 
 
@@ -29,6 +32,12 @@ class constants():
     GET_TICKER_INFO_ENDING= "/getInfo/"
     GET_NEWS_ENDING= "/getNews/"
     GET_FINANCIALS_ENDING= "/getFinancials/"
+    STATS_FILE_PATH = r'app\services\gbm-drl-quant\res\stats'
+    LOG_FILE_PATH = r'app\services\gbm-drl-quant\res\log'
+    DIRECTORY_PATH = "app/services/gbm-drl-quant"
+
+    # Define the command you want to execute
+    QUANT_COMMAND = ".\\exec test {} .\\models\\checkpoint"
 
 
 class emailvars():
@@ -289,9 +298,41 @@ def getPriceChangeStr(ticker:str) ->str:
     return str(daychange) + "%"
 
 
+def readstats():
+    file_path = r'app\services\gbm-drl-quant\res\stats'
 
+    # Read the data from the file
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
 
+    # Split the first line by commas
+    data = lines[0].strip().split(',')
 
+    # Create a DataFrame from the data
+    df = pd.DataFrame([data], columns=["Ticker", "Annualized Return benchmark", "Stdev of Returns benchmark", "Shape Ratio benchmark", "Maximum Drawdown benchmark", "Annualized Return model", "Stdev of Returns model", "Sharpe Ratio model", "Maximum Drawdown model"])
+    return df
+
+def readlog():
+    log_file_path = r'app\services\gbm-drl-quant\res\log'
+
+    # Read the last line of the log file
+    with open(log_file_path, 'r') as file:
+        lines = file.readlines()
+        # Split the last line by commas and create a DataFrame with the specified column labels
+        columns = ["X", "SPY", "IEF", "GSG", "EUR=X", "action", "benchmark", "model"]
+        data = [l.split(',') for l in lines]
+        df = pd.DataFrame(data, columns=columns)
+        return df
+
+def runtest(ticker:str):
+    #subprocess.run(f'ls', shell=True, check=True)
+    # Define the directory you want to change to
+
+    try:
+        # Change the current directory to the specified path
+        subprocess.run(f'cd {constants.DIRECTORY_PATH} && {constants.QUANT_COMMAND.format(ticker)}', shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Error: {e}")
 
 
 
@@ -457,8 +498,26 @@ def getChangestr(companyTicker:str):
     soup = BeautifulSoup(data, "lxml")
     return scrapeMarketStatus(soup)
 
+
+@app.route("/getLog/<string:companyTicker>")
+def getLog(companyTicker:str):
+    return readlog()
+
+@app.route("/getStats/<string:companyTicker>")
+def getStats(companyTicker:str):
+    return readstats()
+
 @app.route("/data/<string:companyTicker>")
 def data(companyTicker:str):
+    # runtest(ticker=companyTicker)
+    log = readlog()
+    if log.iloc[-1]["action"] == 0:
+        action = "SHORT"
+    elif log.iloc[-1]["action"] == 1:
+        action = "HOLD"
+    else:
+        action = "LONG"
+    stats = readstats()
     scrapingURL = getScrapingURL(companyTicker)
     data = requests.get(scrapingURL, headers=constants.REQ_HEADER).text
     soup = BeautifulSoup(data, "lxml")
@@ -470,22 +529,31 @@ def data(companyTicker:str):
     return render_template(
         "data.html", 
         info = {
-        "companyName" : data["companyName"],
-        "currentValue" : {
-            "value" : get_jsonparsed_data(f"https://financialmodelingprep.com/api/v3/quote-short/{companyTicker}?apikey={constants.FMP_API_KEY}")[0]["price"],
-            "change" : getPriceChangeStr(companyTicker)
+            "companyName" : data["companyName"],
+            "currentValue" : {
+                "value" : get_jsonparsed_data(f"https://financialmodelingprep.com/api/v3/quote-short/{companyTicker}?apikey={constants.FMP_API_KEY}")[0]["price"],
+                "change" : getPriceChangeStr(companyTicker)
+            },
+            "marketStatus" : scrapeMarketStatus(soup),
+            "companyDesc" : data["description"],
+            "companyLogoUrl" : data["image"]
         },
-        "marketStatus" : scrapeMarketStatus(soup),
-        "companyDesc" : data["description"],
-        "companyLogoUrl" : data["image"]
-    },
         financials = {
-        "incomeStatement": scrapeIncomeStatement(companyTicker),
-        "balanceSheet":scrapeBalanceSheet(companyTicker),
-        "cashFlow":scrapeCashFlow(companyTicker)
-    },
-        newsList = scrapeNews(companyTicker)
+            "incomeStatement": scrapeIncomeStatement(companyTicker),
+            "balanceSheet":scrapeBalanceSheet(companyTicker),
+            "cashFlow":scrapeCashFlow(companyTicker)
+        },
+        newsList = scrapeNews(companyTicker),
+        action= action,
+        e_a_r = round(float(stats.iloc[0]["Annualized Return model"]), 4),
+        std = round(float(stats.iloc[0]["Stdev of Returns model"]),4),
+        sharperatio=round(float(stats.iloc[0]["Sharpe Ratio model"]),4),
+        maxdrawdown=round(float(stats.iloc[0]["Maximum Drawdown model"]), 4),
+        log = {"test":"val"},
+        stats = {"test":"val"}
     )
+
+
 
 
 if __name__ == '__main__':
