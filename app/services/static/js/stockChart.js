@@ -38,7 +38,6 @@ function createCandlestickChart(data, name) {
   var dataTable = anychart.data.table();
   var csvSettings = { ignoreFirstRow: true, columnsSeparator: ",", rowsSeparator: "\n" };
   dataTable.addData(dataCSV, csvSettings);
-  console.log(dataCSV)
   // Create a mapping for the candlestick chart
   var mapping = dataTable.mapAs({
     "open": 1,

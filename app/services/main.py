@@ -312,12 +312,23 @@ def readstats():
     df = pd.DataFrame([data], columns=["Ticker", "Annualized Return benchmark", "Stdev of Returns benchmark", "Shape Ratio benchmark", "Maximum Drawdown benchmark", "Annualized Return model", "Stdev of Returns model", "Sharpe Ratio model", "Maximum Drawdown model"])
     return df
 
-def readlog():
+def readlog(lastonly=False):
     log_file_path = r'app\services\gbm-drl-quant\res\log'
+
+    if lastonly:
+        with open(log_file_path, 'r') as file:
+            lines = file.readlines()
+            # Split the last line by commas and create a DataFrame with the specified column labels
+            columns = ["X", "SPY", "IEF", "GSG", "EUR=X", "action", "benchmark", "model"]
+            data = [lines[-1].split(',')]
+            df = pd.DataFrame(data, columns=columns)
+            return df
+
 
     # Read the last line of the log file
     with open(log_file_path, 'r') as file:
         lines = file.readlines()
+        lines.pop(0)
         # Split the last line by commas and create a DataFrame with the specified column labels
         columns = ["X", "SPY", "IEF", "GSG", "EUR=X", "action", "benchmark", "model"]
         data = [l.split(',') for l in lines]
@@ -501,19 +512,21 @@ def getChangestr(companyTicker:str):
 
 @app.route("/getLog/<string:companyTicker>")
 def getLog(companyTicker:str):
-    return readlog()
+    log = readlog()
+    print(log)
+    return log.to_csv()
 
 @app.route("/getStats/<string:companyTicker>")
 def getStats(companyTicker:str):
-    return readstats()
+    return readstats().to_csv()
 
 @app.route("/data/<string:companyTicker>")
 def data(companyTicker:str):
     # runtest(ticker=companyTicker)
-    log = readlog()
-    if log.iloc[-1]["action"] == 0:
+    log = readlog(lastonly=True)
+    if log.iloc[0]["action"] == 0:
         action = "SHORT"
-    elif log.iloc[-1]["action"] == 1:
+    elif log.iloc[0]["action"] == 1:
         action = "HOLD"
     else:
         action = "LONG"
@@ -549,8 +562,6 @@ def data(companyTicker:str):
         std = round(float(stats.iloc[0]["Stdev of Returns model"]),4),
         sharperatio=round(float(stats.iloc[0]["Sharpe Ratio model"]),4),
         maxdrawdown=round(float(stats.iloc[0]["Maximum Drawdown model"]), 4),
-        log = {"test":"val"},
-        stats = {"test":"val"}
     )
 
 

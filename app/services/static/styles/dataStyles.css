@@ -68,6 +68,13 @@ p.title {
     padding: 0;
 }
 
+.sidegraph {
+    width: 100%; 
+    height: 450px; 
+    margin: 0; 
+    padding: 0;
+}
+
 
 .companyInfo {
     width: 30%;

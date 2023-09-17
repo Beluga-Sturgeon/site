@@ -7,6 +7,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/dataStyles.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/sidebar.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/suggestions.css') }}">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
@@ -20,14 +21,15 @@
         <script src="{{ url_for('static',filename='js/popupHandler.js') }}"></script>
         <script src="{{ url_for('static',filename='js/changeColor.js') }}"></script>
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/sideBarStyle.css') }}">
-        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-stock.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-data-adapter.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-ui.min.js"></script>
-        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-exports.min.js"></script>
-        <link href="https://cdn.anychart.com/releases/8.11.0/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
-        <link href="https://cdn.anychart.com/releases/8.11.0/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
-        <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-annotations.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-core.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-stock.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-data-adapter.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-ui.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-exports.min.js"></script>
+        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-cartesian.min.js"></script>
+        <link href="https://cdn.anychart.com/releases/8.11.1/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+        <link href="https://cdn.anychart.com/releases/8.11.1/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+        <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-annotations.min.js"></script>
         <script src="{{url_for('static', filename='js/sideBarHandler.js')}}"></script>
     </head>
     <body class="preload">
@@ -67,7 +69,24 @@
             </div>
         </div>
 
+        <div class="sidecontainer">
+            <div class="sidebar" id="sidebar">
+                <div class="arrow" id="arrow">
+                &rarr;
+                </div>
+                    <div class = "sidegraph" id="state">
 
+                    </div>
+                    <div class = "sidegraph" id="actiongraph">
+                        
+                    </div>
+                    <div class = "sidegraph" id="modelvbenchmark">
+                        
+                    </div>
+            </div>
+          </div>
+          <script src="path/to/papaparse.min.js"></script>
+          <script src="{{url_for('static', filename='js/sidebar.js')}}"></script>
 
 
         <div class="container">
@@ -107,11 +126,6 @@
 
                 <p class="model">gbm_quant BETA</p>
             </div>
-            <script>
-                var logData = {{ log.json_data | tojson | safe }};
-                var statsData = {{ stats.json_data | tojson | safe }};
-                console.log(logData);
-            </script>
             <script src="{{url_for('static', filename='js/gbm-drl-quant.js')}}"></script>
 
             <script src="{{url_for('static', filename='js/changeColor.js')}}"></script>
