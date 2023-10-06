@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 import re
 import pandas as pd
 import subprocess
-
+from datetime import datetime, timedelta
 server = gunicorn.SERVER
 
 
@@ -315,24 +315,23 @@ def readstats():
 def readlog(lastonly=False):
     log_file_path = r'app\services\gbm-drl-quant\res\log'
 
+    # Read the last line of the log file when lastonly is True
     if lastonly:
         with open(log_file_path, 'r') as file:
             lines = file.readlines()
-            # Split the last line by commas and create a DataFrame with the specified column labels
             columns = ["X", "SPY", "IEF", "GSG", "EUR=X", "action", "benchmark", "model"]
             data = [lines[-1].split(',')]
+            data[0][-1] = data[0][-1].rstrip()  # Remove newline character from the last element
             df = pd.DataFrame(data, columns=columns)
             return df
 
-
-    # Read the last line of the log file
+    # Read the entire log file when lastonly is False
     with open(log_file_path, 'r') as file:
         lines = file.readlines()
-        lines.pop(0)
-        # Split the last line by commas and create a DataFrame with the specified column labels
         columns = ["X", "SPY", "IEF", "GSG", "EUR=X", "action", "benchmark", "model"]
-        data = [l.split(',') for l in lines]
+        data = [l.strip().split(',') for l in lines[1:]]  # Skip the first line if not lastonly
         df = pd.DataFrame(data, columns=columns)
+        df['model'] = df['model'].str.rstrip()  # Remove newline characters from the 'model' column
         return df
 
 def runtest(ticker:str):
@@ -512,9 +511,19 @@ def getChangestr(companyTicker:str):
 
 @app.route("/getLog/<string:companyTicker>")
 def getLog(companyTicker:str):
-    log = readlog()
-    print(log)
-    return log.to_csv()
+    log = readlog()  # Assuming readlog() returns a DataFrame
+
+    # Calculate the current date
+    current_date = datetime.now()
+
+    # Calculate the date for each row, going back a day for each row
+    log['Date'] = [current_date - timedelta(days=i) for i in range(len(log))]
+    log['Date'] = log['Date'].dt.date
+
+    # Convert the DataFrame to a list of dictionaries
+    log_list_of_dicts = log.to_dict(orient='records')
+
+    return log_list_of_dicts
 
 @app.route("/getStats/<string:companyTicker>")
 def getStats(companyTicker:str):

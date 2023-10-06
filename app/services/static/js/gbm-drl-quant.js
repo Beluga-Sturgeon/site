@@ -83,11 +83,7 @@ async function getData(ticker) {
     };
 }
 
-if (require.main === module) {
-    getData("AAPL")
-        .then(data => console.log(data))
-        .catch(error => console.error(error));
-}
+
 
 
 async function updateActionBox() {

@@ -50,11 +50,6 @@ function createCandlestickChart(data, name) {
   var chart = anychart.stock();
   var plot = chart.plot(0);
   var series = plot.candlestick(mapping);
-  var controller = plot.annotations();
-  // ...
-    controller.verticalLine({
-  xAnchor: getDate()
-  });
 
   plot.yGrid(true).xGrid(true).yMinorGrid(false).xMinorGrid(false);
   plot.xGrid().stroke({
