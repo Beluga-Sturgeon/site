@@ -516,9 +516,13 @@ def getLog(companyTicker:str):
     # Calculate the current date
     current_date = datetime.now()
 
+    log = log.iloc[::-1]
     # Calculate the date for each row, going back a day for each row
     log['Date'] = [current_date - timedelta(days=i) for i in range(len(log))]
     log['Date'] = log['Date'].dt.date
+    # Assuming you have a DataFrame named 'log' with 'Date' and other columns
+
+    print(log)
 
     # Convert the DataFrame to a list of dictionaries
     log_list_of_dicts = log.to_dict(orient='records')
