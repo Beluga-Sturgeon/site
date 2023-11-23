@@ -1,0 +1,13 @@
+{
+  "2023-11-23": {
+    "AAPL": {
+      "times_accessed": 1,
+      "action": "LONG",
+      "price": 191.31,
+      "sd": 0.551,
+      "maxdrawdown": 0.348,
+      "sharpe": 1.1108,
+      "e_a_r": 0.6121
+    }
+  }
+}

@@ -233,34 +233,79 @@ section.rest {
 
 .actions {
     cursor: pointer;
+    position: relative;
+    top: 7vh;
 }
 
+.actions div.item {
+    display: flex; /* Use flexbox for two-column layout */
+    backdrop-filter: blur(15px);
+    transition: all 0.3s;
+    border-radius: 10px;
+    height: 110px;
+    overflow: hidden; /* Hide overflow content initially */
+}
 
-.actions div.item a{
+.actions div.item .infocol {
+    flex: 1; /* Take 50% of the width */
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.actions div.item .details-column {
+    flex: 1; /* Take 50% of the width */
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.actions div.item a {
     font-size: 22px;
     font-family: 'Roboto Mono';
     text-decoration: none;
     color: white;
-    width: 100%;
 }
 
-.actions div.item{
-    backdrop-filter: blur(15px);
-    transition: all 0.3s;
+.actions div.item p {
+    margin: 0;
+}
+
+.actions div.item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    opacity: 0.1; /* Adjust the opacity as needed */
+    transition: opacity 0.3s;
     border-radius: 10px;
-    display: inherit;
-    height: 40px;
+}
+
+.actions div.item:hover::before {
+    opacity: .25; /* Show the white hue on hover */
 }
 
 .actions div.item:hover {
-    height: 200px;
     cursor: pointer;
 }
 
+.actions div.item .details {
+    display: block; /* Hide details initially */
+}
+
+.actions div.item .infocol a {
+    line-height: 50px;
+}
 
 
-
-
+.price {
+    font-family: 'Roboto Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 36px;
+    color: white;
+}
 
 
 

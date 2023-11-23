@@ -51,11 +51,29 @@
                         <script src="{{url_for('static', filename='js/suggestions.js')}}"></script>
                     </div>
                     <div class="actions">
-                        {% for x in hotactions%}
+                        <h2>Hot Actions</h2>
+                        {% for ticker, data in hotactions.items() %}
                         <div class="item">
-                            <a href="/{{x['ticker']}}">{{x['ticker']}}</a>
-                        </div class="item">
-                        {% endfor %}
+                            <div class="infocol">
+                                <a href="/{{ ticker }}">{{ ticker }} {% if data['action'] == 'LONG' %}
+                                    <span style="color: #00FF19;">{{ data['action'] }}</span>
+                                {% elif data['action'] == 'SHORT' %}
+                                    <span style="color: red;">{{ data['action'] }}</span>
+                                {% else %}
+                                    <span style="color: yellow;">{{ data['action'] }}</span>
+                                {% endif %}</a>
+                                <p class="price">${{ data['price'] }}</p>
+                            </div>
+                            <div class="details-column">
+                                <div class="details">
+                                    <p>SD: {{ data['sd'] }}</p>
+                                    <p>Max drawdown: {{ data['maxdrawdown'] }}</p>
+                                    <p>Sharpe Ratio: {{ data['sharpe'] }}</p>
+                                    <p>Avg Annual Return: {{ data['e_a_r'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
                     </div>
                 </div>    
             </div>
