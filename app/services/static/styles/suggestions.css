@@ -16,7 +16,9 @@
     border-radius: 10px;
     border: none;
     background-color: rgb(36, 121, 206);
-    color: white;
+    color: black;
+    background-color: white;
+    opacity: 0.3; /* Adjust the opacity as needed */
     backdrop-filter: blur(15px);
     transition: all 0.3s;
     font-size: 1em;
@@ -25,6 +27,7 @@
 
 #search:focus {
     outline: none;
+    opacity: .45;
 }
 
 #submit {

@@ -53,7 +53,7 @@
                     <div class="actions">
                         <h2>Hot Actions</h2>
                         {% for ticker, data in hotactions.items() %}
-                        <div class="item">
+                        <div class="item" onclick="window.location.href = '/data/{{ ticker }}'">
                             <div class="infocol">
                                 <a href="/{{ ticker }}">{{ ticker }} {% if data['action'] == 'LONG' %}
                                     <span style="color: #00FF19;">{{ data['action'] }}</span>
