@@ -412,7 +412,9 @@ def get_daily(Today=False):
             if not dailydict:
                 return None
             if Today:
-                return dailydict[datetime.today().strftime('%Y-%m-%d')]
+                if datetime.today().strftime('%Y-%m-%d') in dailydict.keys():
+                    return dailydict[datetime.today().strftime('%Y-%m-%d')]
+                return None
             return dailydict
     except FileNotFoundError:
         raise FileNotFoundError
@@ -458,7 +460,8 @@ def home():
         print(hotactions)
         return render_template("./index.html", hotactions=hotactions)
     else:
-        return render_template("./index.html")
+        print("NO DAILY ACTIONS")
+        return render_template("./index.html", hotactions={})
 
 @app.route("/home")
 def home2():
