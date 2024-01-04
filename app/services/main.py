@@ -376,11 +376,13 @@ def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
         with open("daily.json", "r") as file:
             dailydict = json.load(file)
     except FileNotFoundError:
+        print("FILE NOT FOUND")
         dailydict = {}
 
     if current_date_string not in dailydict:
+        print("CREATING NEW DATE ENTRY")
         dailydict[current_date_string] = {}
-    if ticker not in dailydict[current_date_string]:
+    if ticker not in dailydict[current_date_string].keys():
         dailydict[current_date_string][ticker] = {
             'times_accessed':0,
             'action': action,
@@ -399,6 +401,7 @@ def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
         for date, entries in dailydict.items()
     }
 
+    print(sorted_dailydict)
     with open("app\services\daily.json", "w") as file:
         json.dump(sorted_dailydict, file, indent=2) 
 

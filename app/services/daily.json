@@ -1,9 +1,9 @@
 {
-  "2024-01-03": {
+  "2024-01-04": {
     "TSLA": {
       "times_accessed": 1,
       "action": "LONG",
-      "price": 238.045,
+      "price": 237.93,
       "sd": 0.551,
       "maxdrawdown": 0.348,
       "sharpe": 1.1108,

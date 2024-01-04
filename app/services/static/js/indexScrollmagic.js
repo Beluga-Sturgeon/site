@@ -8,3 +8,6 @@ const scene = new ScrollMagic.Scene({
 })
 // .addIndicators()
 .addTo(controller);
+scene.on('end', () => {
+    $('.card').toggleClass('hide');
+});
