@@ -33,12 +33,12 @@ class constants():
     GET_TICKER_INFO_ENDING= "/getInfo/"
     GET_NEWS_ENDING= "/getNews/"
     GET_FINANCIALS_ENDING= "/getFinancials/"
-    STATS_FILE_PATH = r'app\services\gbm-drl-quant\res\stats'
-    LOG_FILE_PATH = r'app\services\gbm-drl-quant\res\log'
+    STATS_FILE_PATH = r'app/services/gbm-drl-quant/res/stats'
+    LOG_FILE_PATH = r'app/services/gbm-drl-quant/res/log'
     DIRECTORY_PATH = "app/services/gbm-drl-quant"
 
     # Define the command you want to execute
-    QUANT_COMMAND = ".\\exec test {} .\\models\\checkpoint"
+    QUANT_COMMAND = "./exec test {} ./models/checkpoint"
 
 
 class emailvars():
@@ -300,7 +300,7 @@ def getPriceChangeStr(ticker:str) ->str:
 
 
 def readstats():
-    file_path = r'app\services\gbm-drl-quant\res\stats'
+    file_path = constants.STATS_FILE_PATH
 
     # Read the data from the file
     with open(file_path, 'r') as file:
@@ -314,7 +314,7 @@ def readstats():
     return df
 
 def readlog(lastonly=False):
-    log_file_path = r'app\services\gbm-drl-quant\res\log'
+    log_file_path = constants.LOG_FILE_PATH
 
     # Read the last line of the log file when lastonly is True
     if lastonly:
@@ -402,7 +402,7 @@ def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
     }
 
     print(sorted_dailydict)
-    with open("app\services\daily.json", "w") as file:
+    with open("app/services/daily.json", "w") as file:
         json.dump(sorted_dailydict, file, indent=2) 
 
 
@@ -410,7 +410,7 @@ def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
 def get_daily(Today=False):
     """Returns the daily dictionary of tickers accessed. If `today` is True, will only return those from the current day."""
     try:
-        with open("app\services\daily.json", "r") as file:
+        with open("app/services/daily.json", "r") as file:
             dailydict = json.load(file)
             if not dailydict:
                 return None
@@ -618,7 +618,10 @@ def getStats(companyTicker:str):
 
 @app.route("/data/<string:companyTicker>")
 def data(companyTicker:str):
-    # runtest(ticker=companyTicker)
+
+    #runs the model
+    runtest(ticker=companyTicker)
+    
     log = readlog(lastonly=True)
     if log.iloc[0]["action"] == 0:
         action = "SHORT"
