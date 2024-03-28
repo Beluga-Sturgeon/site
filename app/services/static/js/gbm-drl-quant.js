@@ -100,7 +100,13 @@ async function updateActionBox() {
 
     // Update the elements with the data
     recommendedActionElement.textContent = data.action;
-    annualizedReturnElement.textContent = data.e_a_r;
+    annualizedReturnElement.textContent = `${data.e_a_r * 100}%`;
+    if (data.e_a_r < 0) {
+        annualizedReturnElement.classList.add("negative")
+    }
+    else {
+        annualizedReturnElement.classList.add("positive")
+    }
     stdReturnElement.textContent = data.std;
     sharpeRatioElement.textContent = data.sharperatio;
     maxDrawdownElement.textContent = data.maxdrawdown;

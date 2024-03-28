@@ -620,7 +620,7 @@ def getStats(companyTicker:str):
 def data(companyTicker:str):
 
     #runs the model
-    runtest(ticker=companyTicker)
+    #runtest(ticker=companyTicker)
     
     log = readlog(lastonly=True)
     if log.iloc[0]["action"] == 0:
@@ -676,8 +676,8 @@ def data(companyTicker:str):
         },
         newsList = scrapeNews(companyTicker),
         action= action,
-        e_a_r = e_a_r,
-        std = std,
+        e_a_r = str(e_a_r * 100) + "%",
+        std = str(std* 100 ) + "%",
         sharperatio=sharperatio,
         maxdrawdown=maxdrawdown,
     )

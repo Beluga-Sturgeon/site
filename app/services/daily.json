@@ -1,9 +1,9 @@
 {
-  "2024-03-27": {
+  "2024-03-28": {
     "AAPL": {
       "times_accessed": 1,
       "action": "LONG",
-      "price": 173.31,
+      "price": 171.15,
       "sd": 0.551,
       "maxdrawdown": 0.348,
       "sharpe": 1.1108,
