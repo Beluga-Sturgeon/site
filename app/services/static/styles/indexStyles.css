@@ -390,6 +390,12 @@ i {
     color: white;
 }
 
+
+
+div.details p {
+    color: white;
+}
+
 .card {
     position: relative;
     left: 5%;

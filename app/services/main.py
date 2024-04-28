@@ -14,6 +14,7 @@ import pandas as pd
 import subprocess
 from datetime import datetime, timedelta
 import itertools
+from collections import OrderedDict
 server = gunicorn.SERVER
 
 
@@ -369,7 +370,6 @@ def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
     
     """
 
-
     current_date = datetime.today()
     current_date_string = current_date.strftime('%Y-%m-%d')
     try:
@@ -378,9 +378,9 @@ def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
     except FileNotFoundError:
         print("FILE NOT FOUND")
         dailydict = {}
-
+    print(dailydict)
     if current_date_string not in dailydict:
-        print("CREATING NEW DATE ENTRY")
+        print("CREATING NEW DATE ENTRY FOR " + current_date_string)
         dailydict[current_date_string] = {}
     if ticker not in dailydict[current_date_string].keys():
         dailydict[current_date_string][ticker] = {
@@ -620,7 +620,7 @@ def getStats(companyTicker:str):
 def data(companyTicker:str):
 
     #runs the model
-    #runtest(ticker=companyTicker)
+    runtest(ticker=companyTicker)
     
     log = readlog(lastonly=True)
     if log.iloc[0]["action"] == 0:
