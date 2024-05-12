@@ -1,22 +1,13 @@
 {
-  "2024-04-28": {
+  "2024-05-12": {
     "AAPL": {
-      "times_accessed": 2,
-      "action": "LONG",
-      "price": 169.3,
-      "sd": 0.551,
-      "maxdrawdown": 0.348,
-      "sharpe": 1.1108,
-      "e_a_r": 0.6121
-    },
-    "TSLA": {
       "times_accessed": 1,
       "action": "LONG",
-      "price": 168.29,
-      "sd": 0.551,
-      "maxdrawdown": 0.348,
-      "sharpe": 1.1108,
-      "e_a_r": 0.6121
+      "price": 183.05,
+      "sd": 0.5137,
+      "maxdrawdown": 0.4653,
+      "sharpe": 1.1729,
+      "e_a_r": 0.6025
     }
   }
 }
