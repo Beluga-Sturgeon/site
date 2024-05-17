@@ -15,8 +15,11 @@ import subprocess
 from datetime import datetime, timedelta
 import itertools
 from collections import OrderedDict
-server = gunicorn.SERVER
 
+from firebase import firebase
+from firebase_admin import db  
+
+server = gunicorn.SERVER
 
 class constants():
     FMP_API_KEY = "b0446da02c01a0943a01730dc2343e34"
@@ -27,6 +30,8 @@ class constants():
 
     API_URL          = "https://Foresightapi.herokuapp.com"
     REQ_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0'}
+
+    FB_DB = 'https://beluga-sturgeon-financial-default-rtdb.firebaseio.com/'
 
 
 
@@ -41,6 +46,8 @@ class constants():
     # Define the command you want to execute
     QUANT_COMMAND = "./exec test {} ./models/checkpoint"
 
+
+firebase = firebase.FirebaseApplication(constants.FB_DB, None)
 
 class emailvars():
     EMAILREGEX            = '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -372,55 +379,46 @@ def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
 
     current_date = datetime.today()
     current_date_string = current_date.strftime('%Y-%m-%d')
-    try:
-        with open("daily.json", "r") as file:
-            dailydict = json.load(file)
-    except FileNotFoundError:
-        print("FILE NOT FOUND")
-        dailydict = {}
-    print(dailydict)
-    if current_date_string not in dailydict:
-        print("CREATING NEW DATE ENTRY FOR " + current_date_string)
-        dailydict[current_date_string] = {}
-    if ticker not in dailydict[current_date_string].keys():
-        dailydict[current_date_string][ticker] = {
-            'times_accessed':0,
+
+    daily_log = firebase.get('/daily/' + current_date_string, None)
+    
+    # If the current date doesn't exist in the daily log, create it
+    print(daily_log)
+    if not daily_log:
+        daily_log = {}
+    
+    # If the ticker doesn't exist for the current date, create it
+    if ticker not in daily_log:
+        daily_log[ticker] = {
+            'times_accessed': 0,
             'action': action,
-            'price':price,
-            'sd':sd,
-            'maxdrawdown':maxdrawdown,
-            'sharpe':sharpe,
-            'e_a_r':e_a_r
-            }
-
-    dailydict[current_date_string][ticker]['times_accessed'] += 1
-
-    # Sort the dictionary by 'times_accessed' before dumping
-    sorted_dailydict = {
-        date: {ticker: data for ticker, data in sorted(entries.items(), key=lambda x: x[1]['times_accessed'], reverse=True)}
-        for date, entries in dailydict.items()
-    }
-
-    print(sorted_dailydict)
-    with open("app/services/daily.json", "w") as file:
-        json.dump(sorted_dailydict, file, indent=2) 
+            'price': price,
+            'sd': sd,
+            'maxdrawdown': maxdrawdown,
+            'sharpe': sharpe,
+            'e_a_r': e_a_r
+        }
+    
+    # Increment times_accessed for the ticker
+    daily_log[ticker]['times_accessed'] += 1
+    
+    # Sort the dictionary by 'times_accessed' (we assume the sorting will be done locally)
+    sorted_daily_log = sorted(daily_log.items(), key=lambda x: x[1]['times_accessed'], reverse=True)
+    sorted_daily_log_dict = {ticker: data for ticker, data in sorted_daily_log}
+    
+    # Update the daily log in the database
+    firebase.put('/daily', current_date_string, sorted_daily_log_dict)
 
 
 
 def get_daily(Today=False):
     """Returns the daily dictionary of tickers accessed. If `today` is True, will only return those from the current day."""
-    try:
-        with open("app/services/daily.json", "r") as file:
-            dailydict = json.load(file)
-            if not dailydict:
-                return None
-            if Today:
-                if datetime.today().strftime('%Y-%m-%d') in dailydict.keys():
-                    return dailydict[datetime.today().strftime('%Y-%m-%d')]
-                return None
-            return dailydict
-    except FileNotFoundError:
-        raise FileNotFoundError
+
+    res = firebase.get('/daily', None)
+    if Today:
+        if datetime.today().strftime('%Y-%m-%d') in res.keys():
+            return res[datetime.today().strftime('%Y-%m-%d')]
+    return None
 
 
 

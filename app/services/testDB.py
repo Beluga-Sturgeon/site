@@ -7,7 +7,6 @@ firebase = firebase.FirebaseApplication('https://beluga-sturgeon-financial-defau
 
 
 
-firebase.put("/names", "jenny", "cooks")
 
 result = firebase.get('/', None)
 print(result)
