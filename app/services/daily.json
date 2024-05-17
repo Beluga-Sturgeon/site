@@ -1,13 +1,13 @@
 {
-  "2024-05-12": {
-    "NVDA": {
+  "2024-05-16": {
+    "TSLA": {
       "times_accessed": 1,
       "action": "LONG",
-      "price": 898.78,
-      "sd": 1.038,
-      "maxdrawdown": 0.8025,
-      "sharpe": 0.6274,
-      "e_a_r": 0.6512
+      "price": 174.84,
+      "sd": 1.341,
+      "maxdrawdown": 0.5365,
+      "sharpe": 0.5168,
+      "e_a_r": 0.693
     }
   }
 }
