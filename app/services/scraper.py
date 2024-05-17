@@ -1,5 +1,4 @@
-import constants
-import yfinance as yf   
+import constants   
 import requests
 import pandas as pd
 import json
