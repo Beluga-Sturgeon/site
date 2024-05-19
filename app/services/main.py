@@ -484,6 +484,10 @@ def apps():
 def about():
     return render_template("./aboutUs.html")
 
+@app.route("/login")
+def login():
+    return render_template("./login.html")
+
 @app.route("/legal")
 def legal():
     return render_template("./legal.html")

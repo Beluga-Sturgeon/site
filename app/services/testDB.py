@@ -1,12 +1,14 @@
-# Import database module.
-from firebase import firebase
+from firebase_admin import credentials, auth, initialize_app
 
 
-firebase = firebase.FirebaseApplication('https://beluga-sturgeon-financial-default-rtdb.firebaseio.com/', None)
+cred = credentials.Certificate('/Users/benjaminbeer/Downloads/beluga-sturgeon-financial-firebase-adminsdk-8lplv-9aa94af3ad.json')
+initialize_app(cred)
+auth_service = auth
 
-
-
-
-
-result = firebase.get('/', None)
-print(result)
+email = "jane@gmail.com"
+password = "doedoe"
+try:
+    user = auth_service.create_user(email=email, password=password)
+    print("Successfully created user:", user.uid)
+except ValueError as e:
+    print("Error creating user:", e)
