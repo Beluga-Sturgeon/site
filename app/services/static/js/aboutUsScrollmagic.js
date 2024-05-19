@@ -11,21 +11,19 @@ for (var i=0; i<slides.length; i++) {
     .setPin(slides[i], {pushFollowers: false})
     .addTo(controller);
 
-    if (i > 0) {
-        currentScene.on("enter", function (event) {
-            var currentPanel = event.target.triggerElement();
-            var previousPanel = currentPanel.previousElementSibling;
-            if (previousPanel) {
-                previousPanel.classList.add("hide");
-            }
-        });
+    currentScene.on("enter", function (event) {
+        var currentPanel = event.target.triggerElement().parentElement;
+        var previousPanel = currentPanel.previousElementSibling;
+        if (previousPanel) {
+            previousPanel.style.opacity = 0;
+        }
+    });
 
-        currentScene.on("leave", function (event) {
-            var currentPanel = event.target.triggerElement();
-            var previousPanel = currentPanel.previousElementSibling;
-            if (previousPanel) {
-                previousPanel.classList.remove("hide");
-            }
-        });
-    }
+    currentScene.on("leave", function (event) {
+        var currentPanel = event.target.triggerElement().parentElement;
+        var previousPanel = currentPanel.previousElementSibling;
+        if (previousPanel) {
+            previousPanel.style.opacity = 1;
+        }
+    });
 }
