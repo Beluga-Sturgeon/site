@@ -13,7 +13,7 @@ form{
     height: 520px;
     width: 400px;
     transform: translate(calc(50vw - 200px), calc(50vh - 260px));
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.8);
     border-radius: 10px;
     backdrop-filter: blur(10px);
     border: 2px solid rgba(255,255,255,0.1);
@@ -26,6 +26,7 @@ form *{
     letter-spacing: 0.5px;
     outline: none;
     border: none;
+    text-decoration: none;
 }
 form h3{
     font-size: 32px;
@@ -77,13 +78,14 @@ button{
   background-color: #090A15;
   color: #eaf0fb;
   text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
 }
 .social div:hover{
   background-color: rgb(43, 59, 98);
 }
-.social .fb{
-  margin-left: 25px;
-}
+
 .social i{
   margin-right: 4px;
 }

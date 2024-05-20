@@ -1,8 +1,7 @@
 from firebase_admin import credentials, auth, initialize_app
+from main import constants
 
-
-cred = credentials.Certificate('/Users/benjaminbeer/Downloads/beluga-sturgeon-financial-firebase-adminsdk-8lplv-9aa94af3ad.json')
-initialize_app(cred)
+initialize_app(constants.FB_CRED)
 auth_service = auth
 
 auth_service = Flow.from_client_secrets_file()

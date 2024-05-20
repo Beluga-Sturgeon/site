@@ -43,21 +43,28 @@
         </div>
         
         <div>
-            <form>
-                <h3>Login Here</h3>
+            <form action="/login/create/submitted" method="post">
+                <h3>Create Account</h3>
         
-                <label for="username">Username</label>
-                <input type="text" placeholder="Email or Phone" id="username">
+                <label for="email">Email</label>
+                <input type="email" placeholder="Email" id="email" name="email">
         
                 <label for="password">Password</label>
-                <input type="password" placeholder="Password" id="password">
+                <input type="password" placeholder="Password" id="password" name="password">
         
-                <button>Cast Off</button>
-                <div class="social">
-                <div class="go"><i class="fab fa-google"></i><a href="/login/google">Google</a></div>
-                <div class="create"><a href="/login/create">Create Account</a></div>
-            </div>
+                <label for="password_repeat">Confirm Password</label>
+                <input type="password" placeholder="Confirm Password" id="password_repeat">
+        
+                <button type="submit">Create</button>
             </form>
         </div>
+        <script>
+        document.getElementById("create").onclick = function(e) {
+            if (document.getElementById("password").value !== document.getElementById("password_repeat").value) {
+                e.preventDefault();
+                alert("Passwords Do Not Match");
+            }
+        };
+        </script>
     </body>
 </html>

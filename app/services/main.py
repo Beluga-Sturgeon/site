@@ -1,3 +1,4 @@
+import pathlib
 from flask import Flask,render_template, request, session, redirect, url_for
 import requests
 from flask_mail import Mail, Message
@@ -15,10 +16,16 @@ import subprocess
 from datetime import datetime, timedelta
 import itertools
 from collections import OrderedDict
+from google.oauth2 import id_token
+from google_auth_oauthlib.flow import Flow
+from pip._vendor import cachecontrol
+import google.auth.transport.requests
 
 from firebase import firebase
 from firebase_admin import db  
+from firebase_admin import credentials, auth, initialize_app
 
+from app.services.secret_info import secretConstants
 server = gunicorn.SERVER
 
 class constants():
@@ -33,8 +40,6 @@ class constants():
 
     FB_DB = 'https://beluga-sturgeon-financial-default-rtdb.firebaseio.com/'
 
-
-
     VALIDATE_TICKER_ENDING= "/isTickerValid/"
     GET_TICKER_INFO_ENDING= "/getInfo/"
     GET_NEWS_ENDING= "/getNews/"
@@ -48,6 +53,9 @@ class constants():
 
 
 firebase = firebase.FirebaseApplication(constants.FB_DB, None)
+
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1" # to allow Http traffic for local dev
+initialize_app(secretConstants.FB_CRED)
 
 class emailvars():
     EMAILREGEX            = '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -488,6 +496,10 @@ def about():
 def login():
     return render_template("./login.html")
 
+@app.route("/login/create")
+def create_account():
+    return render_template("./createAccount.html")
+
 @app.route("/legal")
 def legal():
     return render_template("./legal.html")
@@ -685,7 +697,66 @@ def data(companyTicker:str):
     )
 
 
+app.secret_key = secretConstants.SECRET_KEY # make sure this matches with that's in client_secret.json
 
+@app.route("/login/google")
+def googleLogin():
+    authorization_url, state = secretConstants.flow.authorization_url()
+    session["state"] = state
+    return redirect(authorization_url)
+
+
+@app.route("/google-callback")
+def callback():
+    secretConstants.flow.fetch_token(authorization_response=request.url)
+
+    if not session["state"] == request.args["state"]:
+        abort(500)  # State does not match!
+
+    credentials = secretConstants.flow.credentials
+    request_session = requests.session()
+    cached_session = cachecontrol.CacheControl(request_session)
+    token_request = google.auth.transport.requests.Request(session=cached_session)
+
+    id_info = id_token.verify_oauth2_token(
+        id_token=credentials._id_token,
+        request=token_request,
+        audience=secretConstants.GOOGLE_CLIENT_ID
+    )
+
+    session["email"] = id_info.get("email")
+    session["name"] = id_info.get("name")
+    email = id_info.get("email")
+    name = id_info.get("name")
+
+    user = auth.get_user_by_email(email)
+    if not user:
+        user = auth.create_user(email=email, password=name)
+    return redirect(url_for("home"), uid=user.uid)
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/")
+
+@app.route("/login/create/submitted", methods=["GET", "POST"])
+def createAccount():
+    if request.method == "POST":
+        email = request.form['email']
+        password = request.form['password']
+        password_repeat = request.form['password_repeat']
+        print("works!")
+        print(email)
+        print(password)
+        if password != password_repeat:
+            return render_template("./createAccount.html")
+        try:
+            user = auth.create_user(email=email, password=password)
+            print(user.uid)
+            return redirect(url_for("home"), uid=user.uid)
+        except:
+            return render_template("./createAccount.html")
 
 if __name__ == '__main__':
     def run():
