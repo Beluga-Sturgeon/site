@@ -41,7 +41,11 @@
                 <a href="/#contact" class="btn">Contact</a>
             </div>
         </div>
-        
+        {% if err %}
+        <div class="error">
+            <text>{{err}}</text>
+        </div>
+        {% endif %}
         <div>
             <form action="/login/create/submitted" method="post">
                 <h3>Create Account</h3>
@@ -53,18 +57,11 @@
                 <input type="password" placeholder="Password" id="password" name="password">
         
                 <label for="password_repeat">Confirm Password</label>
-                <input type="password" placeholder="Confirm Password" id="password_repeat">
+                <input type="password" placeholder="Confirm Password" id="password_repeat" name="password_repeat">
         
                 <button type="submit">Create</button>
+                <button id="sign_in" type="button" href="/login">Sign In</button>
             </form>
         </div>
-        <script>
-        document.getElementById("create").onclick = function(e) {
-            if (document.getElementById("password").value !== document.getElementById("password_repeat").value) {
-                e.preventDefault();
-                alert("Passwords Do Not Match");
-            }
-        };
-        </script>
     </body>
 </html>

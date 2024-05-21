@@ -30,6 +30,7 @@ server = gunicorn.SERVER
 
 class constants():
     FMP_API_KEY = "b0446da02c01a0943a01730dc2343e34"
+    FIREBASE_API_KEY = "AIzaSyBnzb5SqamgMcTw99SY8oQebutm2S3bhuw"
     GOOGLE_FINANCE_URL = "https://www.google.com/finance/quote/"
     TRUE  = "true"
     FALSE = "false"
@@ -467,14 +468,14 @@ def home():
     if dailyactions:
         hotactions = dict(itertools.islice(dailyactions.items(), min(5, len(dailyactions))))
         print(hotactions)
-        return render_template("./index.html", hotactions=hotactions)
+        return render_template("./index.html", hotactions=hotactions, id=session.get("id", None), email=session.get("email", None))
     else:
         print("NO DAILY ACTIONS")
-        return render_template("./index.html", hotactions={})
+        return render_template("./index.html", hotactions={}, id=session.get("id", None), email=session.get("email", None))
 
 @app.route("/home")
 def home2():
-    return render_template("./index.html")
+    return render_template("./index.html", id=session.get("id", None), email=session.get("email", None))
 
 @app.route("/index")
 def home1():
@@ -729,10 +730,15 @@ def callback():
     email = id_info.get("email")
     name = id_info.get("name")
 
-    user = auth.get_user_by_email(email)
-    if not user:
+    user = None
+    try: 
+        user = auth.get_user_by_email(email)
+    except:
         user = auth.create_user(email=email, password=name)
-    return redirect(url_for("home"), uid=user.uid)
+    if user:
+        session["id"] = user.uid
+        session["email"] = user.email.split('@')[0]
+        return redirect(url_for("home"))
 
 
 @app.route("/logout")
@@ -746,17 +752,39 @@ def createAccount():
         email = request.form['email']
         password = request.form['password']
         password_repeat = request.form['password_repeat']
-        print("works!")
-        print(email)
-        print(password)
         if password != password_repeat:
-            return render_template("./createAccount.html")
+            return render_template("./createAccount.html", err="Passwords Don't Match!")
         try:
             user = auth.create_user(email=email, password=password)
-            print(user.uid)
-            return redirect(url_for("home"), uid=user.uid)
+            session["id"] = user.uid
+            session["email"] = user.email.split('@')[0]
+            return redirect(url_for("home"))
         except:
-            return render_template("./createAccount.html")
+            return render_template("./createAccount.html", err="Account exists")
+
+@app.route("/login/submitted", methods=["GET", "POST"])
+def signIn():
+    if request.method == "POST":
+        email = request.form['email']
+        password = request.form['password']
+        payload = json.dumps({
+        "email": email,
+        "password": password,
+        "returnSecureToken": True
+        })
+        rest_api_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword"
+        r = requests.post(rest_api_url,
+                        params={"key": constants.FIREBASE_API_KEY},
+                        data=payload)
+        reponse = r.json()
+        print(reponse)
+        if ('error' in reponse):
+            return render_template("./login.html", err=reponse['error']['message'])
+        else:
+            user = auth.get_user_by_email(email)
+            session["id"] = user.uid
+            session["email"] = user.email.split('@')[0]
+            return redirect(url_for("home"))
 
 if __name__ == '__main__':
     def run():

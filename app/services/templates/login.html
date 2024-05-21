@@ -41,18 +41,22 @@
                 <a href="/#contact" class="btn">Contact</a>
             </div>
         </div>
-        
+        {% if err %}
+        <div class="error">
+            <text>{{err}}</text>
+        </div>
+        {% endif %}
         <div>
-            <form>
+            <form action="/login/submitted" method="post">
                 <h3>Login Here</h3>
         
                 <label for="username">Username</label>
-                <input type="text" placeholder="Email or Phone" id="username">
+                <input type="text" placeholder="Email or Phone" id="email" name="email">
         
                 <label for="password">Password</label>
-                <input type="password" placeholder="Password" id="password">
+                <input type="password" placeholder="Password" id="password" name = "password">
         
-                <button>Cast Off</button>
+                <button type="submit">Cast Off</button>
                 <div class="social">
                 <div class="go"><i class="fab fa-google"></i><a href="/login/google">Google</a></div>
                 <div class="create"><a href="/login/create">Create Account</a></div>
