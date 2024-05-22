@@ -87,22 +87,16 @@ button{
 .social i{
   margin-right: 4px;
 }
-.error{
-  height: auto;
-  width: auto;
-  top: 70px;
-  left: 50%;
-  transform: translateX(-50%);  background-color: #FF0000;
-  color: #eaf0fb;
-  position: absolute;
-  text-align: center;
-  border-radius: 10px;
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255,255,255,0.1);
-  box-shadow: 0 0 40px rgba(8,7,16,0.6);
-}
+
 #sign_in{
   margin-top: 10px;
   transform: scale(0.6);
   filter: brightness(0.9);
+  padding: 5px 10px 10px 5px;
+  background-color: #090A15;
+  color: #080710;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
 }

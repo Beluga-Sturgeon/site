@@ -1,4 +1,5 @@
 import pathlib
+import smtplib
 from flask import Flask,render_template, request, session, redirect, url_for
 import requests
 from flask_mail import Mail, Message
@@ -20,6 +21,7 @@ from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
 import google.auth.transport.requests
+from dotenv import load_dotenv
 
 from firebase import firebase
 from firebase_admin import db  
@@ -27,6 +29,7 @@ from firebase_admin import credentials, auth, initialize_app
 
 from app.services.secret_info import secretConstants
 server = gunicorn.SERVER
+load_dotenv()
 
 class constants():
     FMP_API_KEY = "b0446da02c01a0943a01730dc2343e34"
@@ -468,14 +471,14 @@ def home():
     if dailyactions:
         hotactions = dict(itertools.islice(dailyactions.items(), min(5, len(dailyactions))))
         print(hotactions)
-        return render_template("./index.html", hotactions=hotactions, id=session.get("id", None), email=session.get("email", None))
+        return render_template("./index.html", hotactions=hotactions, session=session)
     else:
         print("NO DAILY ACTIONS")
-        return render_template("./index.html", hotactions={}, id=session.get("id", None), email=session.get("email", None))
+        return render_template("./index.html", hotactions={}, session=session)
 
 @app.route("/home")
 def home2():
-    return render_template("./index.html", id=session.get("id", None), email=session.get("email", None))
+    return render_template("./index.html", session=session)
 
 @app.route("/index")
 def home1():
@@ -500,6 +503,11 @@ def login():
 @app.route("/login/create")
 def create_account():
     return render_template("./createAccount.html")
+
+@app.route("/account")
+def account():
+    session["user"] = userToDict(auth.get_user_by_email(session.get("user").get("email")))
+    return render_template("./account.html", session=session)
 
 @app.route("/legal")
 def legal():
@@ -700,6 +708,15 @@ def data(companyTicker:str):
 
 app.secret_key = secretConstants.SECRET_KEY # make sure this matches with that's in client_secret.json
 
+
+def userToDict(user):
+    return {
+        'uid': user.uid,
+        'email': user.email,
+        'email_verified': user.email_verified,
+        'name': user.email.split("@")[0],
+    }
+
 @app.route("/login/google")
 def googleLogin():
     authorization_url, state = secretConstants.flow.authorization_url()
@@ -736,8 +753,7 @@ def callback():
     except:
         user = auth.create_user(email=email, password=name)
     if user:
-        session["id"] = user.uid
-        session["email"] = user.email.split('@')[0]
+        session["user"] = userToDict(user)
         return redirect(url_for("home"))
 
 
@@ -756,11 +772,20 @@ def createAccount():
             return render_template("./createAccount.html", err="Passwords Don't Match!")
         try:
             user = auth.create_user(email=email, password=password)
-            session["id"] = user.uid
-            session["email"] = user.email.split('@')[0]
+            session["user"] = userToDict(user)
+            # Generate email verification 
+            link = auth.generate_email_verification_link(email, action_code_settings=None)
+            msg = Message(
+                subject="No Reply",
+                recipients=[email],
+                body=f"{link}"
+            )
+            msg.sender = emailvars.EMAIL
+            mail.send(msg)
             return redirect(url_for("home"))
-        except:
-            return render_template("./createAccount.html", err="Account exists")
+        except Exception as e:
+            return render_template("./createAccount.html", err=str(e))
+        
 
 @app.route("/login/submitted", methods=["GET", "POST"])
 def signIn():
@@ -782,9 +807,38 @@ def signIn():
             return render_template("./login.html", err=reponse['error']['message'])
         else:
             user = auth.get_user_by_email(email)
-            session["id"] = user.uid
-            session["email"] = user.email.split('@')[0]
+            session["user"] = userToDict(user)
             return redirect(url_for("home"))
+        
+@app.route("/send-verification", methods=["GET", "POST"])
+def sendVerification():
+    email = session["user"].get("email")
+    # Generate email verification 
+    link = auth.generate_email_verification_link(email, action_code_settings=None)
+    msg = Message(
+        subject="No Reply",
+        recipients=[email],
+        body=f"Please verify your email following this link: {link}"
+    )
+    msg.sender = emailvars.EMAIL
+    mail.send(msg)
+    session["user"] = userToDict(auth.get_user_by_email(email))
+    return render_template("./account.html", session=session, message="Verification Sent!")
+
+@app.route("/reset-password", methods=["GET", "POST"])
+def resetPassword():
+    email = session["user"].get("email")
+    # Generate email verification 
+    link = auth.generate_password_reset_link(email, action_code_settings=None)
+    msg = Message(
+        subject="No Reply",
+        recipients=[email],
+        body=f"Reset password here: {link}"
+    )
+    msg.sender = emailvars.EMAIL
+    mail.send(msg)
+    session["user"] = userToDict(auth.get_user_by_email(email))
+    return render_template("./account.html", session=session, message="Check Your Email!")
 
 if __name__ == '__main__':
     def run():
