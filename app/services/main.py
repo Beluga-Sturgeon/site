@@ -1,5 +1,7 @@
 import pathlib
+import random
 import smtplib
+import string
 from flask import Flask,render_template, request, session, redirect, url_for
 import requests
 from flask_mail import Mail, Message
@@ -506,7 +508,6 @@ def create_account():
 
 @app.route("/account")
 def account():
-    session["user"] = userToDict(auth.get_user_by_email(session.get("user").get("email")))
     return render_template("./account.html", session=session)
 
 @app.route("/legal")
@@ -708,7 +709,7 @@ def data(companyTicker:str):
 
 app.secret_key = secretConstants.SECRET_KEY # make sure this matches with that's in client_secret.json
 
-
+# Helper method to change firebase_auth user object to dict
 def userToDict(user):
     return {
         'uid': user.uid,
@@ -716,52 +717,44 @@ def userToDict(user):
         'email_verified': user.email_verified,
         'name': user.email.split("@")[0],
     }
-
+# Redirect user to google login
 @app.route("/login/google")
 def googleLogin():
     authorization_url, state = secretConstants.flow.authorization_url()
     session["state"] = state
     return redirect(authorization_url)
 
-
+# Process information from google login
 @app.route("/google-callback")
 def callback():
     secretConstants.flow.fetch_token(authorization_response=request.url)
-
-    if not session["state"] == request.args["state"]:
-        abort(500)  # State does not match!
 
     credentials = secretConstants.flow.credentials
     request_session = requests.session()
     cached_session = cachecontrol.CacheControl(request_session)
     token_request = google.auth.transport.requests.Request(session=cached_session)
-
     id_info = id_token.verify_oauth2_token(
         id_token=credentials._id_token,
         request=token_request,
         audience=secretConstants.GOOGLE_CLIENT_ID
     )
 
-    session["email"] = id_info.get("email")
-    session["name"] = id_info.get("name")
     email = id_info.get("email")
-    name = id_info.get("name")
 
     user = None
     try: 
         user = auth.get_user_by_email(email)
     except:
-        user = auth.create_user(email=email, password=name)
+        user = auth.create_user(email=email, password=''.join(random.choices(string.ascii_uppercase + string.digits, k=6)))
     if user:
         session["user"] = userToDict(user)
         return redirect(url_for("home"))
-
-
+# Clears session
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/")
-
+# Create account from account creation page & send verification email
 @app.route("/login/create/submitted", methods=["GET", "POST"])
 def createAccount():
     if request.method == "POST":
@@ -785,8 +778,7 @@ def createAccount():
             return redirect(url_for("home"))
         except Exception as e:
             return render_template("./createAccount.html", err=str(e))
-        
-
+# Log user in based on email and password
 @app.route("/login/submitted", methods=["GET", "POST"])
 def signIn():
     if request.method == "POST":
@@ -797,6 +789,7 @@ def signIn():
         "password": password,
         "returnSecureToken": True
         })
+        # Create request to verify firebase user
         rest_api_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword"
         r = requests.post(rest_api_url,
                         params={"key": constants.FIREBASE_API_KEY},
@@ -809,7 +802,7 @@ def signIn():
             user = auth.get_user_by_email(email)
             session["user"] = userToDict(user)
             return redirect(url_for("home"))
-        
+# Resends verification email when link on account page is clicked
 @app.route("/send-verification", methods=["GET", "POST"])
 def sendVerification():
     email = session["user"].get("email")
@@ -824,7 +817,7 @@ def sendVerification():
     mail.send(msg)
     session["user"] = userToDict(auth.get_user_by_email(email))
     return render_template("./account.html", session=session, message="Verification Sent!")
-
+# Sends reset password email when clicked (TODO: add to login screen with seperate page for entering the email)
 @app.route("/reset-password", methods=["GET", "POST"])
 def resetPassword():
     email = session["user"].get("email")
