@@ -24,3 +24,8 @@ soupsieve==2.5
 tzdata==2024.1
 urllib3==2.2.1
 Werkzeug==3.0.1
+google-auth-oauthlib==1.0.0
+google==3.0.0
+python-dotenv==1.0.0
+firebase==4.0.1
+firebase_admin==6.1.0
