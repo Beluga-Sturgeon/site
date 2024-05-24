@@ -1,7 +1,3 @@
-import pathlib
-import random
-import smtplib
-import string
 from flask import Flask,render_template, request, session, redirect, url_for
 import requests
 from flask_mail import Mail, Message
@@ -19,56 +15,24 @@ import subprocess
 from datetime import datetime, timedelta
 import itertools
 from collections import OrderedDict
-from google.oauth2 import id_token
-from google_auth_oauthlib.flow import Flow
-from pip._vendor import cachecontrol
-import google.auth.transport.requests
-from dotenv import load_dotenv
 
 from firebase import firebase
 from firebase_admin import db  
-from firebase_admin import credentials, auth, initialize_app
+from celery import Celery
+from celery.schedules import crontab
 
-from app.services.secret_info import secretConstants
+
+#FILE IMPORTS
+from app.services.cnst import constants, emailvars
+from app.services.scraper import *
+from app.services.helperfunctions import *
+from app.services.fmpRequester import *
+from app.services.readlog import *
+
+
 server = gunicorn.SERVER
-load_dotenv()
-
-class constants():
-    FMP_API_KEY = "b0446da02c01a0943a01730dc2343e34"
-    FIREBASE_API_KEY = "AIzaSyBnzb5SqamgMcTw99SY8oQebutm2S3bhuw"
-    GOOGLE_FINANCE_URL = "https://www.google.com/finance/quote/"
-    TRUE  = "true"
-    FALSE = "false"
-
-
-    API_URL          = "https://Foresightapi.herokuapp.com"
-    REQ_HEADER = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0'}
-
-    FB_DB = 'https://beluga-sturgeon-financial-default-rtdb.firebaseio.com/'
-
-    VALIDATE_TICKER_ENDING= "/isTickerValid/"
-    GET_TICKER_INFO_ENDING= "/getInfo/"
-    GET_NEWS_ENDING= "/getNews/"
-    GET_FINANCIALS_ENDING= "/getFinancials/"
-    STATS_FILE_PATH = r'app/services/gbm-drl-quant/res/stats'
-    LOG_FILE_PATH = r'app/services/gbm-drl-quant/res/log'
-    DIRECTORY_PATH = "app/services/gbm-drl-quant"
-
-    # Define the command you want to execute
-    QUANT_COMMAND = "./exec test {} ./models/checkpoint"
-
 
 firebase = firebase.FirebaseApplication(constants.FB_DB, None)
-
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1" # to allow Http traffic for local dev
-initialize_app(secretConstants.FB_CRED)
-
-class emailvars():
-    EMAILREGEX            = '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-    EMAIL                 = os.getenv("EMAIL")
-    SENDTOEMAIL           = os.getenv("SENDTOEMAIL")
-    EMAILPASSWORD         = os.getenv("EMAILPASSWORD")
-    PORT                  = 465  # For SSL
 
 def createApp():
     app = Flask(
@@ -77,13 +41,6 @@ def createApp():
     static_folder=r"static"
     )
     return app
-
-
-def get_jsonparsed_data(url):
-
-    response = urlopen(url, cafile=certifi.where())
-    data = response.read().decode("utf-8")
-    return json.loads(data)
 
 app = createApp()
 
@@ -94,278 +51,14 @@ app.config.update(dict(
     MAIL_USE_SSL = False,
     MAIL_USERNAME = emailvars.EMAIL,
     MAIL_PASSWORD = emailvars.EMAILPASSWORD,
+    CELERY_BROKER_URL = 'redis://localhost:6379/0',
+    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 ))
 
 
+
+
 mail = Mail(app)
-
-
-
-def isTickerValid(ticker:str) -> bool:
-    fmp_url = f"https://financialmodelingprep.com/api/v3/financial-statement-symbol-lists?apikey={constants.FMP_API_KEY}"
-    alltickers = get_jsonparsed_data(fmp_url)
-    return ticker in alltickers
-
-
-def getInfo(ticker:str) -> dict:
-    data = requests.get(constants.API_URL + constants.GET_TICKER_INFO_ENDING + ticker, headers=constants.REQ_HEADER).json()
-    return data
-
-def getFinancials(ticker:str) -> dict:
-    data = requests.get(constants.API_URL + constants.GET_FINANCIALS_ENDING + ticker, headers=constants.REQ_HEADER).json()
-    return data
-
-def getNews(ticker:str) ->list[dict]:
-    data = requests.get(constants.API_URL + constants.GET_NEWS_ENDING + ticker, headers=constants.REQ_HEADER).json()
-    return data
-
-def human_format(num):
-    num = float('{:.3g}'.format(num))
-    magnitude = 0
-    while abs(num) >= 1000:
-        magnitude += 1
-        num /= 1000.0
-    return '{}{}'.format('{:f}'.format(num).rstrip('0').rstrip('.'), ['', 'K', 'M', 'B', 'T'][magnitude])
-
-
-def scrapeMarketStatus(soup:BeautifulSoup) ->str:
-    "Scrapes google finance page for the close and open date."
-    return re.sub("Disclaimer$", "", soup.find('div', {"class":"ygUjEc","jsname":"Vebqub"}).text)
-
-def scrapeCompanyName(soup:BeautifulSoup) ->str:
-    "Scrapes google finance page for the close and open date."
-    return re.sub("Disclaimer$", "", soup.find('div', {"class":"zzDege"}).text)
-  
-
-def getScrapingURL(ticker:str)->str:
-    """Finds exchanger ending for scraping on google finance. Example:\n 
-    >>> getScrapingURL('MSFT')
-    >>> https://www.google.com/finance/quote/MSFT:NASDAQ"""
-    data = requests.get(f'{constants.GOOGLE_FINANCE_URL}{ticker}', headers=constants.REQ_HEADER).text
-    soup = BeautifulSoup(data, 'lxml')
-    parentList = soup.find("ul", {"class":["sbnBtf xJvDsc ANokyb"]})
-    url = parentList.find("a")["href"] ##finds the first option link, and retuns it.
-    exchanger = url[url.index(":") + 1:]
-    return f"{constants.GOOGLE_FINANCE_URL}{ticker}:{exchanger}"
-
-
-def scrapeNews(ticker:str) -> dict:
-    """Scrapes the news articles off of {constants.GOOGLE_FINANCE_URL}{ticker} in the form of a dictionary
-    EXAPMLE:
-    {'articles': [{'date': '18 hours ago',
-               'link': 'https://www.cnbc.com/2022/07/20/microsoft-eases-up-on-hiring-as-economic-concerns-hit-more-of-the-tech-industry.html',
-               'publisher': 'CNBC',
-               'title': 'Microsoft eases up on hiring as economic concerns hit '
-                        'more of the tech \n'
-                        'industry'},
-              {'date': '2 days ago',
-               'link': 'https://www.barrons.com/articles/microsoft-stock-recession-analyst-price-target-51658230843',
-               'publisher': "Barron's",
-               'title': "Microsoft Stock Is a 'Good Place to Hide.' This "
-                        'Analyst CutsPrice Target \n'
-                        'Anyway.'},
-              {'date': '18 hours ago',
-               'link': 'https://www.bloomberg.com/news/articles/2022-07-20/microsoft-cuts-many-open-job-listings-in-weakening-economy',
-               'publisher': 'Bloomberg.com',
-               'title': 'Microsoft Cuts Many Open Job Listings in Weakening '
-                        'Economy'},
-              {'date': '16 hours ago',
-               'link': 'https://money.usnews.com/investing/news/articles/2022-07-20/microsoft-teams-down-for-thousands-of-users-downdetector',
-               'publisher': 'US News Money',
-               'title': 'Microsoft Teams Back up for Most Users After Global '
-                        'Outage'},
-              {'date': '1 week ago',
-               'link': 'https://seekingalpha.com/article/4523194-microsoft-buy-before-q4-earnings',
-               'publisher': 'Seeking Alpha',
-               'title': 'Microsoft Stock: A Buy Before Q4 Earnings '
-                        '(NASDAQ:MSFT)'},
-              {'date': '20 hours ago',
-               'link': 'https://www.tipranks.com/news/article/microsoft-stock-fx-headwinds-likely-to-persist-says-analyst/',
-               'publisher': 'TipRanks',
-               'title': 'Microsoft Stock: FX Headwinds Likely to Persist, Says '
-                        'Analyst'},
-              {'date': '1 day ago',
-               'link': 'https://finbold.com/citi-analyst-views-microsoft-as-a-solid-recession-proof-stock/',
-               'publisher': 'Finbold',
-               'title': 'Citi analyst views Microsoft as a solid '
-                        'recession-proof stock'}]}"""
-    
-    fmp_url = f"https://financialmodelingprep.com/api/v3/stock_news?tickers={ticker}&page=0&apikey={constants.FMP_API_KEY}"
-    data = get_jsonparsed_data(fmp_url)
-
-    count = 0
-    articles = {}
-    articlelist = []
-    for i in data:
-        if count > 4:
-            break
-        articlelist.append(
-            {
-                'date': i["publishedDate"],
-                'title':i["title"],
-                'publisher':i["site"],
-                'link':i["url"]
-            }
-        )
-        count += 1
-    
-    articles["articles"] = articlelist
-    return articles
-
-
-
-def scrapeCompanyDesc(soup:BeautifulSoup) ->str:
-    try:
-        return re.sub("\. Wikipedia$","",soup.find("div", {"class":"bLLb2d"}).text)
-    except:
-        return "No Description available"
-
-def getFloat(num:str) ->float:
-    """Returns the float of a number containing symbols
-    >>> getFloat('$262.27')
-    >>> 262.27"""
-    return float(re.sub("[$,]", "", num))
-
-def scrapePrice(soup:BeautifulSoup):
-    return soup.find("div", {"class":["YMlKec fxKbKc"]}).text
-
-def scrapePrevClose(soup:BeautifulSoup):
-    return soup.find("div", {"class":"P6K39c"}).text
-
-def scrapeIncomeStatement(ticker:str) ->dict:
-    """returns values in {value:xx, change:xx}"""
-    incomeStatement = {}
-    fmp_url = f"https://financialmodelingprep.com/api/v3/income-statement/{ticker}?period=quarter&limit=120&apikey={constants.FMP_API_KEY}"
-    data = get_jsonparsed_data(fmp_url)
-
-    try:
-        latest, older = data[-1], data[-2]
-    except:
-        latest, older = data[-1], data[-1]
-        
-    for key in latest.keys():
-        new, old = latest[key], older[key]
-        try:
-            change = (new - old) / old * 100
-            if change > 0:
-                incomeStatement[key] = {"value":human_format(latest[key]), "change":"+%.2f%%"%(change)}
-            else:
-                incomeStatement[key] = {"value":human_format(latest[key]), "change":"%.2f%%"%(change)}
-        except:
-            pass
-    return incomeStatement
-
-
-
-def scrapeBalanceSheet(ticker:str) ->dict:
-    """returns values in {value:xx, change:xx}"""
-    balanceSheet = {}
-    fmp_url = f"https://financialmodelingprep.com/api/v3/balance-sheet-statement/{ticker}?period=quarter&limit=120&apikey={constants.FMP_API_KEY}"
-    data = get_jsonparsed_data(fmp_url)
-
-    try:
-        latest, older = data[-1], data[-2]
-    except:
-        latest, older = data[-1], data[-1]
-
-    for key in latest.keys():
-        new, old = latest[key], older[key]
-        try:
-            change = (new - old) / old * 100 
-            if change > 0:
-                balanceSheet[key] = {"value":human_format(latest[key]), "change":"+%.2f%%"%(change)}
-            else:
-                balanceSheet[key] = {"value":human_format(latest[key]), "change":"%.2f%%"%(change)}
-        except:
-            pass
-    return balanceSheet
-
-def scrapeCashFlow(ticker:str) ->dict:
-    """returns values in {value:xx, change:xx}"""
-    cashflow = {}
-    fmp_url = f"https://financialmodelingprep.com/api/v3/cash-flow-statement/{ticker}?period=quarter&limit=120&apikey={constants.FMP_API_KEY}"
-    data = get_jsonparsed_data(fmp_url)
-
-    try:
-        latest, older = data[-1], data[-2]
-    except:
-        latest, older = data[-1], data[-1]
-
-    for key in latest.keys():
-        new, old = latest[key], older[key]
-        try:
-            change = (new - old) / old * 100
-            if change > 0:
-                cashflow[key] = {"value":human_format(latest[key]), "change":"+%.2f%%"%(change)}
-            else:
-                cashflow[key] = {"value":human_format(latest[key]), "change":"%.2f%%"%(change)}
-        except:
-            pass
-    return cashflow
-
-
-
-def scrapeCompanyLogo(companyWebsite:str):
-    "Returns link to company logo given company website url"
-    return constants.LOGO_CLEARBIT_URL + companyWebsite
-
-
-def getPriceChangeStr(ticker:str) ->str:
-    """Gves string that shows difference, and percent difference along wth a label.. Example:\n
-    >>> getPriceChangeStr(12, 10, 'difference'))\n
-    >>> '+2.00 (20.0%) difference'"""
-    fmp_url = (f"https://financialmodelingprep.com/api/v3/stock-price-change/{ticker}?apikey={constants.FMP_API_KEY}")
-    data = get_jsonparsed_data(fmp_url)
-    daychange = data[0]["1D"]
-
-    return str(daychange) + "%"
-
-
-def readstats():
-    file_path = constants.STATS_FILE_PATH
-
-    # Read the data from the file
-    with open(file_path, 'r') as file:
-        lines = file.readlines()
-
-    # Split the first line by commas
-    data = lines[0].strip().split(',')
-
-    # Create a DataFrame from the data
-    df = pd.DataFrame([data], columns=["Ticker", "Annualized Return benchmark", "Stdev of Returns benchmark", "Shape Ratio benchmark", "Maximum Drawdown benchmark", "Annualized Return model", "Stdev of Returns model", "Sharpe Ratio model", "Maximum Drawdown model"])
-    return df
-
-def readlog(lastonly=False):
-    log_file_path = constants.LOG_FILE_PATH
-
-    # Read the last line of the log file when lastonly is True
-    if lastonly:
-        with open(log_file_path, 'r') as file:
-            lines = file.readlines()
-            columns = ["X", "SPY", "IEF", "GSG", "EUR=X", "action", "benchmark", "model"]
-            data = [lines[-1].split(',')]
-            data[0][-1] = data[0][-1].rstrip()  # Remove newline character from the last element
-            df = pd.DataFrame(data, columns=columns)
-            return df
-
-    # Read the entire log file when lastonly is False
-    with open(log_file_path, 'r') as file:
-        lines = file.readlines()
-        columns = ["X", "SPY", "IEF", "GSG", "EUR=X", "action", "benchmark", "model"]
-        data = [l.strip().split(',') for l in lines[1:]]  # Skip the first line if not lastonly
-        df = pd.DataFrame(data, columns=columns)
-        df['model'] = df['model'].str.rstrip()  # Remove newline characters from the 'model' column
-        return df
-
-def runtest(ticker:str):
-    #subprocess.run(f'ls', shell=True, check=True)
-    # Define the directory you want to change to
-
-    try:
-        # Change the current directory to the specified path
-        subprocess.run(f'cd {constants.DIRECTORY_PATH} && {constants.QUANT_COMMAND.format(ticker)}', shell=True, check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"Error: {e}")
 
 
 def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
@@ -387,10 +80,7 @@ def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
             }
         }
     }
-    
-    
     """
-
     current_date = datetime.today()
     current_date_string = current_date.strftime('%Y-%m-%d')
 
@@ -432,8 +122,8 @@ def get_daily(Today=False):
     if Today:
         if datetime.today().strftime('%Y-%m-%d') in res.keys():
             return res[datetime.today().strftime('%Y-%m-%d')]
-    return None
-
+    return None    
+    
 
 
 
@@ -473,14 +163,14 @@ def home():
     if dailyactions:
         hotactions = dict(itertools.islice(dailyactions.items(), min(5, len(dailyactions))))
         print(hotactions)
-        return render_template("./index.html", hotactions=hotactions, session=session)
+        return render_template("./index.html", hotactions=hotactions)
     else:
         print("NO DAILY ACTIONS")
-        return render_template("./index.html", hotactions={}, session=session)
+        return render_template("./index.html", hotactions={})
 
 @app.route("/home")
 def home2():
-    return render_template("./index.html", session=session)
+    return render_template("./index.html")
 
 @app.route("/index")
 def home1():
@@ -497,18 +187,6 @@ def apps():
 @app.route("/about")
 def about():
     return render_template("./aboutUs.html")
-
-@app.route("/login")
-def login():
-    return render_template("./login.html")
-
-@app.route("/login/create")
-def create_account():
-    return render_template("./createAccount.html")
-
-@app.route("/account")
-def account():
-    return render_template("./account.html", session=session)
 
 @app.route("/legal")
 def legal():
@@ -539,21 +217,13 @@ def HandleData():
     return redirect(url_for("home"))
 
 
-@app.route("/search", methods=["GET"])
-def search():
-    args = request.args
-    ticker = args.get("searchedTicker")
-    fmp_url = (f"https://financialmodelingprep.com/api/v3/search?query={ticker}&limit=10&exchange=NASDAQ&apikey={constants.FMP_API_KEY}")
-    data = get_jsonparsed_data(fmp_url)
-    return data
 
+@app.route('/search', methods=["GET"])
 @app.route("/searchticker", methods=["GET"])
 def searchticker():
     args = request.args
     ticker = args.get("searchedTicker")
-    fmp_url = (f"https://financialmodelingprep.com/api/v3/search?query={ticker}&limit=10&exchange=NASDAQ&apikey={constants.FMP_API_KEY}")
-    data = get_jsonparsed_data(fmp_url)
-    return data
+    return search(ticker)
 
 @app.route("/isTickerValidPage/<string:ticker>")
 @cross_origin()
@@ -573,20 +243,18 @@ def getInfo(ticker:str) -> dict:
     data = requests.get(scrapingURL, headers=constants.REQ_HEADER).text
     soup = BeautifulSoup(data, "lxml")
 
-    fmp_url = f"https://financialmodelingprep.com/api/v3/profile/{ticker}?apikey={constants.FMP_API_KEY}"
-    data = get_jsonparsed_data(fmp_url)
-    data = data[0]
+    company_profile = get_profile(ticker)
 
 
     info_we_need = {
-        "companyName" : data["companyName"],
+        "companyName" : company_profile["companyName"],
         "currentValue" : {
-            "value" : get_jsonparsed_data(f"https://financialmodelingprep.com/api/v3/quote-short/{ticker}?apikey={constants.FMP_API_KEY}")[0]["price"],
+            "value" : get_value(ticker),
             "change" : getPriceChangeStr(ticker)
         },
         "marketStatus" : scrapeMarketStatus(soup),
-        "companyDesc" : data["description"],
-        "companyLogoUrl" : data["image"]
+        "companyDesc" : company_profile["description"],
+        "companyLogoUrl" : company_profile["image"]
     }
     return info_we_need
 
@@ -658,13 +326,10 @@ def data(companyTicker:str):
     data = requests.get(scrapingURL, headers=constants.REQ_HEADER).text
     soup = BeautifulSoup(data, "lxml")
 
-    fmp_url = f"https://financialmodelingprep.com/api/v3/profile/{companyTicker}?apikey={constants.FMP_API_KEY}"
-    data = get_jsonparsed_data(fmp_url)
-    data = data[0]
+    data = get_profile(companyTicker)
 
-    
     #STATS
-    price = get_jsonparsed_data(f"https://financialmodelingprep.com/api/v3/quote-short/{companyTicker}?apikey={constants.FMP_API_KEY}")[0]["price"]
+    price = get_value(companyTicker)
     e_a_r = round(float(stats.iloc[0]["Annualized Return model"]), 4)
     std = round(float(stats.iloc[0]["Stdev of Returns model"]),4)
     sharperatio=round(float(stats.iloc[0]["Sharpe Ratio model"]),4)
@@ -707,131 +372,7 @@ def data(companyTicker:str):
     )
 
 
-app.secret_key = secretConstants.SECRET_KEY # make sure this matches with that's in client_secret.json
 
-# Helper method to change firebase_auth user object to dict
-def userToDict(user):
-    return {
-        'uid': user.uid,
-        'email': user.email,
-        'email_verified': user.email_verified,
-        'name': user.email.split("@")[0],
-    }
-# Redirect user to google login
-@app.route("/login/google")
-def googleLogin():
-    authorization_url, state = secretConstants.flow.authorization_url()
-    session["state"] = state
-    return redirect(authorization_url)
-
-# Process information from google login
-@app.route("/google-callback")
-def callback():
-    secretConstants.flow.fetch_token(authorization_response=request.url)
-
-    credentials = secretConstants.flow.credentials
-    request_session = requests.session()
-    cached_session = cachecontrol.CacheControl(request_session)
-    token_request = google.auth.transport.requests.Request(session=cached_session)
-    id_info = id_token.verify_oauth2_token(
-        id_token=credentials._id_token,
-        request=token_request,
-        audience=secretConstants.GOOGLE_CLIENT_ID
-    )
-
-    email = id_info.get("email")
-
-    user = None
-    try: 
-        user = auth.get_user_by_email(email)
-    except:
-        user = auth.create_user(email=email, password=''.join(random.choices(string.ascii_uppercase + string.digits, k=6)))
-    if user:
-        session["user"] = userToDict(user)
-        return redirect(url_for("home"))
-# Clears session
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect("/")
-# Create account from account creation page & send verification email
-@app.route("/login/create/submitted", methods=["GET", "POST"])
-def createAccount():
-    if request.method == "POST":
-        email = request.form['email']
-        password = request.form['password']
-        password_repeat = request.form['password_repeat']
-        if password != password_repeat:
-            return render_template("./createAccount.html", err="Passwords Don't Match!")
-        try:
-            user = auth.create_user(email=email, password=password)
-            session["user"] = userToDict(user)
-            # Generate email verification 
-            link = auth.generate_email_verification_link(email, action_code_settings=None)
-            msg = Message(
-                subject="No Reply",
-                recipients=[email],
-                body=f"{link}"
-            )
-            msg.sender = emailvars.EMAIL
-            mail.send(msg)
-            return redirect(url_for("home"))
-        except Exception as e:
-            return render_template("./createAccount.html", err=str(e))
-# Log user in based on email and password
-@app.route("/login/submitted", methods=["GET", "POST"])
-def signIn():
-    if request.method == "POST":
-        email = request.form['email']
-        password = request.form['password']
-        payload = json.dumps({
-        "email": email,
-        "password": password,
-        "returnSecureToken": True
-        })
-        # Create request to verify firebase user
-        rest_api_url = f"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword"
-        r = requests.post(rest_api_url,
-                        params={"key": constants.FIREBASE_API_KEY},
-                        data=payload)
-        reponse = r.json()
-        print(reponse)
-        if ('error' in reponse):
-            return render_template("./login.html", err=reponse['error']['message'])
-        else:
-            user = auth.get_user_by_email(email)
-            session["user"] = userToDict(user)
-            return redirect(url_for("home"))
-# Resends verification email when link on account page is clicked
-@app.route("/send-verification", methods=["GET", "POST"])
-def sendVerification():
-    email = session["user"].get("email")
-    # Generate email verification 
-    link = auth.generate_email_verification_link(email, action_code_settings=None)
-    msg = Message(
-        subject="No Reply",
-        recipients=[email],
-        body=f"Please verify your email following this link: {link}"
-    )
-    msg.sender = emailvars.EMAIL
-    mail.send(msg)
-    session["user"] = userToDict(auth.get_user_by_email(email))
-    return render_template("./account.html", session=session, message="Verification Sent!")
-# Sends reset password email when clicked (TODO: add to login screen with seperate page for entering the email)
-@app.route("/reset-password", methods=["GET", "POST"])
-def resetPassword():
-    email = session["user"].get("email")
-    # Generate email verification 
-    link = auth.generate_password_reset_link(email, action_code_settings=None)
-    msg = Message(
-        subject="No Reply",
-        recipients=[email],
-        body=f"Reset password here: {link}"
-    )
-    msg.sender = emailvars.EMAIL
-    mail.send(msg)
-    session["user"] = userToDict(auth.get_user_by_email(email))
-    return render_template("./account.html", session=session, message="Check Your Email!")
 
 if __name__ == '__main__':
     def run():
