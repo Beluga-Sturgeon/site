@@ -1,9 +1,10 @@
-import constants   
 import requests
 import pandas as pd
 import json
 from bs4 import BeautifulSoup, Tag
 import re
+from app.services.cnst import constants
+
 """SCRAPES OFF GFINANCE"""
 def getPercentChange(current, previous) ->str:
     """percent difference. Example:\n
@@ -119,7 +120,6 @@ def scrapeNews(soup:BeautifulSoup) -> dict:
             article["title"] = element.find("div", {"class":"Yfwt5"}).text
             articles.append(article)
         return {"articles":articles}
-
 
 def scrapeCompanyDesc(soup:BeautifulSoup) ->str:
     try:
