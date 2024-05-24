@@ -29,7 +29,6 @@ from app.services.helperfunctions import *
 from app.services.fmpRequester import *
 from app.services.readlog import *
 
-
 server = gunicorn.SERVER
 
 firebase = firebase.FirebaseApplication(constants.FB_DB, None)
@@ -192,13 +191,24 @@ def about():
 def legal():
     return render_template("./legal.html")
 
+@app.route("/login")
+def login():
+    return render_template("./login.html")
+
+@app.route("/login/create")
+def create_account():
+    return render_template("./createAccount.html")
+
+@app.route("/account")
+def account():
+    return render_template("./account.html", session=session)
+
 @app.route("/ContactMe/<int:sent>")
 def ContactMe(sent):
     bool = False
     if sent == 1:
         bool = True
     return render_template("./index.html", sent=bool)
-
 
 @app.route("/ContactMe/HandleData", methods=['POST'])
 def HandleData():
@@ -314,7 +324,7 @@ def data(companyTicker:str):
     #runs the model
     runtest(ticker=companyTicker)
     
-    log = readlog(lastonly=True)
+    log = readlog()
     if log.iloc[0]["action"] == 0:
         action = "SHORT"
     elif log.iloc[0]["action"] == 1:
@@ -346,6 +356,9 @@ def data(companyTicker:str):
         e_a_r=e_a_r
     )
 
+    soup_data = requests.get(getScrapingURL(companyTicker), headers=constants.REQ_HEADER).text
+    soup = BeautifulSoup(soup_data, "lxml")
+
     return render_template(
         "data.html", 
         info = {
@@ -359,11 +372,11 @@ def data(companyTicker:str):
             "companyLogoUrl" : data["image"]
         },
         financials = {
-            "incomeStatement": scrapeIncomeStatement(companyTicker),
-            "balanceSheet":scrapeBalanceSheet(companyTicker),
-            "cashFlow":scrapeCashFlow(companyTicker)
+            "incomeStatement": scrapeIncomeStatement(soup),
+            "balanceSheet":scrapeBalanceSheet(soup),
+            "cashFlow":scrapeCashFlow(soup)
         },
-        newsList = scrapeNews(companyTicker),
+        newsList = scrapeNews(soup),
         action= action,
         e_a_r = str(e_a_r * 100) + "%",
         std = str(std* 100 ) + "%",
@@ -371,8 +384,7 @@ def data(companyTicker:str):
         maxdrawdown=maxdrawdown,
     )
 
-
-
+from app.services.accounts import *
 
 if __name__ == '__main__':
     def run():

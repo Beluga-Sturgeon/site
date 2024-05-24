@@ -1,8 +1,10 @@
 import pandas as pd
 import subprocess
 
+from app.services.cnst import constants, emailvars
+
 def readstats():
-    file_path = r'app\services\gbm-drl-quant\res\stats'
+    file_path = constants.STATS_FILE_PATH
 
     # Read the data from the file
     with open(file_path, 'r') as file:
@@ -16,7 +18,7 @@ def readstats():
     return df
 
 def readlog():
-    log_file_path = r'app\services\gbm-drl-quant\res\log'
+    log_file_path = constants.LOG_FILE_PATH
 
     # Read the last line of the log file
     with open(log_file_path, 'r') as file:
