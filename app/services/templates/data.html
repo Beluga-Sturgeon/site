@@ -6,10 +6,10 @@
         <title>Beluga Sturgeon Financial</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/dataStyles.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/sidebar.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/suggestions.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/dataStyles.css') }}">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/loaderStyle.css') }}">
         <link rel="icon" href="{{ url_for('static',filename='images/ForesightLogoNoText.png') }}">
@@ -70,22 +70,6 @@
             </div>
         </div>
 
-        <div class="sidecontainer">
-            <div class="sidebar" id="sidebar">
-                <div class="arrow" id="arrow">
-                &rarr;
-                </div>
-                    <div class = "sidegraph" id="state">
-
-                    </div>
-                    <div class = "sidegraph" id="actiongraph">
-                        
-                    </div>
-                    <div class = "sidegraph" id="reward">
-                        
-                    </div>
-            </div>
-          </div>
           <script src="path/to/papaparse.min.js"></script>
           <script src="{{url_for('static', filename='js/sidebar.js')}}"></script>
 
@@ -93,22 +77,68 @@
         <div class="container">
             <div class="mainVisual">
                 <div class="priceInfo">
-                    <h2>{{info['currentValue']['value']}}</h2>
-                    <div class="scheduleAndChange">
-                        <p class="change">
-                            {{info['currentValue']['change']}}
-                        </p>
-                        <p>
-                            {{info['marketStatus']}}
-                        </p>
-                    </div>
+                    <h2>${{info['currentValue']['value']}}</h2>
+                    <p class="change">
+                        {{info['currentValue']['change']}}
+                    </p>
+                    <p>
+                        {{info['marketStatus']}}
+                    </p>
                 </div>
-                <div class="graph" id="graph">
+            </div>
+            <div class="tab_bar">
+                <div class="tab selected_tab">Charts</div>
+                <div class="tab">Income</div>  
+                <div class="tab">Balance Sheet</div>   
+                <div class="tab">Cash Flow</div>       
+                <div class="tab">Fundamentals</div>          
+            </div>
+            <div class="window">
+                <div class="charts">
+                    <div class = "sidegraph" id="state">
+                    </div>
+                    <div class = "sidegraph" id="actiongraph">
+                    </div>
+                    <div class = "sidegraph" id="reward">
+                    </div>
+                    <div class="candle_graph" id="graph">
+                        <h1 id="loadingText">Generating graph...</h1>
+                    </div>
+                    <script src="{{url_for('static', filename='js/stockChart.js')}}"></script>
+                </div>
+            </div>
+            <div class="actionbox">
+                <p class="recommendedaction">
+                    RECOMMENDED ACTION: <span class="action">{{action}}</span>
+                </p>
+                <p class="annualizedreturn">
+                    Annualized Return: <span class="numbervalue">{{e_a_r}}</span>
+                </p>
+                <p class="stdreturn">
+                    SD return: <span class="numbervalue">{{std}}</span>
+                </p>
+                <p class="recommendedaction">
+                    Sharpe ratio: <span class="numbervalue">{{sharperatio}}</span>
+                </p>
+                <p class="recommendedaction">
+                    Max drawdown: <span class="numbervalue">{{maxdrawdown}}</span>
+                </p>
+
+                <p class="model">gbm_quant BETA</p>
+            </div>
+            <script src="{{url_for('static', filename='js/gbm-drl-quant.js')}}"></script>
+
+            <script src="{{url_for('static', filename='js/changeColor.js')}}"></script>
+            <div class="nameAndLogo">
+                <img class="companyLogo" src="{{info['companyLogoUrl']}}" alt="{{info['companyName']}}">
+                <h1>{{info['companyName']}}</h1>
+            </div>
+                <!-- <div class="graph" id="graph">
                     <h1 id="loadingText">Generating graph...</h1>
                 </div>
                 <script src="{{url_for('static', filename='js/stockChart.js')}}"></script>
-            </div>
-            <div class="actionbox">
+            </div> -->
+            <!-- <div class="actionbox">
                 <p class="recommendedaction">
                     RECOMMENDED ACTION: <span class="action">{{action}}</span>
                 </p>
@@ -193,8 +223,8 @@
                     <th>Value</th>
                     <th>Y/Y change</th>
                 </tr>
-            </table>
-        </div>
+            </table> -->
+        </div> 
         <footer>
             <div id="container">
                 <div class="row">
