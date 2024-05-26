@@ -1,18 +1,15 @@
 class possibleActions 
 {
-    static INCOME_STATEMENT = 0
-    static BALANCE_SHEET = 1
-    static CASH_FLOW = 2
+    static CHARTS = 0
+    static INCOME_STATEMENT = 1
+    static BALANCE_SHEET = 2
+    static CASH_FLOW = 3
+    static NEWS = 4
 }
 
 class constants
 {
     static API_URL = document.URL
-}
-
-function toggleBackground() {
-    let background = document.getElementById("background")
-    $(background).toggleClass("hidden")
 }
 
 function closeThePopup() {
@@ -21,52 +18,59 @@ function closeThePopup() {
     toggleBackground()
 }   
 
-async function openThePopup(action) {
-    toggleBackground()
-    let popup = document.getElementById("popup");
-    $(popup).toggleClass("hidden");
+async function openThePopup(action, tab) {
+    Array.from(document.getElementById("tab_bar").children).forEach( x => x.classList.remove("selected_tab"))
+    tab.classList.add("selected_tab")
+    Array.from(document.getElementById("window").children).forEach( x => x.classList.add("hidden"))
+
+    let popup = document.getElementById("main_table")
     let dictionary
     let titleStr
     if (action == 0)
     {
+        document.getElementById("charts").classList.remove("hidden")
+    }
+    else if (action == 1)
+    {
         dictionary = await getIncomeStatement()
-        titleStr = "Income Statement"
-    } else if (action == 1)
+    } else if (action == 2)
     {
         dictionary = await getBalanceSheet()
-        titleStr = "Balance Sheet"
-    }
-    else
+    } else if (action == 3)
     {
         dictionary = await getCashFlow()
-        titleStr = "Cash Flow"
     }
-    console.log("THIS IS THE DICTIONARY BELOW:")
-    console.log(dictionary)
-
-    let title = popup.getElementsByTagName("h3")[0];
-    title.removeChild(title.firstChild)
-    title.appendChild(document.createTextNode(titleStr))
-    let table = popup.getElementsByTagName("table")[0];
-    let tbody = table.getElementsByTagName("tbody")[0];
-    while (tbody.firstChild)
+    if (action == 4)
     {
-        tbody.removeChild(tbody.firstChild);
+        document.getElementById("news").classList.remove("hidden")
     }
-    tbody.appendChild(createTableRow("(USD)", "Value", "Y/Y change", true));
 
-    for (const property in dictionary)
+    if (action == 1 || action == 2 || action == 3)
     {
-        tbody.appendChild(
-            createTableRow(
-                property,
-                dictionary[property].value,
-                dictionary[property].change
+        document.getElementById("main_table").classList.remove("hidden")
+        console.log("THIS IS THE DICTIONARY BELOW:")
+        console.log(dictionary)
+        let table = popup.getElementsByTagName("table")[0];
+        let tbody = table.getElementsByTagName("tbody")[0];
+        while (tbody.firstChild)
+        {
+            tbody.removeChild(tbody.firstChild);
+        }
+        tbody.appendChild(createTableRow("(USD)", "Value", "Y/Y change", true));
+
+        for (const property in dictionary)
+        {
+            tbody.appendChild(
+                createTableRow(
+                    property,
+                    dictionary[property].value,
+                    dictionary[property].change
+                )
             )
-        )
+        }
+        console.log(tbody)
+        changeColor()
     }
-    console.log(tbody)
-    changeColor()
 }
 
 

@@ -32,7 +32,26 @@
         <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-annotations.min.js"></script>
         <script src="{{url_for('static', filename='js/sideBarHandler.js')}}"></script>
     </head>
-    <body class="preload">
+    <body class="preload" style="background:linear-gradient(157deg, #FFFFFF 0%, rgb{{info['dominantColor']}} 140%);">
+        <style>
+            ::-webkit-scrollbar {
+                width: 7px;
+                height: 7px;
+            }
+            
+            /* Track */
+            ::-webkit-scrollbar-track {
+                background: #141414;
+                border-radius: 10px;
+            }
+            
+            /* Handle */
+            ::-webkit-scrollbar-thumb {
+                background: rgb{{info['dominantColor']}};
+                border-radius: 10px;
+                width: 20px;
+            }
+        </style>
         <div id="loader-wrapper">
             <div id="loading-bar-spinner" class="spinner">
                 <div class="spinner-icon">
@@ -74,65 +93,97 @@
           <script src="{{url_for('static', filename='js/sidebar.js')}}"></script>
 
 
-        <div class="container">
-            <div class="mainVisual">
-                <div class="priceInfo">
-                    <h2>${{info['currentValue']['value']}}</h2>
-                    <p class="change">
-                        {{info['currentValue']['change']}}
-                    </p>
-                    <p>
-                        {{info['marketStatus']}}
-                    </p>
+          <body class="preload">
+            <div class="container">
+                <div class="mainVisual">
+                    <div class="priceInfo">
+                        <h2>${{info['currentValue']['value']}}</h2>
+                        <p class="change" id="price_change">
+                            {{info['currentValue']['change']}}
+                        </p>
+                        <p>
+                            {{info['marketStatus']}}
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="tab_bar">
-                <div class="tab selected_tab">Charts</div>
-                <div class="tab">Income</div>  
-                <div class="tab">Balance Sheet</div>   
-                <div class="tab">Cash Flow</div>       
-                <div class="tab">Fundamentals</div>          
-            </div>
-            <div class="window">
-                <div class="charts">
-                    <div class = "sidegraph" id="state">
-                    </div>
-                    <div class = "sidegraph" id="actiongraph">
-                    </div>
-                    <div class = "sidegraph" id="reward">
-                    </div>
-                    <div class="candle_graph" id="graph">
-                        <h1 id="loadingText">Generating graph...</h1>
-                    </div>
-                    <script src="{{url_for('static', filename='js/stockChart.js')}}"></script>
+                <div id="tab_bar">
+                    <div class="tab selected_tab" onclick="openThePopup(possibleActions.CHARTS, this);">Charts</div>
+                    <div class="tab" onclick="openThePopup(possibleActions.INCOME_STATEMENT, this);">Income</div>  
+                    <div class="tab" onclick="openThePopup(possibleActions.BALANCE_SHEET, this);">Balance Sheet</div>   
+                    <div class="tab" onclick="openThePopup(possibleActions.CASH_FLOW, this);">Cash Flow</div>       
+                    <div class="tab" onclick="openThePopup(possibleActions.NEWS, this);">News</div>          
                 </div>
-            </div>
-            <div class="actionbox">
-                <p class="recommendedaction">
-                    RECOMMENDED ACTION: <span class="action">{{action}}</span>
-                </p>
-                <p class="annualizedreturn">
-                    Annualized Return: <span class="numbervalue">{{e_a_r}}</span>
-                </p>
-                <p class="stdreturn">
-                    SD return: <span class="numbervalue">{{std}}</span>
-                </p>
-                <p class="recommendedaction">
-                    Sharpe ratio: <span class="numbervalue">{{sharperatio}}</span>
-                </p>
-                <p class="recommendedaction">
-                    Max drawdown: <span class="numbervalue">{{maxdrawdown}}</span>
-                </p>
+                <div id="window">
+                    <div id="charts">
+                        <div class="sidegraph" id="state"></div>
+                        <div class="sidegraph" id="actiongraph"></div>
+                        <div class="sidegraph" id="reward"></div>
+                        <div class="candle_graph" id="graph">
+                            <h1 id="loadingText">Generating graph...</h1>
+                        </div>
+                    </div>
+                    <div class="popup hidden" id="main_table">
+                        <table id="table">
+                            <tr>
+                                <th class="label">(USD)</th>
+                                <th>Value</th>
+                                <th>Y/Y change</th>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="news" class="hidden">
+                        <h3>Description</h3>
+                        <div id="description">
+                            <p class="companyDesc">
+                                {{info['companyDesc']}}
+                            </p>
+                        </div>
+                        <div id="news_list">
+                            <h3>News</h3>
+                            <div class="scrollable">
+                                {% for a in newsList["articles"]%}
+                                <a href="{{a['link']}}" target="_blank">
+                                        <div class="article">
+                                            <p class="publisher">
+                                                {{a["publisher"]}} {{a["date"]}}
+                                            </p>
+                                            <p class="title">
+                                                {{a["title"]}}
+                                            </p>
+                                        </div>
+                                </a>
+                                {%endfor%}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <script src="{{url_for('static', filename='js/stockChart.js')}}"></script>
+                <div class="actionbox">
+                    <p class="recommendedaction" id="action">
+                        RECOMMENDED ACTION: <span class="action">{{action}}</span>
+                    </p>
+                    <p class="annualizedreturn">
+                        Annualized Return: <span class="numbervalue">{{e_a_r}}</span>
+                    </p>
+                    <p class="stdreturn">
+                        SD return: <span class="numbervalue">{{std}}</span>
+                    </p>
+                    <p class="recommendedaction">
+                        Sharpe ratio: <span class="numbervalue">{{sharperatio}}</span>
+                    </p>
+                    <p class="recommendedaction">
+                        Max drawdown: <span class="numbervalue">{{maxdrawdown}}</span>
+                    </p>
 
-                <p class="model">gbm_quant BETA</p>
-            </div>
-            <script src="{{url_for('static', filename='js/gbm-drl-quant.js')}}"></script>
+                    <p class="model">gbm_quant BETA</p>
+                </div>
+                <script src="{{url_for('static', filename='js/gbm-drl-quant.js')}}"></script>
 
-            <script src="{{url_for('static', filename='js/changeColor.js')}}"></script>
-            <div class="nameAndLogo">
-                <img class="companyLogo" src="{{info['companyLogoUrl']}}" alt="{{info['companyName']}}">
-                <h1>{{info['companyName']}}</h1>
-            </div>
+                <script src="{{url_for('static', filename='js/changeColor.js')}}"></script>
+                <div class="nameAndLogo">
+                    <img class="companyLogo" src="{{info['companyLogoUrl']}}" alt="{{info['companyName']}}">
+                    <h1>{{info['companyName']}}</h1>
+                </div>
                 <!-- <div class="graph" id="graph">
                     <h1 id="loadingText">Generating graph...</h1>
                 </div>
@@ -225,6 +276,7 @@
                 </tr>
             </table> -->
         </div> 
+    </div>
         <footer>
             <div id="container">
                 <div class="row">

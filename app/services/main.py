@@ -15,6 +15,8 @@ import subprocess
 from datetime import datetime, timedelta
 import itertools
 from collections import OrderedDict
+from colorthief import ColorThief
+import urllib
 
 from firebase import firebase
 from firebase_admin import db  
@@ -264,7 +266,7 @@ def getInfo(ticker:str) -> dict:
         },
         "marketStatus" : scrapeMarketStatus(soup),
         "companyDesc" : company_profile["description"],
-        "companyLogoUrl" : company_profile["image"]
+        "companyLogoUrl" : company_profile["image"],
     }
     return info_we_need
 
@@ -358,7 +360,16 @@ def data(companyTicker:str):
 
     soup_data = requests.get(getScrapingURL(companyTicker), headers=constants.REQ_HEADER).text
     soup = BeautifulSoup(soup_data, "lxml")
+    try:
+        print(data["image"])
+        urllib.request.urlretrieve(data["image"], "tmp.png")
+        color_thief = ColorThief("tmp.png")
+        dominant_color = color_thief.get_color(quality=1)
+        os.remove("tmp.png")
+    except:
+        dominant_color = "(00,00,00)"
 
+    print("dominantColor" + str(dominant_color))
     return render_template(
         "data.html", 
         info = {
@@ -369,7 +380,8 @@ def data(companyTicker:str):
             },
             "marketStatus" : scrapeMarketStatus(soup),
             "companyDesc" : data["description"],
-            "companyLogoUrl" : data["image"]
+            "companyLogoUrl" : data["image"],
+            "dominantColor": dominant_color
         },
         financials = {
             "incomeStatement": scrapeIncomeStatement(soup),
