@@ -65,13 +65,12 @@ function actioncolor() {
         const content = span.textContent.trim();
         
         if (content === "LONG") {
-            span.style.color = "#00FF19";
+            span.style.color = "#006b0b";
         } else if (content === "HOLD") {
-            span.style.color = "yellow";
+            span.style.color = "#d7df00";
         } else if (content === "SHORT") {
-            span.style.color = "#FF0000";
+            span.style.color = "#790000";
         }
     });
 }
-
 actioncolor()

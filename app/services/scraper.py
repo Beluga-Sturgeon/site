@@ -1,9 +1,14 @@
+
+from app.services.cnst import *
 import requests
 import pandas as pd
 import json
 from bs4 import BeautifulSoup, Tag
 import re
+
 from app.services.cnst import constants
+from app.services.fmpRequester import get_jsonparsed_data
+
 
 """SCRAPES OFF GFINANCE"""
 def getPercentChange(current, previous) ->str:
@@ -20,6 +25,15 @@ def getPriceChangeStr(current, open, label:str) ->str:
     diff = "+%.3g"%(current-open) if (current-open) >= 0 else "%.3g"%(current-open)
     return diff + " (" + getPercentChange(current, open) + ") "+label
 
+def getPriceChangeStr(ticker:str) ->str:
+    """Gves string that shows difference, and percent difference along wth a label.. Example:\n
+    >>> getPriceChangeStr(12, 10, 'difference'))\n
+    >>> '+2.00 (20.0%) difference'"""
+    fmp_url = (f"https://financialmodelingprep.com/api/v3/stock-price-change/{ticker}?apikey={constants.FMP_API_KEY}")
+    data = get_jsonparsed_data(fmp_url)
+    daychange = data[0]["1D"]
+
+    return str(daychange) + "%"
 
 def scrapeTickerFromUrl(url:str) ->str:
     """Scrapes the ticker part from the Url. For example:\n
@@ -149,7 +163,7 @@ Earnings per share\n
 EBITDA\n
 Effective tax rate"""
     incomeStatement = {}
-    incomeStatementTable = soup.find_all("table", {"class":"slpEwd"})[constants.INCOME_STATEMENT_INDEX]
+    incomeStatementTable = soup.find_all("table", {"class":"slpEwd"})[0] # Replace with actual index for deployment
     rows = incomeStatementTable.find_all("tr", {"class":"roXhBd"})[1:]
     for row in rows:
         label = row.find("div", {"class":"rsPbEe"}).text
@@ -174,7 +188,7 @@ Price to book\n
 Return on assets\n
 Return on capital"""
     balanceSheet = {}
-    balanceSheetTable = soup.find_all("table", {"class":"slpEwd"})[constants.BALANCE_SHEET_INDEX]
+    balanceSheetTable = soup.find_all("table", {"class":"slpEwd"})[0] # Replace with actual index for deployment
     rows = balanceSheetTable.find_all("tr", {"class":"roXhBd"})[1:]
     for row in rows:
         label = row.find("div", {"class":"rsPbEe"}).text
@@ -197,7 +211,7 @@ Cash from financing\n
 Net change in cash\n
 Free cash flow"""
     CashFlow = {}
-    CashFlowTable = soup.find_all("table", {"class":"slpEwd"})[constants.CASH_FLOW_INDEX]
+    CashFlowTable = soup.find_all("table", {"class":"slpEwd"})[0] # Replace with actual index for deployment
     rows = CashFlowTable.find_all("tr", {"class":"roXhBd"})[1:]
     for row in rows:
         label = row.find("div", {"class":"rsPbEe"}).text

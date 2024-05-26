@@ -209,3 +209,21 @@ h3.HeroSub{
     width: 45%;
     height: auto;
 }
+
+.error{
+    height: auto;
+    width: auto;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);  background-color: #FF0000;
+    color: #eaf0fb;
+    position: absolute;
+    text-align: center;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+  }
+.error *{
+    color: inherit;
+}

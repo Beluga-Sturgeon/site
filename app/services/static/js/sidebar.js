@@ -1,15 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
-  const arrow = document.getElementById('arrow');
-  const sidebar = document.getElementById('sidebar');
 
-  arrow.addEventListener('click', function () {
-    if (sidebar.style.right === '0px' || sidebar.style.right === '') {
-      sidebar.style.right = '-40vw';
-    } else {
-      sidebar.style.right = '0px';
-    }
-  });
-});
 
 function fetchDataAndCreateChart(containerId, chartTitle, type, data) {
   console.log(data);

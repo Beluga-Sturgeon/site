@@ -1,7 +1,11 @@
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 class constants():
     FMP_API_KEY = "b0446da02c01a0943a01730dc2343e34"
+    FIREBASE_API_KEY = "AIzaSyBnzb5SqamgMcTw99SY8oQebutm2S3bhuw"
     GOOGLE_FINANCE_URL = "https://www.google.com/finance/quote/"
     TRUE  = "true"
     FALSE = "false"

@@ -3,6 +3,8 @@ import subprocess
 from app.services.cnst import constants
 
 
+from app.services.cnst import constants, emailvars
+
 def readstats():
     file_path = constants.STATS_FILE_PATH
 
@@ -17,6 +19,7 @@ def readstats():
     df = pd.DataFrame([data], columns=["Ticker", "Annualized Return benchmark", "Stdev of Returns benchmark", "Shape Ratio benchmark", "Maximum Drawdown benchmark", "Annualized Return model", "Stdev of Returns model", "Sharpe Ratio model", "Maximum Drawdown model"])
     return df
 
+
 def readlog(lastonly=False):
     log_file_path = constants.LOG_FILE_PATH
 
@@ -29,6 +32,7 @@ def readlog(lastonly=False):
             data[0][-1] = data[0][-1].rstrip()  # Remove newline character from the last element
             df = pd.DataFrame(data, columns=columns)
             return df
+
 
     # Read the entire log file when lastonly is False
     with open(log_file_path, 'r') as file:
