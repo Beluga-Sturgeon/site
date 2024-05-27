@@ -183,11 +183,6 @@ p.title {
 
 .actionbox p {
     font-size: 24px;
-<<<<<<< Updated upstream
-=======
-    margin-right: 30px;
-    margin-top: 10px;
->>>>>>> Stashed changes
 }
 
 .numbervalue {
@@ -437,7 +432,6 @@ footer {
 
 
 
-<<<<<<< Updated upstream
 .card h3 {
     height: 100%;
     vertical-align: center;
@@ -521,8 +515,6 @@ td.change.negative {
 footer {
     margin-top: 20vh;
 }
-=======
->>>>>>> Stashed changes
 
 footer .row {
     width: 70%;
