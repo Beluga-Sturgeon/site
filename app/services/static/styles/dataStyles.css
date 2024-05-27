@@ -1,5 +1,4 @@
 body{
-    background: linear-gradient(180deg, #f5fbff 0%, #453eff 60%);
     font-family: 'Roboto Mono';
     -webkit-user-select:none;
 }
@@ -53,6 +52,7 @@ p.title {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
+    margin-top: -3vh;
 }
 
 .mainVisual{
@@ -183,6 +183,11 @@ p.title {
 
 .actionbox p {
     font-size: 24px;
+<<<<<<< Updated upstream
+=======
+    margin-right: 30px;
+    margin-top: 10px;
+>>>>>>> Stashed changes
 }
 
 .numbervalue {
@@ -200,7 +205,7 @@ p.title {
     grid-row: 1 / 3;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -317,6 +322,96 @@ img.companyLogo {
     }
 }
 
+.cards {
+    width: 55%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.popup {
+    overflow-y: scroll;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#table{
+    width: 80%;
+}
+
+.popup table tr {
+    padding-bottom: 7%;
+    width: 80%;
+}
+
+th {
+    color: #707070;
+    text-align: right;
+}
+
+td {
+    color: #FFFFFF;
+    text-align: right;
+    border-bottom: 1px solid #707070;
+}
+
+td.label, th.label {
+    text-align: left;
+}
+
+td.change.positive {
+    color: #00FF19;
+}
+
+td.change.negative {
+    color: #FF0000;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+footer {
+    margin-top: 20vh;
+}
+
+@media (max-width: 2000px)
+{
+    #status{
+        display: none;
+    }
+    .companyLogo{
+        display: none;
+    }
+}
+
+
+@media (max-width: 1600px)
+{
+    #status{
+        display: block;
+    }
+    .container{
+        display: block;
+    }
+    .companyLogo{
+        display: block;
+    }
+    .nameAndLogo {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+    .actionbox{
+        margin-top: 40px;
+    }
+    footer{
+        margin-top: 35vh;
+    }
+}
+
 @media (max-width: 1390px)
 {
 
@@ -339,33 +434,10 @@ img.companyLogo {
     }
 }
 
-.cards {
-    width: 55%;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.card {
-    background: #343434;
-    border-radius: 35px;
-    text-align: center;
-    justify-content: center;
-    vertical-align: center;
-    width: 200px;
-    height: 140px;
-    margin: 2vmin;
-    cursor: pointer;
-    transition: all 0.4s;
-}
-@media (min-width: 1391px)
-{
-    .card:hover {
-        width: 240px;
-    }
-}
 
 
 
+<<<<<<< Updated upstream
 .card h3 {
     height: 100%;
     vertical-align: center;
@@ -449,6 +521,8 @@ td.change.negative {
 footer {
     margin-top: 20vh;
 }
+=======
+>>>>>>> Stashed changes
 
 footer .row {
     width: 70%;

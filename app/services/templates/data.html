@@ -101,10 +101,42 @@
                         <p class="change" id="price_change">
                             {{info['currentValue']['change']}}
                         </p>
+<<<<<<< Updated upstream
                         <p>
+=======
+                        <p id="status">
+>>>>>>> Stashed changes
                             {{info['marketStatus']}}
                         </p>
                     </div>
+                </div>
+<<<<<<< Updated upstream
+                <div id="tab_bar">
+                    <div class="tab selected_tab" onclick="openThePopup(possibleActions.CHARTS, this);">Charts</div>
+                    <div class="tab" onclick="openThePopup(possibleActions.INCOME_STATEMENT, this);">Income</div>  
+                    <div class="tab" onclick="openThePopup(possibleActions.BALANCE_SHEET, this);">Balance Sheet</div>   
+                    <div class="tab" onclick="openThePopup(possibleActions.CASH_FLOW, this);">Cash Flow</div>       
+                    <div class="tab" onclick="openThePopup(possibleActions.NEWS, this);">News</div>          
+                </div>
+=======
+                <div class="actionbox">
+                    <p class="recommendedaction" id="action">
+                        RECOMMENDED ACTION: <span class="action">{{action}}</span>
+                    </p>
+                    <p class="annualizedreturn">
+                        Annualized Return: <span class="numbervalue">{{e_a_r}}</span>
+                    </p>
+                    <p class="stdreturn">
+                        SD return: <span class="numbervalue">{{std}}</span>
+                    </p>
+                    <p class="recommendedaction">
+                        Sharpe ratio: <span class="numbervalue">{{sharperatio}}</span>
+                    </p>
+                    <p class="recommendedaction">
+                        Max drawdown: <span class="numbervalue">{{maxdrawdown}}</span>
+                    </p>
+
+                    <p class="model">gbm_quant BETA</p>
                 </div>
                 <div id="tab_bar">
                     <div class="tab selected_tab" onclick="openThePopup(possibleActions.CHARTS, this);">Charts</div>
@@ -113,6 +145,7 @@
                     <div class="tab" onclick="openThePopup(possibleActions.CASH_FLOW, this);">Cash Flow</div>       
                     <div class="tab" onclick="openThePopup(possibleActions.NEWS, this);">News</div>          
                 </div>
+>>>>>>> Stashed changes
                 <div id="window">
                     <div id="charts">
                         <div class="sidegraph" id="state"></div>
@@ -158,6 +191,7 @@
                     </div>
                 </div>
             <script src="{{url_for('static', filename='js/stockChart.js')}}"></script>
+<<<<<<< Updated upstream
                 <div class="actionbox">
                     <p class="recommendedaction" id="action">
                         RECOMMENDED ACTION: <span class="action">{{action}}</span>
@@ -179,6 +213,10 @@
                 </div>
                 <script src="{{url_for('static', filename='js/gbm-drl-quant.js')}}"></script>
 
+=======
+                <script src="{{url_for('static', filename='js/gbm-drl-quant.js')}}"></script>
+
+>>>>>>> Stashed changes
                 <script src="{{url_for('static', filename='js/changeColor.js')}}"></script>
                 <div class="nameAndLogo">
                     <img class="companyLogo" src="{{info['companyLogoUrl']}}" alt="{{info['companyName']}}">
