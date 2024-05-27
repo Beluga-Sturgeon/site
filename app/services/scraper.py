@@ -1,3 +1,4 @@
+
 from app.services.cnst import *
 import requests
 import pandas as pd
@@ -5,7 +6,9 @@ import json
 from bs4 import BeautifulSoup, Tag
 import re
 
+from app.services.cnst import constants
 from app.services.fmpRequester import get_jsonparsed_data
+
 
 """SCRAPES OFF GFINANCE"""
 def getPercentChange(current, previous) ->str:
@@ -131,7 +134,6 @@ def scrapeNews(soup:BeautifulSoup) -> dict:
             article["title"] = element.find("div", {"class":"Yfwt5"}).text
             articles.append(article)
         return {"articles":articles}
-
 
 def scrapeCompanyDesc(soup:BeautifulSoup) ->str:
     try:

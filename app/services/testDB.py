@@ -14,3 +14,4 @@ try:
     print("Successfully created user:", user.uid)
 except ValueError as e:
     print("Error creating user:", e)
+

@@ -31,6 +31,7 @@ from app.services.helperfunctions import *
 from app.services.fmpRequester import *
 from app.services.readlog import *
 
+
 server = gunicorn.SERVER
 
 firebase = firebase.FirebaseApplication(constants.FB_DB, None)
@@ -266,7 +267,7 @@ def getInfo(ticker:str) -> dict:
         },
         "marketStatus" : scrapeMarketStatus(soup),
         "companyDesc" : company_profile["description"],
-        "companyLogoUrl" : company_profile["image"],
+        "companyLogoUrl" : company_profile["image"]
     }
     return info_we_need
 
