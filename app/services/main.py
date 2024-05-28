@@ -397,6 +397,13 @@ def data(companyTicker:str):
         maxdrawdown=maxdrawdown,
     )
 
+# Loading page. TODO: I didn't build June's modle. Pls test this.
+@app.route("/loading", methods=["POST"])
+def loading():
+    if request.method == "POST":
+        return render_template("loading.html")
+    
+
 from app.services.accounts import *
 
 if __name__ == '__main__':
