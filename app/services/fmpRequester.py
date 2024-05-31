@@ -39,3 +39,17 @@ def get_profile(ticker):
 
 def get_value(ticker):
     return get_jsonparsed_data(f"https://financialmodelingprep.com/api/v3/quote-short/{ticker}?apikey={constants.FMP_API_KEY}")[0]["price"]
+
+def getNews(ticker:str) -> dict:
+    """Scrapes the news articles off of fmp in the form of a dictionary
+    EXAPMLE:
+    """
+    fmp_url = (f"https://financialmodelingprep.com/api/v3/stock_news?apikey={constants.FMP_API_KEY}&tickers={ticker}&page=0")
+    data = get_jsonparsed_data(fmp_url)
+    
+    limit = constants.NEWS_LIMIT
+
+    articles = data[:limit]
+    return articles
+
+
