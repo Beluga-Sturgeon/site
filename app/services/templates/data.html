@@ -9,7 +9,8 @@
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/sidebar.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/suggestions.css') }}">
-        <link id="pageStyle" rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/lightDataStyles.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/data/dataBase.css') }}">
+        <link id="pageStyle" rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/data/light.css') }}">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/loaderStyle.css') }}">
         <link rel="icon" href="{{ url_for('static',filename='images/ForesightLogoNoText.png') }}">
@@ -35,7 +36,8 @@
                 integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
                 crossorigin="anonymous"></script>
         <script src="{{url_for('static', filename='js/jtoggler.js')}}"></script>
-        <script src="{{url_for('static', filename='js/jtogglerHandler.js')}}"></script>
+        <script src="{{url_for('static', filename='js/jtogglerThemeHandler.js')}}"></script>
+        <link rel= "stylesheet" type= "text/css" href="{{url_for('static', filename='styles/jtoggler.css')}}"></link>
         <script>
             $(document).ready(() => {
                 $('.jtoggler').jtoggler();
@@ -46,11 +48,10 @@
                 $(document).on('jt:toggled:multi', function(event, target) {
                     console.log(event, target);
                     console.info($(target).parent().index());
-                    swapStyleSheet('{{info['dominantColor']}}', $(target).parent().index());
+                    swapStyleSheet('{{info['dominantColor']}}', $(target).parent().index(), '{{url_for('account')}}');
                 });
             });
         </script>
-        <link rel= "stylesheet" type= "text/css" href="{{url_for('static', filename='styles/jtoggler.css')}}"></link>
     </head>
     <body class="preload" style="background:linear-gradient(157deg, #ffffff 0%, rgb{{info['dominantColor']}} 180%);">
         <style>
@@ -121,7 +122,7 @@
                         <p class="change" id="price_change">
                             {{info['currentValue']['change']}}
                         </p>
-                        <p>
+                        <p id="status">
                             {{info['marketStatus']}}
                         </p>
                     </div>

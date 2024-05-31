@@ -1,10 +1,8 @@
 body{
     font-family: 'Roboto Mono';
     -webkit-user-select:none;
-}
-
-.NavBar a{
-    color: #000000;
+    min-height: 300px;
+    min-width: 1600px;
 }
 
 #search {
@@ -14,15 +12,11 @@ body{
     padding: 8px;
     border-radius: 10px;
     border: none;
-    background-color: rgba(0, 0, 0, 0.80);
-    color: black;
     backdrop-filter: blur(15px);
     transition: all 0.3s;
     font-size: 1em;
     margin-top: 2vh;
-    color: white;
 }
-
 
 p {
     font-family: 'Roboto Mono';
@@ -35,12 +29,6 @@ p {
 p.publisher {
     font-size: 16px;
 }
-
-p.title {
-    color: rgb(0, 0, 0);
-}
-
-
 
 .container, .cardLayout {
     position: relative;
@@ -183,17 +171,15 @@ p.title {
 
 .actionbox p {
     font-size: 24px;
-}
-
-.numbervalue {
-    color: rgb(0, 0, 0);
+    margin-right: 30px;
+    margin-bottom: 10px;
 }
 
 .actionbox .model  {
     bottom: 0px;
     font-size: 12px;
-    color: rgb(0, 0, 0);
 }
+
 
 .nameAndLogo {
     grid-column: 10 / 11;
@@ -208,7 +194,6 @@ p.title {
     margin: 0;
     font-size: revert; 
     text-align: center;
-    color: black;
 }
 
 img.companyLogo {
@@ -294,29 +279,6 @@ img.companyLogo {
 }
 
 
-@media (max-aspect-ratio: 1040/1000)
-{
-    div.container {
-        display: block;
-    }
-
-    div.mainVisual {
-        width: 100%;
-        margin-left: 0px;
-    }
-    
-    div.cards {
-        width: 100%;
-    }
-
-    div.companyInfo{
-        width: 100%;
-        height: auto;
-        margin: 0px;
-        margin-bottom: 5vh;
-    }
-}
-
 .cards {
     width: 55%;
     display: flex;
@@ -339,138 +301,6 @@ img.companyLogo {
     width: 80%;
 }
 
-th {
-    color: #707070;
-    text-align: right;
-}
-
-td {
-    color: #FFFFFF;
-    text-align: right;
-    border-bottom: 1px solid #707070;
-}
-
-td.label, th.label {
-    text-align: left;
-}
-
-td.change.positive {
-    color: #00FF19;
-}
-
-td.change.negative {
-    color: #FF0000;
-}
-
-
-.hidden {
-    display: none !important;
-}
-
-
-footer {
-    margin-top: 20vh;
-}
-
-@media (max-width: 2000px)
-{
-    #status{
-        display: none;
-    }
-    .companyLogo{
-        display: none;
-    }
-}
-
-
-@media (max-width: 1600px)
-{
-    #status{
-        display: block;
-    }
-    .container{
-        display: block;
-    }
-    .companyLogo{
-        display: block;
-    }
-    .nameAndLogo {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-    }
-    .actionbox{
-        margin-top: 40px;
-    }
-    footer{
-        margin-top: 35vh;
-    }
-}
-
-@media (max-width: 1390px)
-{
-
-    div.cardLayout {
-        display: block;
-    }
-    div.cards {
-        max-height: 30vh;
-        overflow-x: auto;
-        overflow-y: hidden;
-        flex-wrap: nowrap;
-        width: 100%;
-    }
-    div.card {
-        margin-left: 2vmin;
-        margin-right: 2vmin;
-    }
-    div.news {
-        width: 100%;
-    }
-}
-
-
-
-
-.card h3 {
-    height: 100%;
-    vertical-align: center;
-    transition: all 0.3s;
-}
-
-.white {
-    color: white;
-}
-
-.cardValue {
-    margin-left: 5%;
-    display: flex;
-}
-
-.cardTitle {
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-.cardValue p {
-    margin-left: 5%;
-}
-
-.popup {
-    overflow-y: scroll;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-#table{
-    width: 80%;
-}
-
-.popup table tr {
-    padding-bottom: 7%;
-    width: 80%;
-}
 
 th {
     color: #707070;
@@ -501,15 +331,6 @@ td.change.negative {
 .hidden {
     display: none !important;
 }
-
-
-
-
-
-
-
-
-
 
 
 footer {
@@ -563,12 +384,7 @@ footer .copyright{
     text-align: center;
     background-color: #1e1f1c;
 }
-@media (max-aspect-ratio: 485/762) {
-    footer div.row {
-        flex-direction: column;
-    }
-    
-}
+
 
 .copyright a {
     transition: all 0.3s;
@@ -585,53 +401,97 @@ footer .copyright{
     color: #790000;
 }
 
-.tw-toggle {
-    /* background: #95A5A6; */
-    display: inline-block;
-    padding: 2px 3px;
-    border-radius: 20px;
-    position:relative;
-    border: 2px solid #95A5A6;
-  }
-  
-  .tw-toggle label {
-    text-align: center;
-    font-family: sans-serif;
-    display: inline-block;
-    color: #95A5A6;
-    position:relative;
-    z-index:2;
-    margin: 0;
-    text-align: center;
-    padding: 2px 3px;
-    font-size: 15px;
-    /* cursor: pointer; */
-  }
-  
-  .tw-toggle input {
-    /* display: none; */
-    position: absolute;
-    z-index: 3;
-    opacity: 0;
-    cursor: pointer;
-  }
-  
-  .tw-toggle span {
-    height: 21px;
-    width: 21px;
-    line-height: 21px;
-    border-radius: 50%;
-    background:#fff;
-    display:block;
-    position:absolute;
-    left: 22px;
-    top: 2px;
-    transition:all 0.3s ease-in-out;
-  }
-  .switch-toggle input {
-    opacity: 0;
-    height: 25px;
-    position: absolute;
-    border-radius: 15px;
+
+@media (max-aspect-ratio: 1040/1000)
+{
+    div.container {
+        display: block;
+    }
+
+    div.mainVisual {
+        width: 100%;
+        margin-left: 0px;
+    }
+    
+    div.cards {
+        width: 100%;
+    }
+
+    div.companyInfo{
+        width: 100%;
+        height: auto;
+        margin: 0px;
+        margin-bottom: 5vh;
+    }
 }
 
+@media (max-aspect-ratio: 485/762) {
+    footer div.row {
+        flex-direction: column;
+    }
+    
+}
+
+@media (max-aspect-ratio: 485/762) {
+    footer div.row {
+        flex-direction: column;
+    }
+}
+
+
+@media (max-width: 2000px)
+{
+    #status{
+        display: none;
+    }
+    .companyLogo{
+        display: none;
+    }
+}
+
+
+@media (max-width: 1800px)
+{
+    #status{
+        display: block;
+    }
+    .container{
+        display: block;
+    }
+    .companyLogo{
+        display: block;
+    }
+    .nameAndLogo {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+    .actionbox{
+        margin-top: 40px;
+    }
+    footer{
+        margin-top: 35vh;
+    }
+}
+
+@media (max-width: 1390px)
+{
+
+    div.cardLayout {
+        display: block;
+    }
+    div.cards {
+        max-height: 30vh;
+        overflow-x: auto;
+        overflow-y: hidden;
+        flex-wrap: nowrap;
+        width: 100%;
+    }
+    div.card {
+        margin-left: 2vmin;
+        margin-right: 2vmin;
+    }
+    div.news {
+        width: 100%;
+    }
+}

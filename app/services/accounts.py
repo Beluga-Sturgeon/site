@@ -144,3 +144,11 @@ def resetPassword():
     mail.send(msg)
     session["user"] = userToDict(auth.get_user_by_email(email))
     return render_template("./account.html", session=session, message="Check Your Email!")
+
+@app.route("/account/set-light", methods=["GET", "POST"])
+def setLight():
+    try:
+        user = auth.get_user_by_uid(session["user"].get('uid'))
+        user.theme = "light"
+    except:
+        return True
