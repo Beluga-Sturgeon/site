@@ -65,7 +65,7 @@ function actioncolor() {
         const content = span.textContent.trim();
         
         if (content === "LONG") {
-            span.style.color = "#006b0b";
+            span.style.color = "#00ff00";
         } else if (content === "HOLD") {
             span.style.color = "#d7df00";
         } else if (content === "SHORT") {

@@ -9,7 +9,7 @@
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/sidebar.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/suggestions.css') }}">
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/dataStyles.css') }}">
+        <link id="pageStyle" rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/lightDataStyles.css') }}">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/loaderStyle.css') }}">
         <link rel="icon" href="{{ url_for('static',filename='images/ForesightLogoNoText.png') }}">
@@ -31,8 +31,28 @@
         <link href="https://cdn.anychart.com/releases/8.11.1/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
         <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-annotations.min.js"></script>
         <script src="{{url_for('static', filename='js/sideBarHandler.js')}}"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" 
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+                crossorigin="anonymous"></script>
+        <script src="{{url_for('static', filename='js/jtoggler.js')}}"></script>
+        <script src="{{url_for('static', filename='js/jtogglerHandler.js')}}"></script>
+        <script>
+            $(document).ready(() => {
+                $('.jtoggler').jtoggler();
+                $(document).on('jt:toggled', function(event, target) {
+                    console.log(event, target);
+                    console.info($(target).prop('checked'));
+                });
+                $(document).on('jt:toggled:multi', function(event, target) {
+                    console.log(event, target);
+                    console.info($(target).parent().index());
+                    swapStyleSheet('{{info['dominantColor']}}', $(target).parent().index());
+                });
+            });
+        </script>
+        <link rel= "stylesheet" type= "text/css" href="{{url_for('static', filename='styles/jtoggler.css')}}"></link>
     </head>
-    <body class="preload" style="background:linear-gradient(157deg, #FFFFFF 0%, rgb{{info['dominantColor']}} 140%);">
+    <body class="preload" style="background:linear-gradient(157deg, #ffffff 0%, rgb{{info['dominantColor']}} 180%);">
         <style>
             ::-webkit-scrollbar {
                 width: 7px;
@@ -276,6 +296,10 @@
                 </tr>
             </table> -->
         </div> 
+    </div>
+    <div id="theme_toggle">
+        <label for="theme_switcher" style="size: 24px;" id="theme_label">Theme</label>
+        <input id = "theme_switcher" type="checkbox" class="jtoggler" data-jtmulti-state="">
     </div>
         <footer>
             <div id="container">
