@@ -1,6 +1,3 @@
-[submodule "app/services/gbm-drl-quant"]
-	path = app/services/gbm-drl-quant
-	url = https://github.com/junyoung-sim/gbm-drl-quant.git
-[submodule "app/services/portfolio"]
-	path = app/services/portfolio
-	url = https://github.com/junyoung-sim/portfolio.git
+[submodule "app/services/bsf_portfolio"]
+	path = app/services/bsf_portfolio
+	url = https://github.com/Beluga-Sturgeon/bsf_portfolio.git
