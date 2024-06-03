@@ -1,2 +1,3 @@
 venv/
 secret_info
+app/services/__pycache__/
