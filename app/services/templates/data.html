@@ -58,7 +58,7 @@
                 </div>
             </div>
         </div>
-        <script src="{{url_for('static', filename='js/loader.js')}}"></script>
+        <script src="{{ url_for('static', filename='js/loader.js')}}"></script>
         <div class="header">
             <a href="/">
                 <img class="logo" src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png" alt="belugaSturgeon">
@@ -141,14 +141,18 @@
                         <div id="news_list">
                             <h3>News</h3>
                             <div class="scrollable">
-                                {% for a in newsList["articles"]%}
-                                <a href="{{a['link']}}" target="_blank">
+                                {% for a in newsList%}
+                                <a href="{{a['url']}}" target="_blank">
                                         <div class="article">
+                                            <img src="{{a['image']}}" alt="img">
                                             <p class="publisher">
-                                                {{a["publisher"]}} {{a["date"]}}
+                                                {{a["site"]}} {{a["publishedDate"]}}
                                             </p>
                                             <p class="title">
                                                 {{a["title"]}}
+                                            </p>
+                                            <p>
+                                                {{a["text"]}}
                                             </p>
                                         </div>
                                 </a>
