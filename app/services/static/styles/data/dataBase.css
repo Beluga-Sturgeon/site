@@ -432,13 +432,6 @@ footer .copyright{
     
 }
 
-@media (max-aspect-ratio: 485/762) {
-    footer div.row {
-        flex-direction: column;
-    }
-}
-
-
 @media (max-width: 2000px)
 {
     #status{

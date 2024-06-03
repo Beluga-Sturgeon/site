@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Beluga Sturgeon Financial</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.00, minimum-scale=1.00, maximum-scale=2.00">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/sidebar.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/suggestions.css') }}">
@@ -50,6 +50,29 @@
                     console.info($(target).parent().index());
                     swapStyleSheet('{{info['dominantColor']}}', $(target).parent().index(), '{{url_for('account')}}');
                 });
+
+                if ('{{session['theme']}}' == 'dark') {
+                    swapStyleSheet('{{info['dominantColor']}}', 2, '{{url_for('account')}}');
+                    Array.from(document.getElementsByClassName('jtoggler-btn-wrapper')).forEach((e, i) => {
+                        if (i === 2) {
+                            e.click();
+                        }
+                    });
+                } else if ('{{session['theme']}}' == 'blue'){
+                    swapStyleSheet('{{info['dominantColor']}}', 1, '{{url_for('account')}}');
+                    Array.from(document.getElementsByClassName('jtoggler-btn-wrapper')).forEach((e, i) => {
+                        if (i === 1) {
+                            e.click();
+                        }
+                    });
+                } else {
+                    swapStyleSheet('{{info['dominantColor']}}', 0, '{{url_for('account')}}');
+                    Array.from(document.getElementsByClassName('jtoggler-btn-wrapper')).forEach((e, i) => {
+                        if (i === 0) {
+                            e.click();
+                        }
+                    });
+                }
             });
         </script>
     </head>
@@ -106,7 +129,11 @@
                 <a href="/about" class="btn">About</a>
                 <a href="/#contact" class="btn">Contact</a>
                 <a href="premium">Premium</a>
-                <a href="/login" class="btn">Login</a>
+                {% if session.user %}
+                    <a href="/account" class="btn">{{session.user.name}}</a>
+                {% else %}
+                    <a href="/login" class="btn">Login</a>
+                {% endif %}
             </div>
         </div>
 

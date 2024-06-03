@@ -395,9 +395,11 @@ def data(companyTicker:str):
         std = str(std* 100 ) + "%",
         sharperatio=sharperatio,
         maxdrawdown=maxdrawdown,
+        session=session
     )
 
 from app.services.accounts import *
+from app.services.paypal import *
 
 if __name__ == '__main__':
     def run():
