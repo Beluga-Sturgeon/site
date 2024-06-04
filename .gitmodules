@@ -3,3 +3,4 @@
 	url = https://github.com/Beluga-Sturgeon/bsf_portfolio.git
 [submodule "app/services/gbm"]
 	path = app/services/gbm
+	url = https://github.com/Beluga-Sturgeon/bsf_gbm-drl-quant.git
