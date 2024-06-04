@@ -1,3 +1,5 @@
 [submodule "app/services/bsf_portfolio"]
 	path = app/services/bsf_portfolio
 	url = https://github.com/Beluga-Sturgeon/bsf_portfolio.git
+[submodule "app/services/gbm"]
+	path = app/services/gbm
