@@ -27,7 +27,7 @@ class constants():
 
     PORTFOLIO_LOG_FILE_PATH = r'app/services/portfolio/res/action'
     
-    DIRECTORY_PATH = "app/services/gbm-drl-quant"
+    DIRECTORY_PATH = "app/services/bsf_gbm-drl-quant"
 
     # Define the command you want to execute
     QUANT_COMMAND = "./exec test {} ./models/checkpoint"
