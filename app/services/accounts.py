@@ -68,7 +68,7 @@ def callback():
         user = auth.create_user(email=email, password=''.join(random.choices(string.ascii_uppercase + string.digits, k=6)))
     if user:
         session["user"] = userToDict(user)
-        firebase.put("/names", session["user"].get('uid'))
+        firebase.put("/names", session["user"].get('uid'), {'theme': 'light', 'premium_models': 0})
         return redirect(url_for("home"))
     
 # Clears session
