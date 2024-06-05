@@ -22,12 +22,17 @@ class constants():
     GET_TICKER_INFO_ENDING= "/getInfo/"
     GET_NEWS_ENDING= "/getNews/"
     GET_FINANCIALS_ENDING= "/getFinancials/"
-    STATS_FILE_PATH = r'app/services/gbm-drl-quant/res/stats'
-    LOG_FILE_PATH = r'app/services/gbm-drl-quant/res/log'
-    DIRECTORY_PATH = "app/services/gbm-drl-quant"
+    STATS_FILE_PATH = r'app/services/gbm/res/stats'
+    LOG_FILE_PATH = r'app/services/gbm/res/log'
+
+    PORTFOLIO_LOG_FILE_PATH = r'app/services/portfolio/res/action'
+    
+    DIRECTORY_PATH = "app/services/gbm"
 
     # Define the command you want to execute
     QUANT_COMMAND = "./exec test {} ./models/checkpoint"
+
+    NEWS_LIMIT = 10
 
 
 class emailvars():

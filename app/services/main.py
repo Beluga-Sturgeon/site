@@ -325,7 +325,7 @@ def getStats(companyTicker:str):
 def data(companyTicker:str):
 
     #runs the model
-    runtest(ticker=companyTicker)
+    # runtest(ticker=companyTicker)
     
     log = readlog()
     if log.iloc[0]["action"] == 0:
@@ -371,6 +371,7 @@ def data(companyTicker:str):
         dominant_color = "(00,00,00)"
 
     print("dominantColor" + str(dominant_color))
+    print("NEWS", getNews(companyTicker))
     return render_template(
         "data.html", 
         info = {
@@ -384,12 +385,7 @@ def data(companyTicker:str):
             "companyLogoUrl" : data["image"],
             "dominantColor": dominant_color
         },
-        financials = {
-            "incomeStatement": scrapeIncomeStatement(soup),
-            "balanceSheet":scrapeBalanceSheet(soup),
-            "cashFlow":scrapeCashFlow(soup)
-        },
-        newsList = scrapeNews(soup),
+        newsList = getNews(companyTicker),
         action= action,
         e_a_r = str(e_a_r * 100) + "%",
         std = str(std* 100 ) + "%",
@@ -397,6 +393,17 @@ def data(companyTicker:str):
         maxdrawdown=maxdrawdown,
         session=session
     )
+
+"""
+This is the loading page
+It uses the loading.html in templates
+It seems to be giving an error :/
+"""
+# @app.route("/loading", methods=["POST"])
+# def loading():
+#     if request.method == "POST":
+#         return render_template("loading.html")
+    
 
 from app.services.accounts import *
 from app.services.paypal import *
