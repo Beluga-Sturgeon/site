@@ -406,7 +406,7 @@ It seems to be giving an error :/
     
 
 from app.services.accounts import *
-from app.services.paypal import *
+from app.services.premium import *
 
 if __name__ == '__main__':
     def run():

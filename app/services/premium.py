@@ -20,8 +20,16 @@ PAYPAL_API_URL = f"https://api-m.sandbox.paypal.com"
 IB_TAX_APP_PRICE = float(150.00)
 IB_TAX_APP_PRICE_CURRENCY = "PLN"
  
+@app.route("/build-model")
+def build_model():
+    return render_template("buildModel.html")
+
+@app.route("/build-model/save", methods=['POST'])
+def saveModel():
+    return True
+
 @app.route("/payment")
-def paypal_payment():
+def paypallPayment():
     if (session.get('user') != None):
         return render_template("./checkout.html", paypal_business_client_id=PAYPAL_BUSINESS_CLIENT_ID,
                             price=IB_TAX_APP_PRICE, currency=IB_TAX_APP_PRICE_CURRENCY)
@@ -29,7 +37,7 @@ def paypal_payment():
         return redirect(url_for("login"))
  
 @app.route("/payment/<order_id>/capture", methods=["POST"])
-def capture_payment(order_id):  # Checks and confirms payment
+def capturePayment(order_id):  # Checks and confirms payment
     captured_payment = paypal_capture_function(order_id)
     # print(captured_payment)
     if is_approved_payment(captured_payment):

@@ -53,7 +53,9 @@ body {
     justify-content: center;
 }
 
-
+.hidden {
+    display: none !important;
+}
 
 .header {
     position: absolute;
