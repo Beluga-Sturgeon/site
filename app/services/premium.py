@@ -26,6 +26,36 @@ def build_model():
 
 @app.route("/build-model/save", methods=['POST'])
 def saveModel():
+    requestData = request.get_json() 
+    tickers = set(requestData)
+    print(tickers)
+    uid = session["user"].get('uid')
+    tickerString = str(tickers)
+    addModel(tickers)
+    models = firebase.get('/names', uid).get('models')
+    if models is None:
+        models = [tickerString]
+    else:
+        modelsSet = [set(eval(s)) for s in models]
+        if tickers in modelsSet:
+            print("already there")
+            return {"success": True}
+        else:
+            models.append(tickerString)
+    firebase.put(f"/names/{uid}", 'models', models)
+    return "success"
+
+def addModel(tickers):
+    models = firebase.get('','models')
+    if models is None:
+            firebase.put('/','models', ["{'AMZN'}"])
+    modelsSet = [set(eval(s)) for s in models]
+    if tickers in modelsSet:
+        print("already there")
+        return {"success": True}
+    else:
+        models.append(str(tickers))
+    firebase.put('/','models', models)
     return True
 
 @app.route("/payment")

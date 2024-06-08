@@ -2,7 +2,13 @@ body{
     background-image: url("https://wallpapercave.com/wp/wp5103645.jpg");
     background-size: cover;
     background-position: center;
-    min-height: 100vh;
+    margin-bottom: 5vh;
+    user-select: none;
+}
+
+#main_box{
+    height: 70vh;
+    width: 100%;
 }
 
 #model_name {
@@ -14,12 +20,12 @@ body{
 
 #ticker_list{
     width: 90%;
-    height: 70vh;
+    max-height: 50vh;
     margin-left: 5%;
     margin-right: 5%;
     display: flex;
     flex-direction: column;
-    margin-bottom: 10vh;
+    margin-bottom: 10px;
     overflow-y: auto;
 }
 
@@ -29,12 +35,14 @@ body{
     min-height: 100px;
     height: 100px;
     border-radius: 10px;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.8);
     margin-bottom: 10px;
 }
 
 #plus{
     justify-content: space-evenly;
+    width: 90%;
+    margin-left: 5%;
 }
 
 .search-container{
@@ -58,7 +66,7 @@ body{
     margin-top: 0px;
     font-size: 30px;
     text-align: center;
-    background-color: rgba(0,0,0,0.0);
+    background-color: black;
     color: white;
     opacity: 1;
     backdrop-filter: None;
@@ -110,6 +118,10 @@ body{
     align-content: space-around;
     flex-direction: column;
     justify-content: space-evenly;
+    overflow: hidden;
+    text-overflow: ellipsis " [..]";
+    white-space: nowrap;
+    width: -webkit-fill-available;
 }
 
 .name_box *{
@@ -135,6 +147,8 @@ body{
     margin-right: 10px;
     width: fit-content;
     text-align: end;
+    max-width: fit-content;
+    min-width: fit-content;
 }
 
 .share_box p{
@@ -170,7 +184,7 @@ body{
 
 .suggestion{
     color: white;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.8);
 }
 
 .name{
@@ -179,4 +193,40 @@ body{
 
 .exchange{
     color: grey
+}
+
+.build_model{
+    position: relative;
+    border-radius: 10px;
+    background-color: black;
+    margin-left: auto;
+    margin-right: auto;
+    height: -webkit-fit-content;
+    width: -webkit-fit-content;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 5vh;
+}
+
+.build_model p{
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+}
+
+#build{
+    cursor: pointer;
+}
+
+#warning{
+    background-color: #ff0000;
+    margin-bottom: 10px;
+    line-height: normal;
+}
+
+#warning h3{
+    color: white;
+    padding: 10px;
+    margin-bottom: 0px;
+    margin-top: 0px;
 }

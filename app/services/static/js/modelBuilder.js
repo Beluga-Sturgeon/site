@@ -45,6 +45,16 @@ $(document).ready(() => {
         $('.search-container').toggleClass('hidden');
         $('#search').focus();
     });
+
+    $('#build').on('click', e => {
+        if ($('#warning').hasClass('hidden')){
+            $('#warning').removeClass('hidden')
+            $('#build p').text('I understand, build the model');
+        } else {
+            $('#ticker_list').tickers('export');
+            // window.location.href = "/models";
+        }
+    });
 });
 
 $.widget("custom.tickers", {
@@ -58,7 +68,7 @@ $.widget("custom.tickers", {
     _refresh: function() {
         this.element.find('.ticker_row').remove();
 
-        $.each(this.options.tickers.slice().reverse(), (index, ticker) => {
+        $.each(this.options.tickers, (index, ticker) => {
             this._renderTicker(ticker);
         });
     },
@@ -109,7 +119,7 @@ $.widget("custom.tickers", {
         tickerElement.append(remove);
 
 
-        this.element.prepend(tickerElement);
+        this.element.append(tickerElement);
     },
 
     addTicker: function(ticker) {
@@ -123,6 +133,20 @@ $.widget("custom.tickers", {
             this.options.tickers.splice(index, 1);
             this._refresh();
         }
+    },
+
+    export: function() {
+        const tickers = []
+        $.each(this.options.tickers, (index, ticker) => {
+            tickers.push(ticker.ticker);
+        });
+    
+        console.log(tickers);
+    
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/build-model/save", true);
+        xhttp.setRequestHeader("Content-Type", "application/json");
+        xhttp.send(JSON.stringify(tickers));
     }
 });
 
