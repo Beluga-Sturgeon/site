@@ -20,6 +20,10 @@ PAYPAL_API_URL = f"https://api-m.sandbox.paypal.com"
 # PAYPAL payment price
 IB_TAX_APP_PRICE = float(150.00)
 IB_TAX_APP_PRICE_CURRENCY = "PLN"
+
+@app.route("/premium")
+def premium():
+    return render_template("premium.html")
  
 @app.route("/portfolio")
 def portfolio():
@@ -33,25 +37,34 @@ def portfolio():
 
 @app.route("/build-model")
 def build_model():
-    return render_template("buildModel.html")
 
-@app.route("/build-model/save", methods=['POST'])
+    if (session.get('user') != None):
+        return render_template("buildModel.html")
+    else:
+        return redirect(url_for("login"))
+
+@app.route("/build-model/save", methods=['POST', 'GET'])
 def saveModel():
     tickers = request.get_json() 
     addModel(tickers)
     uid = session["user"].get('uid')
-    tickerString = str(tickers)
-    models = firebase.get('/names', uid).get('models')
-    if models is None:
-        models = [tickerString]
+    data = firebase.get('/names', uid)
+    if data.get('premium_models') <= 0:
+        return redirect(url_for('paypallPayment'))
     else:
-        if tickerString in models:
-            print("User has model")
-            return {"success": True}
+        tickerString = str(tickers)
+        models = firebase.get('/names', uid).get('models')
+        if models is None:
+            print(tickerString)
+            models = [tickerString]
         else:
-            models.append(tickerString)
-    firebase.put(f"/names/{uid}", 'models', models)
-    return "success"
+            if tickerString in models:
+                return redirect(url_for("build_model"))
+            else:
+                models.append(tickerString)
+        firebase.put(f"/names/{uid}", 'models', models)
+        firebase.put(f"/names/{uid}", 'premium_models', data.get('premium_models') - 1)
+        return redirect(url_for("portfolio"))
 
 def addModel(tickers):
     modelsJson = firebase.get('','models')
@@ -101,10 +114,10 @@ def capturePayment(order_id):  # Checks and confirms payment
         data = firebase.get('/names', uid)
         premium_models = data.get('premium_models')
         if premium_models is None:
-            firebase.put("/names", uid, {'premium_models': 1})
+            data['premium_models'] = 1
         else:
-            num_models = int(premium_models)
-            firebase.put("/names", uid, {'premium_models': num_models + 1})
+            data['premium_models'] = int(premium_models) + 1
+        firebase.put("/names", uid, data)
         return redirect(url_for("account"))
 
 @app.route("/test-payment")

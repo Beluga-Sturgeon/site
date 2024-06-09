@@ -49,10 +49,10 @@ $(document).ready(() => {
     $('#build').on('click', e => {
         if ($('#warning').hasClass('hidden')){
             $('#warning').removeClass('hidden')
-            $('#build p').text('I understand, build the model');
+            $('#build p').text('I understand, submit the portfolio');
+            $('#build svg').addClass('hidden');
         } else {
             $('#ticker_list').tickers('export');
-            window.location.href = "/portfolio";
         }
     });
 });
@@ -147,10 +147,21 @@ $.widget("custom.tickers", {
         });
         console.log(tickers);
     
-        const xhttp = new XMLHttpRequest();
-        xhttp.open("POST", "/build-model/save", true);
-        xhttp.setRequestHeader("Content-Type", "application/json");
-        xhttp.send(JSON.stringify(tickers.sort()));
+        fetch("/build-model/save", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(tickers.sort())
+        })
+        .then(response => {
+            console.log(response)
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                return response.json();
+            }
+        })
     }
 });
 

@@ -11,7 +11,7 @@
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/indexStyles.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">     
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/suggestions.css') }}">
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/portfolioStyle.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/premiumStyle.css') }}">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
         <link rel="icon" href="{{ url_for('static',filename='images/LOGONOTEXT.png') }}">
         <script src="https://kit.fontawesome.com/1b4a129057.js" crossorigin="anonymous"></script>
@@ -50,20 +50,19 @@
                 </div>
             </div>
             <div id="main_box">
-                <div id="plus" class="model_card">
-                    <h2>Build New Portfolio</h2>
-                    <div id="plus_svg" style="margin-top: auto; margin-bottom: auto;">
-                        <svg width="30" height="30" viewBox="0 0 30 30" style="transform:scale(1.5);" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M14.875 0.5C15.3723 0.5 15.8492 0.697544 16.2008 1.04917C16.5525 1.40081 16.75 1.87772 16.75 2.375V13H27.375C27.8723 13 28.3492 13.1975 28.7008 13.5492C29.0525 13.9008 29.25 14.3777 29.25 14.875C29.25 15.3723 29.0525 15.8492 28.7008 16.2008C28.3492 16.5525 27.8723 16.75 27.375 16.75H16.75V27.375C16.75 27.8723 16.5525 28.3492 16.2008 28.7008C15.8492 29.0525 15.3723 29.25 14.875 29.25C14.3777 29.25 13.9008 29.0525 13.5492 28.7008C13.1975 28.3492 13 27.8723 13 27.375V16.75H2.375C1.87772 16.75 1.40081 16.5525 1.04917 16.2008C0.697544 15.8492 0.5 15.3723 0.5 14.875C0.5 14.3777 0.697544 13.9008 1.04917 13.5492C1.40081 13.1975 1.87772 13 2.375 13H13V2.375C13 1.87772 13.1975 1.40081 13.5492 1.04917C13.9008 0.697544 14.3777 0.5 14.875 0.5Z" fill="white"/>
-                        </svg> 
+                <h1>Invest... Better</h1>
+                <p>Have you ever looked at your portfolio and thought: ‘Maybe dad was right.  I should have just put all of my money in the S&P five years ago and done nothing’?</p>
+
+                <p>Well, he was half right.  You’re not cut out for the big markets.  But your dad was also wrong.  Because our models outpreform the market.</p>
+                    
+                <p>Enter the stocks in your portfolio and we’ll tell you what the optimal distribution of funds is for that set of tickers.  What are you waiting for?</p>
+                <p>It’s time to make your dad proud.</p>
+                <a href="/build-model" style="text-decoration: none; margin-top: 50px;">
+                    <div class="build_model" id="build">
+                        <p>Build Portfolio</p>            
                     </div>
-                </div>  
+                </a>
             </div>
-            <script>
-                var portfolio = {{data | tojson}};
-                console.log(portfolio)
-            </script>
-            <script src="{{url_for('static', filename='js/portfolio.js')}}"></script>
         <footer id="footer">
             <div class="container">
                 <div class="row">

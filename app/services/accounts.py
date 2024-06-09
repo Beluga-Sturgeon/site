@@ -66,9 +66,9 @@ def callback():
         user = auth.get_user_by_email(email)
     except:
         user = auth.create_user(email=email, password=''.join(random.choices(string.ascii_uppercase + string.digits, k=6)))
+        firebase.put("/names", session["user"].get('uid'), {'theme': 'light', 'premium_models': 0, 'models': None})
     if user:
         session["user"] = userToDict(user)
-        firebase.put("/names", session["user"].get('uid'), {'theme': 'light', 'premium_models': 0})
         return redirect(url_for("home"))
     
 # Clears session
