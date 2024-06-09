@@ -1,0 +1,56 @@
+body{
+    background-image: url("https://wallpapercave.com/wp/wp5103645.jpg");
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 5vh;
+    user-select: none;
+}
+
+#main_box{
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin-top: 10vh;
+}
+
+.model_card{
+    height: 550px;
+    width: 500px;
+    background-color: rgba(0,0,0,0.8);
+    border-radius: 10px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    display: flex;
+    margin: 10px;
+    overflow-y: auto;
+}
+
+.ticker_logo{
+    height: 80%;
+    width: auto;
+}
+
+.ticker_row{
+    display: flex;
+    width: 100%;
+    height: 100px;
+    margin-top: 20px;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.ticker_row p{
+    font-size: 38px;
+}
+
+.ticker{
+    color: white;
+}
+
+.percentage{
+    color: rgb(211, 211, 211);
+}

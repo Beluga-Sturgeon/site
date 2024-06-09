@@ -4,6 +4,7 @@ from firebase_admin import credentials, auth, initialize_app
 from flask_login import LoginManager, login_user
 from flask import jsonify
 
+import json
 import os
  
 # # # # PAYPAL SANDBOX
@@ -20,25 +21,32 @@ PAYPAL_API_URL = f"https://api-m.sandbox.paypal.com"
 IB_TAX_APP_PRICE = float(150.00)
 IB_TAX_APP_PRICE_CURRENCY = "PLN"
  
+@app.route("/portfolio")
+def portfolio():
+    uid = session["user"].get('uid')
+    models = firebase.get('/names', uid).get('models')
+    portfolio = []
+    for model in models:
+        portfolio.append(getModelData(model))
+    print(portfolio)
+    return render_template("portfolio.html", session=session, data=portfolio)
+
 @app.route("/build-model")
 def build_model():
     return render_template("buildModel.html")
 
 @app.route("/build-model/save", methods=['POST'])
 def saveModel():
-    requestData = request.get_json() 
-    tickers = set(requestData)
-    print(tickers)
+    tickers = request.get_json() 
+    addModel(tickers)
     uid = session["user"].get('uid')
     tickerString = str(tickers)
-    addModel(tickers)
     models = firebase.get('/names', uid).get('models')
     if models is None:
         models = [tickerString]
     else:
-        modelsSet = [set(eval(s)) for s in models]
-        if tickers in modelsSet:
-            print("already there")
+        if tickerString in models:
+            print("User has model")
             return {"success": True}
         else:
             models.append(tickerString)
@@ -46,17 +54,35 @@ def saveModel():
     return "success"
 
 def addModel(tickers):
-    models = firebase.get('','models')
-    if models is None:
-            firebase.put('/','models', ["{'AMZN'}"])
-    modelsSet = [set(eval(s)) for s in models]
-    if tickers in modelsSet:
-        print("already there")
-        return {"success": True}
-    else:
-        models.append(str(tickers))
-    firebase.put('/','models', models)
+    modelsJson = firebase.get('','models')
+    if modelsJson is None:
+        firebase.put('/','models', """
+[
+    {"AMZN": 0.0, "TSLA": 1.0},
+    {"AAPL": 0.0, "AMD": 1.0}
+]
+""")
+    models = json.loads(modelsJson)
+    for dic in models:
+        keys = list(dic.keys())
+        if tickers == keys:
+            print("Free Money")
+            return True
+    newModel = {}
+    for ticker in tickers:
+        newModel[ticker] = 0.0
+    models.append(newModel)
+    firebase.put('/','models', json.dumps(models))
     return True
+
+def getModelData(tickers):
+    models = json.loads(firebase.get('','models'))
+    for dic in models:
+        keys = str(list(dic.keys()))
+        if tickers == keys:
+            print('found')
+            return dic
+    return {}
 
 @app.route("/payment")
 def paypallPayment():
