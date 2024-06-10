@@ -33,6 +33,7 @@ def portfolio():
     for model in models:
         portfolio.append(getModelData(model))
     print(portfolio)
+    
     return render_template("portfolio.html", session=session, data=portfolio)
 
 @app.route("/build-model")
