@@ -25,12 +25,14 @@ class constants():
     STATS_FILE_PATH = r'app/services/gbm/res/stats'
     LOG_FILE_PATH = r'app/services/gbm/res/log'
 
-    PORTFOLIO_LOG_FILE_PATH = r'app/services/portfolio/res/action'
+    PORTFOLIO_LOG_FILE_PATH = r'app/services/bsf_portfolio/res/action'
     
     DIRECTORY_PATH = "app/services/gbm"
+    PORTFOLIO_DIRECTORY = "app/services/bsf_portfolio"
 
     # Define the command you want to execute
     QUANT_COMMAND = "./exec test {} ./models/checkpoint"
+    PORTFOLIO_COMMAND = "./exec {}"
 
     NEWS_LIMIT = 10
 
