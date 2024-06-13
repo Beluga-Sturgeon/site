@@ -43,6 +43,7 @@
                     <a href="/#contact" class="btn">Contact</a>
                     <a href="/premium">Premium</a>
                     {% if session.user %}
+                        <a href="/portfolio" class="btn">Portfolios</a>
                         <a href="/account" class="btn">{{session.user.name}}</a>
                     {% else %}
                         <a href="/login" class="btn">Login</a>
@@ -51,7 +52,11 @@
             </div>
             <div id="main_box">
                 <div id="plus" class="model_card">
+                    {% if session.user.premium_models <= 0 %}
+                    <h2>Buy New Portfolio</h2>
+                    {% else %}
                     <h2>Build New Portfolio</h2>
+                    {% endif %}
                     <div id="plus_svg" style="margin-top: auto; margin-bottom: auto;">
                         <svg width="30" height="30" viewBox="0 0 30 30" style="transform:scale(1.5);" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M14.875 0.5C15.3723 0.5 15.8492 0.697544 16.2008 1.04917C16.5525 1.40081 16.75 1.87772 16.75 2.375V13H27.375C27.8723 13 28.3492 13.1975 28.7008 13.5492C29.0525 13.9008 29.25 14.3777 29.25 14.875C29.25 15.3723 29.0525 15.8492 28.7008 16.2008C28.3492 16.5525 27.8723 16.75 27.375 16.75H16.75V27.375C16.75 27.8723 16.5525 28.3492 16.2008 28.7008C15.8492 29.0525 15.3723 29.25 14.875 29.25C14.3777 29.25 13.9008 29.0525 13.5492 28.7008C13.1975 28.3492 13 27.8723 13 27.375V16.75H2.375C1.87772 16.75 1.40081 16.5525 1.04917 16.2008C0.697544 15.8492 0.5 15.3723 0.5 14.875C0.5 14.3777 0.697544 13.9008 1.04917 13.5492C1.40081 13.1975 1.87772 13 2.375 13H13V2.375C13 1.87772 13.1975 1.40081 13.5492 1.04917C13.9008 0.697544 14.3777 0.5 14.875 0.5Z" fill="white"/>
@@ -64,6 +69,10 @@
                 console.log(portfolio)
             </script>
             <script src="{{url_for('static', filename='js/portfolio.js')}}"></script>
+            <div id="bottom_row">
+                <p id="avialable">Portfolios Available: {{session.user.premium_models}}</p>
+                <a id="buy_new" href="/payment">Buy New Portfolio</a>
+            </div>
         <footer id="footer">
             <div class="container">
                 <div class="row">

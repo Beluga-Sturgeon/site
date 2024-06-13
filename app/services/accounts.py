@@ -35,6 +35,7 @@ def userToDict(user):
         'email': user.email,
         'email_verified': user.email_verified,
         'name': user.email.split("@")[0],
+        'premium_models': firebase.get('/names', user.uid).get('premium_models')
     }
 
 # Redirect user to google login

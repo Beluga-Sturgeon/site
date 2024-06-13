@@ -56,4 +56,12 @@ function sort_object(obj) {
     return(sorted_obj)
 } 
 
-$('#plus').on('click', () => window.location.href = "/build-model");
+$('#plus').on('click', () => {
+        if ($('#plus h2').text() === 'Buy New Portfolio'){
+            window.location.href = "/payment"
+        }
+        else {
+            window.location.href = "/build-model"
+        }
+    }
+);

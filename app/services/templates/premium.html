@@ -36,18 +36,19 @@
                 <a href="/">
                     <img class="logo" src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png" alt="belugaSturgeon">
                 </a>
-                <div class="NavBar">
-                    <a href="/apps" class="btn">Apps</a>
-                    <a href="/team" class="btn">Team</a>
-                    <a href="/about" class="btn">About</a>
-                    <a href="/#contact" class="btn">Contact</a>
-                    <a href="/premium">Premium</a>
-                    {% if session.user %}
-                        <a href="/account" class="btn">{{session.user.name}}</a>
-                    {% else %}
-                        <a href="/login" class="btn">Login</a>
-                    {% endif %}
-                </div>
+            <div class="NavBar">
+                <a href="/apps" class="btn">Apps</a>
+                <a href="/team" class="btn">Team</a>
+                <a href="/about" class="btn">About</a>
+                <a href="/#contact" class="btn">Contact</a>
+                <a href="/premium">Premium</a>
+                {% if session.user %}
+                    <a href="/portfolio" class="btn">Portfolios</a>
+                    <a href="/account" class="btn">{{session.user.name}}</a>
+                {% else %}
+                    <a href="/login" class="btn">Login</a>
+                {% endif %}
+            </div>
             </div>
             <div id="main_box">
                 <h1>Invest... Better</h1>
@@ -57,11 +58,20 @@
                     
                 <p>Enter the stocks in your portfolio and we’ll tell you what the optimal distribution of funds is for that set of tickers.  What are you waiting for?</p>
                 <p>It’s time to make your dad proud.</p>
+                {% if session.user.premium_models <= 0 %}
+                <a href="/payment" style="text-decoration: none; margin-top: 50px;">
+                    <div class="build_model" id="build">
+                        <p>Buy Portfolio</p>            
+                    </div>
+                </a>
+                {% else %}
                 <a href="/build-model" style="text-decoration: none; margin-top: 50px;">
                     <div class="build_model" id="build">
                         <p>Build Portfolio</p>            
                     </div>
                 </a>
+                {% endif %}
+
             </div>
         <footer id="footer">
             <div class="container">

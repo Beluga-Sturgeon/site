@@ -3,13 +3,14 @@ from app.services.secret_info.secretConstants import secretConstants
 from firebase_admin import credentials, auth, initialize_app
 from flask_login import LoginManager, login_user
 from flask import jsonify
+from requests.auth import HTTPBasicAuth
 
 import json
 import os
  
 # # # # PAYPAL SANDBOX
-PAYPAL_BUSINESS_CLIENT_ID = os.getenv("PAYPAL_SANDBOX_BUSINESS_CLIENT_ID")
-PAYPAL_BUSINESS_SECRET = os.getenv("PAYPAL_SANDBOX_BUSINESS_SECRET")
+PAYPAL_BUSINESS_CLIENT_ID = secretConstants.PAYPAL_SANDBOX_BUSINESS_CLIENT_ID
+PAYPAL_BUSINESS_SECRET = secretConstants.PAYPAL_SANDBOX_BUSINESS_SECRET
 PAYPAL_API_URL = f"https://api-m.sandbox.paypal.com"
  
 # # # # PAYPAL LIVE Details
@@ -28,12 +29,14 @@ def premium():
 @app.route("/portfolio")
 def portfolio():
     uid = session["user"].get('uid')
+    email = session["user"].get('email')
+    session['user'] = userToDict(auth.get_user_by_email(email))
     models = firebase.get('/names', uid).get('models')
     portfolio = []
     for model in models:
         portfolio.append(getModelData(model))
     print(portfolio)
-    
+
     return render_template("portfolio.html", session=session, data=portfolio)
 
 @app.route("/build-model")
@@ -60,11 +63,12 @@ def saveModel():
             models = [tickerString]
         else:
             if tickerString in models:
-                return redirect(url_for("build_model"))
+                return redirect(url_for("portfolio"))
             else:
                 models.append(tickerString)
         firebase.put(f"/names/{uid}", 'models', models)
-        firebase.put(f"/names/{uid}", 'premium_models', data.get('premium_models') - 1)
+        firebase.put(f"/names/{uid}", 'premium_models', numMod := data.get('premium_models') - 1)
+        session['user']['premium_models'] = numMod
         return redirect(url_for("portfolio"))
 
 def addModel(tickers):
@@ -111,6 +115,7 @@ def capturePayment(order_id):  # Checks and confirms payment
     captured_payment = paypal_capture_function(order_id)
     # print(captured_payment)
     if is_approved_payment(captured_payment):
+        email = session["user"].get("email")
         uid = session["user"].get('uid')
         data = firebase.get('/names', uid)
         premium_models = data.get('premium_models')
@@ -119,7 +124,8 @@ def capturePayment(order_id):  # Checks and confirms payment
         else:
             data['premium_models'] = int(premium_models) + 1
         firebase.put("/names", uid, data)
-        return redirect(url_for("account"))
+        session['user'] = userToDict(auth.get_user_by_email(email))
+        return captured_payment
 
 @app.route("/test-payment")
 def testPayment():
