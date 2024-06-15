@@ -1,3 +1,33 @@
 venv/
 secret_info
 app/services/__pycache__/
+
+
+# Ignore compiled bytecode files
+*.py[cod]
+
+# Ignore other common Python-related files and directories
+*.pyo
+*.pyd
+*.pdb
+*.egg
+*.egg-info/
+dist/
+build/
+*.venv/
+.venv/
+env/
+venv/
+ENV/
+ENV.bak/
+bin/
+lib/
+lib64/
+parts/
+sdist/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+.python-version
+celerybeat-schedule
+__pypackages__/

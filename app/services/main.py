@@ -89,7 +89,6 @@ def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
     daily_log = firebase.get('/daily/' + current_date_string, None)
     
     # If the current date doesn't exist in the daily log, create it
-    print(daily_log)
     if not daily_log:
         daily_log = {}
     
@@ -113,6 +112,7 @@ def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
     sorted_daily_log_dict = {ticker: data for ticker, data in sorted_daily_log}
     
     # Update the daily log in the database
+    print(sorted_daily_log_dict)
     firebase.put('/daily', current_date_string, sorted_daily_log_dict)
 
 
@@ -325,7 +325,7 @@ def getStats(companyTicker:str):
 def data(companyTicker:str):
 
     #runs the model
-    # runtest(ticker=companyTicker)
+    runtest(ticker=companyTicker)
     
     log = readlog()
     if log.iloc[0]["action"] == 0:
