@@ -267,7 +267,7 @@ def getInfo(ticker:str) -> dict:
         },
         "marketStatus" : scrapeMarketStatus(soup),
         "companyDesc" : company_profile["description"],
-        "companyLogoUrl" : company_profile["image"]
+        "companyLogoUrl" : company_profile["image"],
     }
     return info_we_need
 
@@ -391,6 +391,7 @@ def data(companyTicker:str):
         std = str(std* 100 ) + "%",
         sharperatio=sharperatio,
         maxdrawdown=maxdrawdown,
+        session=session
     )
 
 """
@@ -405,6 +406,7 @@ It seems to be giving an error :/
     
 
 from app.services.accounts import *
+from app.services.premium import *
 
 if __name__ == '__main__':
     def run():

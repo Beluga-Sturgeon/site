@@ -14,7 +14,7 @@ for (var i=0; i<slides.length; i++) {
     currentScene.on("enter", function (event) {
         var currentPanel = event.target.triggerElement().parentElement;
         var previousPanel = currentPanel.previousElementSibling;
-        if (previousPanel) {
+        if (previousPanel && !previousPanel.classList.contains('header')) {
             previousPanel.style.opacity = 0;
         }
     });

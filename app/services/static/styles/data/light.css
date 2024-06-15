@@ -1,0 +1,32 @@
+.NavBar a{
+    color: #000000;
+}
+
+#search{
+    background-color: rgba(0, 0, 0, 0.80);
+    color: white
+}
+
+p {
+    color: black;
+}
+
+p.title {
+    color: rgb(0, 0, 0);
+}
+
+.priceInfo h2{
+    color: black;
+}
+
+.numbervalue {
+    color: rgb(0, 0, 0);
+}
+
+.actionbox .model  {
+    color: rgb(0, 0, 0);
+}
+
+.nameAndLogo h1{
+    color: black;
+}

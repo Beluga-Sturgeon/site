@@ -1,0 +1,242 @@
+body{
+    background-image: url("https://wallpapercave.com/wp/wp5103645.jpg");
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 5vh;
+    user-select: none;
+}
+
+#main_box{
+    height: 70vh;
+    width: 100%;
+}
+
+#model_name {
+    margin-left: 5%;
+    margin-right: auto;
+    margin-top: 10%;
+    width: fit-content;
+}
+
+#ticker_list{
+    width: 90%;
+    max-height: 50vh;
+    margin-left: 5%;
+    margin-right: 5%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    overflow-y: auto;
+}
+
+.masked{
+    mask-image: 
+    linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 1%, rgba(0, 0, 0, 1) 99%, rgba(0, 0, 0, 0) 100%);
+}
+
+.list_item{
+    width: 100%;
+    display: flex;
+    min-height: 100px;
+    height: 100px;
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0.8);
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#plus{
+    justify-content: space-evenly;
+    width: 90%;
+    margin-left: 5%;
+}
+
+.search-container{
+    width: 80%;
+    top: 50%;
+    left: 10%;
+    height: 100px;
+    position: absolute;
+    background-color: rgba(0,0,0,0.9);
+    border-radius: 10px;
+}
+
+#searchForm{
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+}
+
+#search{
+    width: 100%;
+    height: 100%;
+    margin-top: 0px;
+    font-size: 30px;
+    text-align: center;
+    background-color: black;
+    color: white;
+    opacity: 1;
+    backdrop-filter: None;
+}
+
+#search:focus {
+    outline: none;
+    opacity: 1;
+}
+
+#submit{
+    display: none;
+}
+
+.logo_box{
+    width: 200px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    flex-direction: row;
+    justify-content: flex-start;
+    display: inline-flex;
+    white-space: nowrap;
+    min-width: 200px;
+    align-items: center;
+    margin: 10px
+}
+
+.ticker_logo{
+    height: 60%;
+    margin-left: 10px;
+}
+
+.white_logo{
+    height: 40%;
+    background-color: black;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.ticker{
+    font-size: 48px;
+    color: black;
+    width: -webkit-fill-available;
+    text-align: center;
+}
+
+.name_box{
+    display: flex;
+    align-content: space-around;
+    flex-direction: column;
+    justify-content: space-evenly;
+    overflow: hidden;
+    text-overflow: ellipsis " [..]";
+    white-space: nowrap;
+    width: -webkit-fill-available;
+}
+
+.name_box *{
+    margin: 0px
+}
+
+.name_box h1{
+    font-size: 36px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.name_box p{
+    color: white;
+}
+
+.share_box{
+    float: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    margin-right: 10px;
+    width: fit-content;
+    text-align: end;
+    max-width: fit-content;
+    min-width: fit-content;
+}
+
+.share_box p{
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.share_box h2{
+    margin-top: -10px;
+}
+
+.remove_box{
+    width: 30px;
+    background: black;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    justify-content: center;
+}
+
+.positive{
+    color: #00ff1a !important;
+}
+
+.negative{
+    color: #ff0000 !important;
+}
+
+#suggestions{
+    max-height: 300px;
+}
+
+.suggestion{
+    color: white;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.name{
+    color: white;
+}
+
+.exchange{
+    color: grey
+}
+
+.build_model{
+    position: relative;
+    border-radius: 10px;
+    background-color: rgba(0,0,0,0.8);
+    margin-left: auto;
+    margin-right: auto;
+    height: -webkit-fit-content;
+    width: -webkit-fit-content;
+    text-align: center;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 5vh;
+    display: flex;
+}
+
+.build_model p{
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+    line-height: normal;
+}
+
+#build{
+    cursor: pointer;
+}
+
+#warning{
+    background-color: #ff0000;
+    margin-bottom: 10px;
+    line-height: normal;
+}
+
+#warning h3{
+    color: white;
+    padding: 10px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+}

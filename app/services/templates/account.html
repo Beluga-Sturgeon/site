@@ -53,6 +53,13 @@
                 <a href="/team" class="btn">Team</a>
                 <a href="/about" class="btn">About</a>
                 <a href="/#contact" class="btn">Contact</a>
+                <a href="/premium" class="btn">Premium</a>
+                {% if session.user %}
+                <a href="/portfolio" class="btn">Portfolios</a>
+                <a href="/account" class="btn">{{session.user.name}}</a>
+                {% else %}
+                <a href="/login" class="btn">Login</a>
+                {% endif %}
             </div>
         </div>
         <section id="Hero">

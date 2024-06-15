@@ -6,6 +6,7 @@ from collections import OrderedDict
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
 from pip._vendor import cachecontrol
+from flask_login import LoginManager, login_user
 
 import random
 import string
@@ -18,13 +19,23 @@ os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 initialize_app(secretConstants.FB_CRED)
 
 
+def startSession():
+    try:
+        data = firebase.get('/names', session['user'].get('uid'))
+        session["theme"] = data.get('theme')
+    except:
+        session["theme"] = 'light'
+
+
 # Helper method to change firebase_auth user object to dict
 def userToDict(user):
+    startSession()
     return {
         'uid': user.uid,
         'email': user.email,
         'email_verified': user.email_verified,
         'name': user.email.split("@")[0],
+        'premium_models': firebase.get('/names', user.uid).get('premium_models')
     }
 
 # Redirect user to google login
@@ -56,9 +67,12 @@ def callback():
         user = auth.get_user_by_email(email)
     except:
         user = auth.create_user(email=email, password=''.join(random.choices(string.ascii_uppercase + string.digits, k=6)))
+        session["user"] = userToDict(user)
+        firebase.put("/names", session["user"].get('uid'), {'theme': 'light', 'premium_models': 0, 'models': None})
     if user:
         session["user"] = userToDict(user)
         return redirect(url_for("home"))
+    
 # Clears session
 @app.route("/logout")
 def logout():
@@ -85,6 +99,7 @@ def createAccount():
             )
             msg.sender = emailvars.EMAIL
             mail.send(msg)
+            firebase.put("/names", session["user"].get('uid'))
             return redirect(url_for("home"))
         except Exception as e:
             return render_template("./createAccount.html", err=str(e))
@@ -144,3 +159,39 @@ def resetPassword():
     mail.send(msg)
     session["user"] = userToDict(auth.get_user_by_email(email))
     return render_template("./account.html", session=session, message="Check Your Email!")
+
+@app.route("/account/set-light", methods=["GET", "POST"])
+def setLight():
+    session['theme'] = 'light'
+    try:
+        uid = session["user"].get('uid')
+        data = firebase.get('/names', uid)
+        data['theme'] = 'light'
+        firebase.put("/names", uid, data)
+        return "user"
+    except:
+        return "no user"
+    
+@app.route("/account/set-blue", methods=["GET", "POST"])
+def setBlue():
+    session['theme'] = 'blue'
+    try:
+        uid = session["user"].get('uid')
+        data = firebase.get('/names', uid)
+        data['theme'] = 'blue'
+        firebase.put("/names", uid, data)
+        return "user"
+    except:
+        return "no user"
+    
+@app.route("/account/set-dark", methods=["GET", "POST"])
+def setDark():
+    session['theme'] = 'dark'
+    try:
+        uid = session["user"].get('uid')
+        data = firebase.get('/names', session["user"].get('uid'))
+        data['theme'] = 'dark'
+        firebase.put("/names", uid, data)
+        return "user"
+    except:
+        return "no user"

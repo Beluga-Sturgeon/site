@@ -1,0 +1,36 @@
+#search {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: white;
+}
+
+p {
+    color: white;
+}
+
+#suggestions *{
+    color: white;
+}
+
+p.title {
+    color: rgb(255, 255, 255);
+}
+
+#submit{
+    color: white;
+}
+
+.priceInfo h2 {
+    color: white;
+}
+
+.numbervalue {
+    color: whitesmoke;
+}
+
+.actionbox .model  {
+    color: whitesmoke;
+}
+
+.nameAndLogo h1{
+    color: white;
+}

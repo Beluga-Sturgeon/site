@@ -1,0 +1,30 @@
+body{
+    background: linear-gradient(0deg, #ffffff 0%, #226ace 40%); /*Needs to be light 4 credit card checkout*/
+}
+
+#main_box{
+    min-height: 80vh;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    margin-top: 10vh;
+    align-items: center;
+    text-align: center;
+}
+
+
+#paypal-button-container{
+    margin-left: auto;
+    width: 50%;
+}
+
+h1{
+    margin-left: 30px;
+}
+
+p{
+    color: white;
+    margin: 30px;
+}

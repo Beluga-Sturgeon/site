@@ -1,0 +1,54 @@
+body{
+    background-image: url('/static/images/portfolio.png');
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 5vh;
+    user-select: none;
+}
+
+#main_box{
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    margin-top: 10vh;
+    align-items: center;
+}
+
+h1{
+    font-size: 100px;
+}
+
+p{
+    color: white;
+    text-align: center;
+    padding-left: 20vw;
+    padding-right: 20vw;
+    font-size: 30px;
+    line-height: normal;
+}
+
+.build_model{
+    border-radius: 10px;
+    background-color: rgba(144, 125, 6, 0.8);
+    margin-left: auto;
+    margin-right: auto;
+    height: -webkit-fit-content;
+    width: -webkit-fit-content;
+    text-align: center;
+    padding: 10px;
+    display: flex;
+}
+
+.build_model p{
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+    line-height: normal;
+}
+
+#build{
+    cursor: pointer;
+}

@@ -5,11 +5,12 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Beluga Sturgeon Financial</title>
         <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.00, minimum-scale=1.00, maximum-scale=2.00">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/sidebar.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/suggestions.css') }}">
-        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/dataStyles.css') }}">
+        <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/data/dataBase.css') }}">
+        <link id="pageStyle" rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/data/light.css') }}">
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
         <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/loaderStyle.css') }}">
         <link rel="icon" href="{{ url_for('static',filename='images/ForesightLogoNoText.png') }}">
@@ -31,8 +32,51 @@
         <link href="https://cdn.anychart.com/releases/8.11.1/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
         <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-annotations.min.js"></script>
         <script src="{{url_for('static', filename='js/sideBarHandler.js')}}"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" 
+                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+                crossorigin="anonymous"></script>
+        <script src="{{url_for('static', filename='js/jtoggler.js')}}"></script>
+        <script src="{{url_for('static', filename='js/jtogglerThemeHandler.js')}}"></script>
+        <link rel= "stylesheet" type= "text/css" href="{{url_for('static', filename='styles/jtoggler.css')}}"></link>
+        <script>
+            $(document).ready(() => {
+                $('.jtoggler').jtoggler();
+                $(document).on('jt:toggled', function(event, target) {
+                    console.log(event, target);
+                    console.info($(target).prop('checked'));
+                });
+                $(document).on('jt:toggled:multi', function(event, target) {
+                    console.log(event, target);
+                    console.info($(target).parent().index());
+                    swapStyleSheet('{{info['dominantColor']}}', $(target).parent().index(), '{{url_for('account')}}');
+                });
+
+                if ('{{session['theme']}}' == 'dark') {
+                    swapStyleSheet('{{info['dominantColor']}}', 2, '{{url_for('account')}}');
+                    Array.from(document.getElementsByClassName('jtoggler-btn-wrapper')).forEach((e, i) => {
+                        if (i === 2) {
+                            e.click();
+                        }
+                    });
+                } else if ('{{session['theme']}}' == 'blue'){
+                    swapStyleSheet('{{info['dominantColor']}}', 1, '{{url_for('account')}}');
+                    Array.from(document.getElementsByClassName('jtoggler-btn-wrapper')).forEach((e, i) => {
+                        if (i === 1) {
+                            e.click();
+                        }
+                    });
+                } else {
+                    swapStyleSheet('{{info['dominantColor']}}', 0, '{{url_for('account')}}');
+                    Array.from(document.getElementsByClassName('jtoggler-btn-wrapper')).forEach((e, i) => {
+                        if (i === 0) {
+                            e.click();
+                        }
+                    });
+                }
+            });
+        </script>
     </head>
-    <body class="preload" style="background:linear-gradient(157deg, #FFFFFF 0%, rgb{{info['dominantColor']}} 140%);">
+    <body class="preload" style="background:linear-gradient(157deg, #ffffff 0%, rgb{{info['dominantColor']}} 180%);">
         <style>
             ::-webkit-scrollbar {
                 width: 7px;
@@ -84,8 +128,12 @@
                 <a href="/team" class="btn">Team</a>
                 <a href="/about" class="btn">About</a>
                 <a href="/#contact" class="btn">Contact</a>
-                <a href="premium">Premium</a>
-                <a href="/login" class="btn">Login</a>
+                <a href="/premium">Premium</a>
+                {% if session.user %}
+                    <a href="/account" class="btn">{{session.user.name}}</a>
+                {% else %}
+                    <a href="/login" class="btn">Login</a>
+                {% endif %}
             </div>
         </div>
 
@@ -101,7 +149,7 @@
                         <p class="change" id="price_change">
                             {{info['currentValue']['change']}}
                         </p>
-                        <p>
+                        <p id="status">
                             {{info['marketStatus']}}
                         </p>
                     </div>
@@ -280,6 +328,10 @@
                 </tr>
             </table> -->
         </div> 
+    </div>
+    <div id="theme_toggle">
+        <label for="theme_switcher" style="size: 24px;" id="theme_label">Theme</label>
+        <input id = "theme_switcher" type="checkbox" class="jtoggler" data-jtmulti-state="">
     </div>
         <footer>
             <div id="container">

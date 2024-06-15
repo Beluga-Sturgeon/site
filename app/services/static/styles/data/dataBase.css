@@ -1,11 +1,8 @@
 body{
-    background: linear-gradient(180deg, #f5fbff 0%, #453eff 60%);
     font-family: 'Roboto Mono';
     -webkit-user-select:none;
-}
-
-.NavBar a{
-    color: #000000;
+    min-height: 300px;
+    min-width: 1600px;
 }
 
 #search {
@@ -15,15 +12,11 @@ body{
     padding: 8px;
     border-radius: 10px;
     border: none;
-    background-color: rgba(0, 0, 0, 0.80);
-    color: black;
     backdrop-filter: blur(15px);
     transition: all 0.3s;
     font-size: 1em;
     margin-top: 2vh;
-    color: white;
 }
-
 
 p {
     font-family: 'Roboto Mono';
@@ -37,12 +30,6 @@ p.publisher {
     font-size: 16px;
 }
 
-p.title {
-    color: rgb(0, 0, 0);
-}
-
-
-
 .container, .cardLayout {
     position: relative;
     display: flex;
@@ -53,6 +40,7 @@ p.title {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
     grid-template-rows: repeat(10, 1fr);
+    margin-top: -3vh;
 }
 
 .mainVisual{
@@ -183,24 +171,22 @@ p.title {
 
 .actionbox p {
     font-size: 24px;
-}
-
-.numbervalue {
-    color: rgb(0, 0, 0);
+    margin-right: 30px;
+    margin-bottom: 10px;
 }
 
 .actionbox .model  {
     bottom: 0px;
     font-size: 12px;
-    color: rgb(0, 0, 0);
 }
+
 
 .nameAndLogo {
     grid-column: 10 / 11;
     grid-row: 1 / 3;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
 }
 
@@ -208,7 +194,6 @@ p.title {
     margin: 0;
     font-size: revert; 
     text-align: center;
-    color: black;
 }
 
 img.companyLogo {
@@ -294,100 +279,10 @@ img.companyLogo {
 }
 
 
-@media (max-aspect-ratio: 1040/1000)
-{
-    div.container {
-        display: block;
-    }
-
-    div.mainVisual {
-        width: 100%;
-        margin-left: 0px;
-    }
-    
-    div.cards {
-        width: 100%;
-    }
-
-    div.companyInfo{
-        width: 100%;
-        height: auto;
-        margin: 0px;
-        margin-bottom: 5vh;
-    }
-}
-
-@media (max-width: 1390px)
-{
-
-    div.cardLayout {
-        display: block;
-    }
-    div.cards {
-        max-height: 30vh;
-        overflow-x: auto;
-        overflow-y: hidden;
-        flex-wrap: nowrap;
-        width: 100%;
-    }
-    div.card {
-        margin-left: 2vmin;
-        margin-right: 2vmin;
-    }
-    div.news {
-        width: 100%;
-    }
-}
-
 .cards {
     width: 55%;
     display: flex;
     flex-wrap: wrap;
-}
-
-.card {
-    background: #343434;
-    border-radius: 35px;
-    text-align: center;
-    justify-content: center;
-    vertical-align: center;
-    width: 200px;
-    height: 140px;
-    margin: 2vmin;
-    cursor: pointer;
-    transition: all 0.4s;
-}
-@media (min-width: 1391px)
-{
-    .card:hover {
-        width: 240px;
-    }
-}
-
-
-
-.card h3 {
-    height: 100%;
-    vertical-align: center;
-    transition: all 0.3s;
-}
-
-.white {
-    color: white;
-}
-
-.cardValue {
-    margin-left: 5%;
-    display: flex;
-}
-
-.cardTitle {
-    margin-top: 5%;
-    margin-left: 5%;
-}
-
-.cardValue p {
-    margin-left: 5%;
 }
 
 .popup {
@@ -405,6 +300,7 @@ img.companyLogo {
     padding-bottom: 7%;
     width: 80%;
 }
+
 
 th {
     color: #707070;
@@ -435,15 +331,6 @@ td.change.negative {
 .hidden {
     display: none !important;
 }
-
-
-
-
-
-
-
-
-
 
 
 footer {
@@ -497,12 +384,7 @@ footer .copyright{
     text-align: center;
     background-color: #1e1f1c;
 }
-@media (max-aspect-ratio: 485/762) {
-    footer div.row {
-        flex-direction: column;
-    }
-    
-}
+
 
 .copyright a {
     transition: all 0.3s;
@@ -519,3 +401,90 @@ footer .copyright{
     color: #790000;
 }
 
+
+@media (max-aspect-ratio: 1040/1000)
+{
+    div.container {
+        display: block;
+    }
+
+    div.mainVisual {
+        width: 100%;
+        margin-left: 0px;
+    }
+    
+    div.cards {
+        width: 100%;
+    }
+
+    div.companyInfo{
+        width: 100%;
+        height: auto;
+        margin: 0px;
+        margin-bottom: 5vh;
+    }
+}
+
+@media (max-aspect-ratio: 485/762) {
+    footer div.row {
+        flex-direction: column;
+    }
+    
+}
+
+@media (max-width: 2000px)
+{
+    #status{
+        display: none;
+    }
+    .companyLogo{
+        display: none;
+    }
+}
+
+
+@media (max-width: 1800px)
+{
+    #status{
+        display: block;
+    }
+    .container{
+        display: block;
+    }
+    .companyLogo{
+        display: block;
+    }
+    .nameAndLogo {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+    .actionbox{
+        margin-top: 40px;
+    }
+    footer{
+        margin-top: 35vh;
+    }
+}
+
+@media (max-width: 1390px)
+{
+
+    div.cardLayout {
+        display: block;
+    }
+    div.cards {
+        max-height: 30vh;
+        overflow-x: auto;
+        overflow-y: hidden;
+        flex-wrap: nowrap;
+        width: 100%;
+    }
+    div.card {
+        margin-left: 2vmin;
+        margin-right: 2vmin;
+    }
+    div.news {
+        width: 100%;
+    }
+}

@@ -54,7 +54,10 @@ def human_format(num):
 
 def scrapeMarketStatus(soup:BeautifulSoup) ->str:
     "Scrapes google finance page for the close and open date."
-    return re.sub("Disclaimer$", "", soup.find('div', {"class":"ygUjEc","jsname":"Vebqub"}).text)
+    try:
+        return re.sub("Disclaimer$", "", soup.find('div', {"class":"ygUjEc","jsname":"Vebqub"}).text)
+    except:
+        return ""
 
 def scrapeCompanyName(soup:BeautifulSoup) ->str:
     "Scrapes google finance page for the close and open date."

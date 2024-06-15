@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PayPal JS SDK Standard Integration</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Beluga Sturgeon Financial</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/indexStyles.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/base.css') }}">     
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/suggestions.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/checkoutStyle.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.1/css/all.css. ">
+    <link rel="icon" href="{{ url_for('static',filename='images/LOGONOTEXT.png') }}">
+    <script src="https://kit.fontawesome.com/1b4a129057.js" crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/ScrollMagic.min.js" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/plugins/animation.gsap.min.js" integrity="sha512-5/OHwmQzDSBS0Ous4/hlYoWLHd06/d2r7LdKZQVBXOA6PvOqWVXtdboiLTU7lQTGyVoKVTNkwi0ol4gHGlw5ww==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.8/plugins/debug.addIndicators.min.js" integrity="sha512-RvUydNGlqYJapy0t4AH8hDv/It+zKsv4wOQGb+iOnEfa6NnF2fzjXgRy+FDjSpMfC3sjokNUzsfYZaZ8QAwIxg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ url_for('static',filename='js/dominantColor.js') }}"></script>
+</head>
+<body class="preload">
+        <div id="loader-wrapper">
+            <div id="loader">
+                <canvas id="loadingCanvas"></canvas>
+                <script type="module" src="{{url_for('static', filename='js/loadingCanvas.js')}}"></script>
+            </div>
+        </div>
+        <script src="{{url_for('static', filename='js/loader.js')}}"></script>
+
+        <div class="header">
+            <a href="/">
+                <img class="logo" src="https://www.adaptivewfs.com/wp-content/uploads/2020/07/logo-placeholder-image.png" alt="belugaSturgeon">
+            </a>
+            <div class="NavBar">
+                <a href="/apps" class="btn">Apps</a>
+                <a href="/team" class="btn">Team</a>
+                <a href="/about" class="btn">About</a>
+                <a href="/#contact" class="btn">Contact</a>
+                <a href="/premium">Premium</a>
+                {% if session.user %}
+                    <a href="/account" class="btn">{{session.user.name}}</a>
+                {% else %}
+                    <a href="/login" class="btn">Login</a>
+                {% endif %}
+            </div>
+        </div>
+  </head>
+  <div id="main_box">
+    <div id="description">
+      <h1>$3 - 1 portfolio</h1>
+      <p>Leverage the power of bsf_portfolio to find the optimal allocation of funds for any collection of stocks.</p>
+      <p>BSF is trained each day and individual portfolios are updated at midnight.</p>
+      <p>There's a new best part of waking up.</p>
+    </div>
+    <div id="paypal-button-container"></div>
+    <p id="result-message"></p>
+    
+    <!-- Initialize the JS-SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AVuB0IgzeSlP6W1lATYqhpj0Kv4VoKEqAJN3uGAqxtm8pifkwi5oitfnympAqJ-nWYqNFsCEriy6Ai-i&currency=USD"></script>
+    <script src="{{url_for('static', filename='js/paypal.js')}}"></script>
+  </div>
+  <footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm3">
+                <h5>Get started</h5>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                </ul>
+            </div>
+            <div class="col-sm3">
+                <h5>Support</h5>
+                <ul>
+                    <li>
+                        <a href="/#contact">Contact us</a>
+                    </li>
+                </ul>  
+            </div>
+            <div class="col-sm3">
+                <h5>Legal</h5>
+                <ul>
+                    <li>
+                        <a href="/legal">Our policy</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        © 2022 <a href="https://https://resonance-website.sentientplatypu.repl.co">Resonance</a>
+    </div>
+</footer>
+  </body>
+</html>
