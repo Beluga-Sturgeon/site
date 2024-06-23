@@ -1,8 +1,10 @@
 from celery import Celery
 import requests
-from app.services.main import app
+from app.services.main import *
 import subprocess
 import app.services.cnst as constants
+from firebase_admin import credentials, auth, initialize_app
+from flask_login import LoginManager, login_user
 
 
 celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
@@ -31,6 +33,16 @@ def daily_update_portfolio():
         return
     subprocess.run(f'cd {constants.PORTFOLIO_DIRECTORY} && {constants.PORTFOLIO_COMMAND.format(sp500_tickers)}', shell=True, check=True)
 
+def update_database_portfolios():
+    modelsJson = firebase.get('','models')
+    models = json.loads(modelsJson)
+    for dic in models:
+        tickers = " ".join(dic.keys())
+        subprocess.run(f'cd {constants.PORTFOLIO_DIRECTORY} && '{constants.PORTFOLIO_COMMAND.format({tickers})}', shell=True, check=True)
+        action = read_portfolio(True)
+        for item in tickers:
+            dic[item] = action[item].iloc[-1]
+    firebase.put('/','models', json.dumps(models))    
 
 celery.conf.beat_schedule = {
     'daily-get-daily': {
