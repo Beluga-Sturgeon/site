@@ -327,14 +327,14 @@ def data(companyTicker:str):
     #runs the model
     runtest(ticker=companyTicker)
     
-    log = readlog()
+    log = readlog(companyTicker)
     if log.iloc[0]["action"] == 0:
         action = "SHORT"
     elif log.iloc[0]["action"] == 1:
         action = "HOLD"
     else:
         action = "LONG"
-    stats = readstats()
+    stats = readstats(companyTicker)
     scrapingURL = getScrapingURL(companyTicker)
     data = requests.get(scrapingURL, headers=constants.REQ_HEADER).text
     soup = BeautifulSoup(data, "lxml")

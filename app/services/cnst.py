@@ -22,8 +22,8 @@ class constants():
     GET_TICKER_INFO_ENDING= "/getInfo/"
     GET_NEWS_ENDING= "/getNews/"
     GET_FINANCIALS_ENDING= "/getFinancials/"
-    STATS_FILE_PATH = r'app/services/gbm/res/stats'
-    LOG_FILE_PATH = r'app/services/gbm/res/log'
+    STATS_FILE_PATH = 'app/services/gbm/res/{}_stats'
+    LOG_FILE_PATH = 'app/services/gbm/res/{}_log'
 
     PORTFOLIO_LOG_FILE_PATH = r'app/services/bsf_portfolio/res/action'
     

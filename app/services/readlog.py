@@ -3,8 +3,8 @@ import subprocess
 from app.services.cnst import constants
 
 
-def readstats():
-    file_path = constants.STATS_FILE_PATH
+def readstats(ticker:str):
+    file_path = constants.STATS_FILE_PATH.format(ticker)
 
     # Read the data from the file
     with open(file_path, 'r') as file:
@@ -17,8 +17,8 @@ def readstats():
     df = pd.DataFrame([data], columns=["Ticker", "Annualized Return benchmark", "Stdev of Returns benchmark", "Shape Ratio benchmark", "Maximum Drawdown benchmark", "Annualized Return model", "Stdev of Returns model", "Sharpe Ratio model", "Maximum Drawdown model"])
     return df
 
-def readlog(lastonly=False):
-    log_file_path = constants.LOG_FILE_PATH
+def readlog(ticker:str, lastonly=False):
+    log_file_path = constants.LOG_FILE_PATH.format(ticker)
 
     # Read the last line of the log file when lastonly is True
     if lastonly:
