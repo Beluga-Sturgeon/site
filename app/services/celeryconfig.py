@@ -31,7 +31,7 @@ def daily_update_portfolio():
     else:
         print("Failed to retrieve S&P 500 tickers.")
         return
-    subprocess.run(f'cd {constants.PORTFOLIO_DIRECTORY} && {constants.PORTFOLIO_COMMAND.format(sp500_tickers)}', shell=True, check=True)
+    subprocess.run(f'cd {constants.PORTFOLIO_DIRECTORY} && {constants.PORTFOLIO_COMMAND.format('build', sp500_tickers)}', shell=True, check=True)
 
 def update_database_portfolios():
     modelsJson = firebase.get('','models')

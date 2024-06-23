@@ -32,7 +32,7 @@ class constants():
 
     # Define the command you want to execute
     QUANT_COMMAND = "./exec test {} ./models/checkpoint"
-    PORTFOLIO_COMMAND = "./exec {}"
+    PORTFOLIO_COMMAND = "./exec {} {}"
 
     NEWS_LIMIT = 10
 
