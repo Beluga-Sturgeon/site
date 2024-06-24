@@ -1,6 +1,7 @@
 venv/
 secret_info
 app/services/__pycache__/
+venv
 
 
 # Ignore compiled bytecode files
@@ -16,6 +17,7 @@ dist/
 build/
 *.venv/
 .venv/
+
 env/
 venv/
 ENV/
