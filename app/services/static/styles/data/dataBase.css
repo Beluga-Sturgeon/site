@@ -247,7 +247,7 @@ img.companyLogo {
     transition: all 0.3s;
     display: flex;
     flex-wrap: nowrap;
-    flex-direction: row;
+    flex-direction: column;
     align-items: baseline;
     justify-content: flex-start;
     margin-bottom: 10px;
@@ -488,3 +488,4 @@ footer .copyright{
         width: 100%;
     }
 }
+
