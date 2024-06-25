@@ -34,3 +34,11 @@ p.title {
 .nameAndLogo h1{
     color: white;
 }
+
+.mainVisual .positive{
+    color: rgb(0, 196, 0);
+}
+
+#theme_label{
+    color: white;
+}

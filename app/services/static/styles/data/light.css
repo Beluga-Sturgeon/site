@@ -30,3 +30,11 @@ p.title {
 .nameAndLogo h1{
     color: black;
 }
+
+#generate_action:hover > * {
+    color: black;
+}
+
+#generate_action:hover > * > path{
+    fill: black;
+}

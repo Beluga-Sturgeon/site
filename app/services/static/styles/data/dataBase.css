@@ -94,6 +94,7 @@ p.publisher {
     margin-right: 5px;
     white-space: nowrap;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .selected_tab{
@@ -465,6 +466,13 @@ footer .copyright{
     footer{
         margin-top: 35vh;
     }
+    #window{
+        height: 70vh;
+    }
+    #charts{
+        height: 70vh;
+    }
+
 }
 
 @media (max-width: 1390px)

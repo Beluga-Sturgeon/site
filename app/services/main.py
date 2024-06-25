@@ -319,46 +319,19 @@ def getLog(companyTicker:str):
 
 @app.route("/getStats/<string:companyTicker>")
 def getStats(companyTicker:str):
-    return readstats().to_csv()
+    return readstats(companyTicker).to_csv()
 
 @app.route("/data/<string:companyTicker>")
 def data(companyTicker:str):
 
-    #runs the model
+    # #runs the model
     if not tickerAlreadyAccessed(companyTicker):
         runtest(ticker=companyTicker)
-    
-    log = readlog(companyTicker)
-    if log.iloc[0]["action"] == 0:
-        action = "SHORT"
-    elif log.iloc[0]["action"] == 1:
-        action = "HOLD"
-    else:
-        action = "LONG"
-    stats = readstats(companyTicker)
     scrapingURL = getScrapingURL(companyTicker)
     data = requests.get(scrapingURL, headers=constants.REQ_HEADER).text
     soup = BeautifulSoup(data, "lxml")
 
     data = get_profile(companyTicker)
-
-    #STATS
-    price = get_value(companyTicker)
-    e_a_r = round(float(stats.iloc[0]["Annualized Return model"]), 4)
-    std = round(float(stats.iloc[0]["Stdev of Returns model"]),4)
-    sharperatio=round(float(stats.iloc[0]["Sharpe Ratio model"]),4)
-    maxdrawdown=round(float(stats.iloc[0]["Maximum Drawdown model"]), 4)
-
-
-    update_daily(
-        ticker=companyTicker,
-        action=action,
-        price=price,
-        sd=std,
-        maxdrawdown=maxdrawdown,
-        sharpe=sharperatio,
-        e_a_r=e_a_r
-    )
 
     soup_data = requests.get(getScrapingURL(companyTicker), headers=constants.REQ_HEADER).text
     soup = BeautifulSoup(soup_data, "lxml")
@@ -370,7 +343,57 @@ def data(companyTicker:str):
     except:
         dominant_color = "(00,00,00)"
 
-    return render_template(
+    price = get_value(companyTicker)
+
+    #Check if stats and log exist
+    stats = readstats(companyTicker)
+    log = readlog(companyTicker)
+    if stats is None or log is None:
+        print("stats is none!")
+        #Only return scraped data w/ run button
+        return render_template(
+        "data.html", 
+        info = {
+            "companyName" : data["companyName"],
+            "currentValue" : {
+                "value" : price,
+                "change" : getPriceChangeStr(companyTicker)
+            },
+            "marketStatus" : scrapeMarketStatus(soup),
+            "companyDesc" : data["description"],
+            "companyLogoUrl" : data["image"],
+            "dominantColor": dominant_color
+        },
+        newsList = getNews(companyTicker),
+        session=session
+        )
+    else:
+        print("stats is not!")
+        #Read action
+        if log.iloc[0]["action"] == 0:
+            action = "SHORT"
+        elif log.iloc[0]["action"] == 1:
+            action = "HOLD"
+        else:
+            action = "LONG"
+        #Returns model stats and price
+        price = get_value(companyTicker)
+        e_a_r = round(float(stats.iloc[0]["Annualized Return model"]), 4)
+        std = round(float(stats.iloc[0]["Stdev of Returns model"]),4)
+        sharperatio=round(float(stats.iloc[0]["Sharpe Ratio model"]),4)
+        maxdrawdown=round(float(stats.iloc[0]["Maximum Drawdown model"]), 4)
+
+        update_daily(
+            ticker=companyTicker,
+            action=action,
+            price=price,
+            sd=std,
+            maxdrawdown=maxdrawdown,
+            sharpe=sharperatio,
+            e_a_r=e_a_r
+        )
+
+        return render_template(
         "data.html", 
         info = {
             "companyName" : data["companyName"],
@@ -390,7 +413,7 @@ def data(companyTicker:str):
         sharperatio=sharperatio,
         maxdrawdown=maxdrawdown,
         session=session
-    )
+        )
 
 """
 This is the loading page

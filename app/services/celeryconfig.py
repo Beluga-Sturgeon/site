@@ -38,7 +38,7 @@ def update_database_portfolios():
     models = json.loads(modelsJson)
     for dic in models:
         tickers = " ".join(dic.keys())
-        subprocess.run(f'cd {constants.PORTFOLIO_DIRECTORY} && '{constants.PORTFOLIO_COMMAND.format({tickers})}', shell=True, check=True)
+        subprocess.run(f"cd {constants.PORTFOLIO_DIRECTORY} && '{constants.PORTFOLIO_COMMAND.format({tickers})}'", shell=True, check=True)
         action = read_portfolio(True)
         for item in tickers:
             dic[item] = action[item].iloc[-1]
