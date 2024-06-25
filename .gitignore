@@ -19,7 +19,6 @@ build/
 .venv/
 
 env/
-venv/
 ENV/
 ENV.bak/
 bin/
