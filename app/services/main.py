@@ -324,9 +324,9 @@ def getStats(companyTicker:str):
 @app.route("/data/<string:companyTicker>")
 def data(companyTicker:str):
 
-    # #runs the model
-    if not tickerAlreadyAccessed(companyTicker):
-        runtest(ticker=companyTicker)
+    #runs the model
+    # if not tickerAlreadyAccessed(companyTicker):
+    #     runtest(ticker=companyTicker)
     scrapingURL = getScrapingURL(companyTicker)
     data = requests.get(scrapingURL, headers=constants.REQ_HEADER).text
     soup = BeautifulSoup(data, "lxml")

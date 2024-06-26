@@ -30,28 +30,34 @@
     --size: 5px;
 }
 
-.loader__element {
-    border-radius: 100%;
-    border: var(--size) solid var(--point-color);
-    margin: calc(var(--size) * 2);
-    width: 1em; /* Ensure each element has a width and height */
-    height: 1em; /* Adjust based on your design */
-}
-
-.loader__element:nth-child(1) {
-    animation: preloader .6s ease-in-out alternate infinite;
-}
-
-.loader__element:nth-child(2) {
-    animation: preloader .6s ease-in-out alternate .2s infinite;
-}
-
-.loader__element:nth-child(3) {
-    animation: preloader .6s ease-in-out alternate .4s infinite;
-}
-
-@keyframes preloader {
-    100% {
-        transform: scale(2);
+.loading {
+    font-size: 30px;
+    width: 100%;
+    height: 100%;
+    margin-top: 20%;
+    text-align: left;
+    color: white;
+    margin-left: 33.3%;
+  }
+  
+  .loading:after {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+    -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
+    animation: ellipsis steps(4,end) 900ms infinite;
+    content: "\2026"; /* ascii code for the ellipsis character */
+    width: 0px;
+  }
+  
+  @keyframes ellipsis {
+    to {
+      width: 1.25em;    
     }
-}
+  }
+  
+  @-webkit-keyframes ellipsis {
+    to {
+      width: 1.25em;    
+    }
+  }
