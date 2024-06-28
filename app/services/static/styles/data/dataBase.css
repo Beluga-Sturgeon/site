@@ -128,7 +128,7 @@ p.publisher {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    height: -webkit-fill-available;
+    height: 100%;
 }
 
 .sidegraph{
@@ -433,16 +433,6 @@ footer .copyright{
     
 }
 
-@media (max-width: 2000px)
-{
-    #status{
-        display: none;
-    }
-    .companyLogo{
-        display: none;
-    }
-}
-
 
 @media (max-width: 1800px)
 {
@@ -463,16 +453,15 @@ footer .copyright{
     .actionbox{
         margin-top: 40px;
     }
-    footer{
-        margin-top: 35vh;
-    }
     #window{
         height: 70vh;
     }
     #charts{
         height: 70vh;
     }
-
+    #theme_toggler{
+        position: absolute;
+    }
 }
 
 @media (max-width: 1390px)

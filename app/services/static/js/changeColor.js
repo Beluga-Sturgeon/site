@@ -45,9 +45,6 @@ function changeTableStyle()
     $(credits[0]).css("display","none")
 }
 
-
-
-
 $( "div.card" ).hover(
     function(){
         $(this).children().css("color", "white")
@@ -74,3 +71,26 @@ function actioncolor() {
     });
 }
 actioncolor()
+
+function fixCss(){
+    if (window.innerWidth < 1800){
+        const rect = document.getElementById('actionbox').getBoundingClientRect();
+        const footer = document.querySelector('footer');
+        const themeToggle = document.getElementById('theme_toggle');
+    
+        footer.style.marginTop = `calc(${rect.bottom}px - 50vh)`;
+        themeToggle.style.top = `${rect.top}px`;
+    } else {
+        const rect = document.getElementById('window');
+        themeToggle.style.top = `${rect.top}px`;
+        footer.style.marginTop = `calc(${rect.bottom}px - 50vh)`;
+    }
+}
+
+window.addEventListener("resize", (e) => {
+    fixCss()
+});
+
+$(document).ready(() => {
+    fixCss()
+})

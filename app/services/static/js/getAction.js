@@ -29,4 +29,3 @@ $(document).ready(() => {
 });
 
 // Call to server
-
