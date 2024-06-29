@@ -73,16 +73,16 @@ function actioncolor() {
 actioncolor()
 
 function fixCss(){
-    if (window.innerWidth < 1800){
+    if (window.innerWidth / window.innerHeight < 3/2){
         const rect = document.getElementById('actionbox').getBoundingClientRect();
         const footer = document.querySelector('footer');
         const themeToggle = document.getElementById('theme_toggle');
     
         footer.style.marginTop = `calc(${rect.bottom}px - 50vh)`;
-        themeToggle.style.top = `${rect.top}px`;
+        themeToggle.style.top = `${rect.bottom}px`;
     } else {
         const rect = document.getElementById('window');
-        themeToggle.style.top = `${rect.top}px`;
+        themeToggle.style.top = `${rect.bottom}px`;
         footer.style.marginTop = `calc(${rect.bottom}px - 50vh)`;
     }
 }

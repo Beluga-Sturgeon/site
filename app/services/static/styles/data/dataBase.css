@@ -426,7 +426,7 @@ footer .copyright{
     }
 }
 
-@media (max-aspect-ratio: 485/762) {
+@media (max-aspect-ratio: 3/2) {
     footer div.row {
         flex-direction: column;
     }
@@ -434,7 +434,7 @@ footer .copyright{
 }
 
 
-@media (max-width: 1800px)
+@media (max-aspect-ratio: 3/2)
 {
     #status{
         display: block;
@@ -464,7 +464,7 @@ footer .copyright{
     }
 }
 
-@media (max-width: 1390px)
+@media (max-aspect-ratio: 3/2)
 {
 
     div.cardLayout {
