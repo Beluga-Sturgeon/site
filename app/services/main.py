@@ -348,7 +348,7 @@ def data(companyTicker:str):
     #Check if stats and log exist
     stats = readstats(companyTicker)
     log = readlog(companyTicker)
-    if stats is None or log is None:
+    if not tickerAlreadyAccessed(companyTicker):
         print("stats is none!")
         #Only return scraped data w/ run button
         return render_template(
