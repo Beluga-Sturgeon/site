@@ -321,6 +321,14 @@ def getLog(companyTicker:str):
 def getStats(companyTicker:str):
     return readstats(companyTicker).to_csv()
 
+@app.route("/runTests/<string:companyTicker>")
+def run(companyTicker: str):
+    runtest(ticker=companyTicker)
+    if (readstats(companyTicker) is None and readlog(companyTicker) is None):
+        return "Not Ready"
+    else:
+        return url_for(f"/data/{companyTicker}")
+
 @app.route("/data/<string:companyTicker>")
 def data(companyTicker:str):
 

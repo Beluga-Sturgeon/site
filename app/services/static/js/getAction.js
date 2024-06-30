@@ -9,23 +9,33 @@ $(document).ready(() => {
     });
 
     $('#generate_action').on('click', (e) => {
-
         e.preventDefault();
         $("#c").addClass('hidden')
         $('.loading').removeClass('hidden')
+        runtTest()
     });
 
-    fetch(document.URL.split("/").slice(0, 3).join("/") + '/runModel/' + document.URL.split("/").pop())
-        .then(function (response) {
-            if (!response.ok) {
-              throw new Error('Network response was not ok');
-            }
-            return response.json();
+    function runtTest() {
+      fetch(document.URL.split("/").slice(0, 3).join("/") + '/runTests/' + document.URL.split("/").pop())
+          .then(function(response) {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.text();
           })
-          .then(function (url) {
-            // Add function that redirects to /data/<Ticker> once data is ready
-            window.location.href = url
+          .then(function(text) {
+              //Check every ten seconds
+              if (text === "Not Ready") {
+                  setTimeout(function() {
+                      runtTest();
+                  }, 10000);
+              } else {
+                  window.location.href = text;
+              }
+          })
+          .catch(function(error) {
+              console.error(error);
           });
+  }
+  
 });
-
-// Call to server
