@@ -176,6 +176,7 @@ def home():
 
 @app.route("/home")
 def home2():
+    print(portfolio_to_dict())
     return render_template("./index.html")
 
 @app.route("/index")
