@@ -106,10 +106,9 @@ def getModelData(tickers):
 def update_model_data(list_of_tickers:list):
     """Takes in data as a list of tickers Pushes to the models key in the database. MODEL NEEDS TO BE RUN FIRST"""
     keyName = " ".join(list_of_tickers)
-    modells = firebase.get('/modells/' + keyName, None)
     result = portfolio_to_dict()
     result['last_updated'] = datetime.today().strftime('%Y-%m-%d')
-    firebase.put('/modells', keyName, result)
+    firebase.put('/models', keyName, result)
 
 
 

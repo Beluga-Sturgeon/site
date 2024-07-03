@@ -52,6 +52,11 @@ def runtest(ticker:str):
         print(f"Error: {e}")
 
 def read_portfolio(lastonly = False):
+    """returns Dataframe with portfolio readings.
+    
+        NVDA      TSLA     AAPL       AMD     GOOGL
+    0  0.19943  0.208618  0.20574  0.195329  0.190883
+    """
     action_file_path = constants.PORTFOLIO_LOG_FILE_PATH
     # Read the last line of the log file when lastonly is True
     if lastonly:
@@ -77,6 +82,7 @@ def read_portfolio(lastonly = False):
         return df
     
 def portfolio_to_dict():
+    """Returns `read_portfolio(True)` as a dictionary"""
     df, headers = read_portfolio(lastonly=True)
     if df.empty:
         return {}
