@@ -25,7 +25,11 @@ IB_TAX_APP_PRICE_CURRENCY = "PLN"
 
 @app.route("/premium")
 def premium():
-    return render_template("premium.html")
+    try:
+        return render_template("premium.html")
+    except:
+        print("failed, going to login.")
+        return redirect("/login")
  
 @app.route("/portfolio")
 def portfolio():
@@ -34,9 +38,12 @@ def portfolio():
     session['user'] = userToDict(auth.get_user_by_email(email))
     models = firebase.get('/names', uid).get('models')
     portfolio = []
-    for model in models:
-        portfolio.append(getModelData(model))
-    print(portfolio)
+    if models:
+        for model in models:
+            portfolio.append(getModelData(model))
+        print(portfolio)
+    else:
+        print("no models.")
 
     return render_template("portfolio.html", session=session, data=portfolio)
 
