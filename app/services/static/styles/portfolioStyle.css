@@ -81,3 +81,8 @@ body{
     padding: 10px;
     text-decoration: none;
 }
+
+.reload_img{
+    width: 10%;
+    margin-bottom: 20px;
+}

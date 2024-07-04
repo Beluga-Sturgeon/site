@@ -1,22 +1,33 @@
 
 $.each(portfolio, (i, model) => {
-    const model_card = $("<div>").addClass("model_card")
-    console.log(model)
+    const model_card = $("<div>").addClass("model_card");
+    console.log(model);
 
+    const tickerPromises = [];
     $.each(Object.keys(model), (i, t) => {
-        fetchTickerData(t).then(ticker => {
-            if (ticker !== null){
-                console.log(ticker)
+        // Skip 'last_updated' key
+        if (t === 'last_updated') {
+            return true;
+        }
+        tickerPromises.push(fetchTickerData(t).then(ticker => {
+            if (ticker !== null) {
+                console.log(ticker);
                 const tickerElement = $("<div>").addClass("ticker_row");
                 tickerElement.append($("<img>").attr("src", ticker.companyLogoUrl).addClass('ticker_logo'));
                 tickerElement.append($("<p>").text(t).addClass('ticker'));
-                tickerElement.append($("<p>").text(`${model[t]}%`).addClass('percentage'))
+                tickerElement.append($("<p>").text(`${model[t]}%`).addClass('percentage'));
 
-                model_card.append(tickerElement)
+                model_card.append(tickerElement);
             }
-        });
+        }));
     });
-    $('#main_box').prepend(model_card)
+
+    Promise.all(tickerPromises).then(() => {
+        model_card.append($("<p>").text("Last Updated: " + model.last_updated).addClass('update_text').css('color', 'white'));
+        model_card.append($("<img>").attr("src", `static/images/reload.png`).addClass('reload_img'));
+
+        $('#main_box').prepend(model_card);
+    });
 });
 
 function fetchTickerData(ticker) {
