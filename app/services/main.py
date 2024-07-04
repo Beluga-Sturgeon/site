@@ -67,6 +67,8 @@ def tickerAlreadyAccessed(ticker:str):
     current_date_string = current_date.strftime('%Y-%m-%d')
 
     daily_log = firebase.get('/daily/' + current_date_string, None)
+    if not daily_log:
+        return False
     return ticker in daily_log
 
 def update_daily(ticker:str, action, price, sd, maxdrawdown, sharpe, e_a_r):
@@ -174,6 +176,7 @@ def home():
 
 @app.route("/home")
 def home2():
+    print(portfolio_to_dict())
     return render_template("./index.html")
 
 @app.route("/index")
@@ -324,10 +327,37 @@ def getStats(companyTicker:str):
 @app.route("/runTests/<string:companyTicker>")
 def run(companyTicker: str):
     runtest(ticker=companyTicker)
-    if (readstats(companyTicker) is None and readlog(companyTicker) is None):
+    stats = readstats(companyTicker)
+    log = readlog(companyTicker)    
+
+    if (stats is None and log is None):
         return "Not Ready"
     else:
-        return url_for(f"/data/{companyTicker}")
+        price = get_value(companyTicker)
+        e_a_r = round(float(stats.iloc[0]["Annualized Return model"]), 4)
+        std = round(float(stats.iloc[0]["Stdev of Returns model"]),4)
+        sharperatio=round(float(stats.iloc[0]["Sharpe Ratio model"]),4)
+        maxdrawdown=round(float(stats.iloc[0]["Maximum Drawdown model"]), 4)
+
+        if log.iloc[0]["action"] == 0:
+            action = "SHORT"
+        elif log.iloc[0]["action"] == 1:
+            action = "HOLD"
+        else:
+            action = "LONG"
+
+        update_daily(
+            ticker=companyTicker,
+            action=action,
+            price=price,
+            sd=std,
+            maxdrawdown=maxdrawdown,
+            sharpe=sharperatio,
+            e_a_r=e_a_r
+        )
+        return url_for("data", companyTicker=companyTicker)
+    
+
 
 @app.route("/data/<string:companyTicker>")
 def data(companyTicker:str):

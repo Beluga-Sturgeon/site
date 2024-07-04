@@ -50,15 +50,13 @@ def runtest(ticker:str):
         subprocess.run(f'cd {constants.DIRECTORY_PATH} && {constants.QUANT_COMMAND.format(ticker)}', shell=True, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error: {e}")
-    
-
-
-
-
-
-
 
 def read_portfolio(lastonly = False):
+    """returns Dataframe with portfolio readings.
+    
+        NVDA      TSLA     AAPL       AMD     GOOGL
+    0  0.19943  0.208618  0.20574  0.195329  0.190883
+    """
     action_file_path = constants.PORTFOLIO_LOG_FILE_PATH
     # Read the last line of the log file when lastonly is True
     if lastonly:
@@ -68,7 +66,7 @@ def read_portfolio(lastonly = False):
             data = [lines[-1].split(',')]
             data[0][-1] = data[0][-1].rstrip()  # Remove newline character from the last element
             df = pd.DataFrame(data, columns=columns)
-            return df
+            return df, columns
 
     # Read the entire log file when lastonly is False
     with open(action_file_path, 'r') as file:
@@ -82,7 +80,16 @@ def read_portfolio(lastonly = False):
         df = pd.DataFrame(data, columns=columns)
         df[columns[-1]] = df[columns[-1]].str.rstrip()  # Remove newline characters from the columns[-1] column
         return df
+    
+def portfolio_to_dict():
+    """Returns `read_portfolio(True)` as a dictionary"""
+    df, headers = read_portfolio(lastonly=True)
+    if df.empty:
+        return {}
+    return dict(zip(headers, df.iloc[0]))
 
+if __name__ == "__main__":
+    print(read_portfolio(True))
 
 
 

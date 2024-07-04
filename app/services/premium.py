@@ -1,10 +1,11 @@
 from app.services.main import *
 from app.services.secret_info.secretConstants import secretConstants
+from app.services.readlog import *
 from firebase_admin import credentials, auth, initialize_app
 from flask_login import LoginManager, login_user
 from flask import jsonify
 from requests.auth import HTTPBasicAuth
-
+from datetime import datetime, timedelta
 import json
 import os
  
@@ -72,35 +73,27 @@ def saveModel():
         return redirect(url_for("portfolio"))
 
 def addModel(tickers):
-    modelsJson = firebase.get('','models')
-    if modelsJson is None:
-        firebase.put('/','models', """
-[
-    {"AMZN": 0.0, "TSLA": 1.0},
-    {"AAPL": 0.0, "AMD": 1.0}
-]
-""")
-    models = json.loads(modelsJson)
-    for dic in models:
-        keys = list(dic.keys())
-        if tickers == keys:
-            print("Free Money")
-            return True
-    newModel = {}
+    keyName = " ".join(tickers)
+    model = {"last_updated": "never"}
+
     for ticker in tickers:
-        newModel[ticker] = 0.0
-    models.append(newModel)
-    firebase.put('/','models', json.dumps(models))
-    return True
+        model[ticker] = 0
+
+    firebase.put("/models", keyName, model)
 
 def getModelData(tickers):
-    models = json.loads(firebase.get('','models'))
-    for dic in models:
-        keys = str(list(dic.keys()))
-        if tickers == keys:
-            print('found')
-            return dic
-    return {}
+    """Returns a dictionary of the model and the asset values"""
+    return firebase.get("/models/" + " ".join(tickers))
+
+def update_model_data(list_of_tickers:list):
+    """Takes in data as a list of tickers Pushes to the models key in the database. MODEL NEEDS TO BE RUN FIRST"""
+    keyName = " ".join(list_of_tickers)
+    result = portfolio_to_dict()
+    result['last_updated'] = datetime.today().strftime('%Y-%m-%d')
+    firebase.put('/models', keyName, result)
+
+
+
 
 @app.route("/payment")
 def paypallPayment():
