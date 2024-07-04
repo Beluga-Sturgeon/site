@@ -100,7 +100,11 @@ def update_model_data(list_of_tickers:list):
     result = portfolio_to_dict()
     result['last_updated'] = datetime.today().strftime('%Y-%m-%d')
     firebase.put('/models', keyName, result)
+    return result
 
+@app.route("/runPortfolio/<string:keyName>")
+def runPortfolio(keyName):
+    return jsonify(update_model_data(keyName))
 
 
 

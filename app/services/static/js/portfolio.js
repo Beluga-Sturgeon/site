@@ -4,11 +4,15 @@ $.each(portfolio, (i, model) => {
     console.log(model);
 
     const tickerPromises = [];
+    keyName = "";
+
     $.each(Object.keys(model), (i, t) => {
         // Skip 'last_updated' key
         if (t === 'last_updated') {
             return true;
         }
+
+        keyName += t;
         tickerPromises.push(fetchTickerData(t).then(ticker => {
             if (ticker !== null) {
                 console.log(ticker);
@@ -29,6 +33,8 @@ $.each(portfolio, (i, model) => {
         $('#main_box').prepend(model_card);
     });
 });
+
+
 
 function fetchTickerData(ticker) {
     console.log("Ticker is " + ticker)
