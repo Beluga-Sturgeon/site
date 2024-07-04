@@ -67,8 +67,8 @@ def callback():
         user = auth.get_user_by_email(email)
     except:
         user = auth.create_user(email=email, password=''.join(random.choices(string.ascii_uppercase + string.digits, k=6)))
+        firebase.put("/names", user.uid, {'theme': 'light', 'premium_models': 0, 'models': None})
         session["user"] = userToDict(user)
-        firebase.put("/names", session["user"].get('uid'), {'theme': 'light', 'premium_models': 0, 'models': None})
     if user:
         session["user"] = userToDict(user)
         return redirect(url_for("home"))
@@ -89,6 +89,7 @@ def createAccount():
             return render_template("./createAccount.html", err="Passwords Don't Match!")
         try:
             user = auth.create_user(email=email, password=password)
+            firebase.put("/names", user.uid, {'theme': 'light', 'premium_models': 0, 'models': None})
             session["user"] = userToDict(user)
             # Generate email verification 
             link = auth.generate_email_verification_link(email, action_code_settings=None)
@@ -99,7 +100,6 @@ def createAccount():
             )
             msg.sender = emailvars.EMAIL
             mail.send(msg)
-            firebase.put("/names", session["user"].get('uid'))
             return redirect(url_for("home"))
         except Exception as e:
             return render_template("./createAccount.html", err=str(e))
