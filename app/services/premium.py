@@ -50,6 +50,7 @@ def build_model():
 
 @app.route("/build-model/save", methods=['POST', 'GET'])
 def saveModel():
+    print(request)
     tickers = request.get_json() 
     addModel(tickers)
     uid = session["user"].get('uid')
@@ -57,7 +58,7 @@ def saveModel():
     if data.get('premium_models') <= 0:
         return redirect(url_for('paypallPayment'))
     else:
-        tickerString = str(tickers)
+        tickerString = " ".join(tickers)
         models = firebase.get('/names', uid).get('models')
         if models is None:
             print(tickerString)
@@ -83,7 +84,8 @@ def addModel(tickers):
 
 def getModelData(tickers):
     """Returns a dictionary of the model and the asset values"""
-    return firebase.get("/models/" + " ".join(tickers))
+    print(firebase.get("/models", tickers))
+    return firebase.get("/models", tickers)
 
 def update_model_data(list_of_tickers:list):
     """Takes in data as a list of tickers Pushes to the models key in the database. MODEL NEEDS TO BE RUN FIRST"""

@@ -1,26 +1,30 @@
+var i = 0
 $.each(portfolio, (i, model) => {
-    const model_card = $("<div>").addClass("model_card")
-    console.log()
+    if (i === 0){
+        i++
+    } else {
+        const model_card = $("<div>").addClass("model_card")
+        console.log(model)
 
-    model = sort_object(model) //Not perfect for sorting by highest priority, but loads much faster than doing it sequentially
+        $.each(Object.keys(model), (i, t) => {
+            fetchTickerData(t).then(ticker => {
+                if (ticker !== null){
+                    console.log(ticker)
+                    const tickerElement = $("<div>").addClass("ticker_row");
+                    tickerElement.append($("<img>").attr("src", ticker.companyLogoUrl).addClass('ticker_logo'));
+                    tickerElement.append($("<p>").text(t).addClass('ticker'));
+                    tickerElement.append($("<p>").text(`${model[t]}%`).addClass('percentage'))
 
-    $.each(Object.keys(model), (i, t) => {
-        fetchTickerData(t).then(ticker => {
-            if (ticker !== null){
-                console.log(ticker)
-                const tickerElement = $("<div>").addClass("ticker_row");
-                tickerElement.append($("<img>").attr("src", ticker.companyLogoUrl).addClass('ticker_logo'));
-                tickerElement.append($("<p>").text(t).addClass('ticker'));
-                tickerElement.append($("<p>").text(`${model[t]}%`).addClass('percentage'))
-
-                model_card.append(tickerElement)
-            }
+                    model_card.append(tickerElement)
+                }
+            });
         });
-    });
-    $('#main_box').prepend(model_card)
+        $('#main_box').prepend(model_card)
+    }
 });
 
 function fetchTickerData(ticker) {
+    console.log("Ticker is " + ticker)
     return new Promise((resolve, reject) => {
         const xhttp = new XMLHttpRequest();
         
