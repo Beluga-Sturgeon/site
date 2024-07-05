@@ -1,10 +1,9 @@
-
 $.each(portfolio, (i, model) => {
     const model_card = $("<div>").addClass("model_card");
     console.log(model);
 
     const tickerPromises = [];
-    keyName = "";
+    keys = [];
 
     $.each(Object.keys(model), (i, t) => {
         // Skip 'last_updated' key
@@ -12,7 +11,7 @@ $.each(portfolio, (i, model) => {
             return true;
         }
 
-        keyName += t;
+        keys.push(t);
         tickerPromises.push(fetchTickerData(t).then(ticker => {
             if (ticker !== null) {
                 console.log(ticker);
@@ -28,12 +27,66 @@ $.each(portfolio, (i, model) => {
 
     Promise.all(tickerPromises).then(() => {
         model_card.append($("<p>").text("Last Updated: " + model.last_updated).addClass('update_text').css('color', 'white'));
-        model_card.append($("<img>").attr("src", `static/images/reload.png`).addClass('reload_img'));
+
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        let mm = today.getMonth() + 1; // Months start at 0!
+        let dd = today.getDate();
+
+        if (dd < 10) dd = '0' + dd;
+        if (mm < 10) mm = '0' + mm;
+
+        const formattedToday = mm + '-' + dd + '-' + yyyy;
+        console.log(formattedToday)
+        if (model.last_updated != formattedToday){
+            const refresh = $("<img>").attr("src", `static/images/reload.png`).addClass('reload_img');
+            refresh.on('click', e => {
+                console.log(keys)
+                refreshPortfolio(keys)
+            });
+            model_card.append(refresh);
+        }
 
         $('#main_box').prepend(model_card);
     });
 });
 
+$('#plus').on('click', () => {
+        if ($('#plus h2').text() === 'Buy New Portfolio'){
+            window.location.href = "/payment"
+        }
+        else {
+            window.location.href = "/build-model"
+        }
+    }
+);
+
+function refreshPortfolio(tickers) {
+    fetch(document.URL.split("/").slice(0, 3).join("/") + '/runPortfolio', 
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(tickers)
+        })
+        .then(function(response) {
+            return response.text();
+        })
+        .then(function(text) {
+            //Check every ten seconds
+            if (text === "Not Ready") {
+                setTimeout(function() {
+                    refreshPortfolio(tickers);
+                }, 10000);
+            } else {
+                window.location.href = text;
+            }
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
+}
 
 
 function fetchTickerData(ticker) {
@@ -72,13 +125,3 @@ function sort_object(obj) {
     })
     return(sorted_obj)
 } 
-
-$('#plus').on('click', () => {
-        if ($('#plus h2').text() === 'Buy New Portfolio'){
-            window.location.href = "/payment"
-        }
-        else {
-            window.location.href = "/build-model"
-        }
-    }
-);

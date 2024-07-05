@@ -102,9 +102,29 @@ def update_model_data(list_of_tickers:list):
     firebase.put('/models', keyName, result)
     return result
 
-@app.route("/runPortfolio/<string:keyName>")
-def runPortfolio(keyName):
-    return jsonify(update_model_data(keyName))
+@app.route("/runPortfolio", methods=['POST', 'GET'])
+def runPortfolio():
+    tickers = request.get_json() 
+    keyName = " ".join(tickers)
+    if not session.get('runningPortfolio', False):
+        session['runningPortfolio'] = True
+        try:
+            subprocess.run(f"cd {constants.PORTFOLIO_DIRECTORY} && rm {constants.PORTFOLIO_LOG_FILE_PATH} && {constants.PORTFOLIO_COMMAND.format('run', keyName)}", shell=True, check=True)
+        except:
+            try:
+                subprocess.run(f"cd {constants.PORTFOLIO_DIRECTORY} && {constants.PORTFOLIO_COMMAND.format('run', keyName)}", shell=True, check=True)
+            except:
+                session['runningPortfolio'] = False
+                return "Not Ready", 200
+    print(keyName)
+    if portfolio_to_dict() == {}:
+        print('Not Ready')
+        return "Not Ready", 200
+    else:
+        print('Ready')
+        update_model_data(tickers)
+        session['runningPortfolio'] = False
+        return url_for('portfolio')
 
 
 

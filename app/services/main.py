@@ -326,7 +326,9 @@ def getStats(companyTicker:str):
 
 @app.route("/runTests/<string:companyTicker>")
 def run(companyTicker: str):
-    runtest(ticker=companyTicker)
+    if not session.get('runningTest', False):
+        session['runningTest'] = True
+        runtest(ticker=companyTicker)
     stats = readstats(companyTicker)
     log = readlog(companyTicker)    
 
@@ -355,6 +357,7 @@ def run(companyTicker: str):
             sharpe=sharperatio,
             e_a_r=e_a_r
         )
+        session['runningTest'] = False
         return url_for("data", companyTicker=companyTicker)
     
 
