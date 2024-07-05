@@ -18,7 +18,7 @@ $.each(portfolio, (i, model) => {
                 const tickerElement = $("<div>").addClass("ticker_row");
                 tickerElement.append($("<img>").attr("src", ticker.companyLogoUrl).addClass('ticker_logo'));
                 tickerElement.append($("<p>").text(t).addClass('ticker'));
-                tickerElement.append($("<p>").text(`${model[t]}%`).addClass('percentage'));
+                tickerElement.append($("<p>").text(`${(model[t] * 100).toFixed(2)}%`).addClass('percentage'));
 
                 model_card.append(tickerElement);
             }
