@@ -42,9 +42,21 @@ $.each(portfolio, (i, model) => {
             const refresh = $("<img>").attr("src", `static/images/reload.png`).addClass('reload_img');
             refresh.on('click', e => {
                 console.log(keys)
-                refreshPortfolio(keys)
+                refreshPortfolio(keys).then(() => {
+                    // Remove the refresh button and replace it with text after refreshPortfolio completes
+                    refresh.remove();
+                    const updatedText = $("<p>").text("already up to date!").addClass('update_text').css('color', 'white');
+                    model_card.append(updatedText);
+                }).catch((error) => {
+                    console.error("Error refreshing portfolio:", error);
+                    const errorText = $("<p>").text("Failed to update! Please try again.").addClass('error_text').css('color', 'red');
+                    model_card.append(errorText);
+                });
             });
             model_card.append(refresh);
+        } else {
+            const updatedText = $("<p>").text("already up to date!").addClass('update_text').css('color', 'white');
+            model_card.append(updatedText);
         }
 
         $('#main_box').prepend(model_card);
