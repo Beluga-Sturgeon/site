@@ -29,3 +29,5 @@ google==3.0.0
 python-dotenv==1.0.0
 firebase==4.0.1
 firebase_admin==6.1.0
+colortheif==0.2.1
+celery==5.4.0

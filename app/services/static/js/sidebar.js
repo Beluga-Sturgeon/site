@@ -62,7 +62,13 @@ function fetchDataAndCreateChart(containerId, chartTitle, type, data) {
 
   // Draw the chart
   chart.draw();
+  return chart
 }
+
+
+var reward;
+var state;
+var actiongraph;
 
 // Fetch the data once and pass it into the function
 fetch(document.URL.split("/").slice(0, 3).join("/") + '/getLog/' + document.URL.split("/").pop())
@@ -75,15 +81,15 @@ fetch(document.URL.split("/").slice(0, 3).join("/") + '/getLog/' + document.URL.
   .then(function (data) {
     anychart.onDocumentReady(function () {
       // Call the function for the 'reward' chart
-      fetchDataAndCreateChart("reward", "Reward", 1, data);
+      reward = fetchDataAndCreateChart("reward", "Reward", 1, data);
     });
     anychart.onDocumentReady(function () {
       // Call the function for the 'state' chart
-      fetchDataAndCreateChart("state", "State", 2, data);
+      state = fetchDataAndCreateChart("state", "State", 2, data);
     });
     anychart.onDocumentReady(function () {
       // Call the function for the 'reward' chart
-      fetchDataAndCreateChart("actiongraph", "Actions", 3, data);
+      actiongraph = fetchDataAndCreateChart("actiongraph", "Actions", 3, data);
     });
   })
   .catch(function (error) {

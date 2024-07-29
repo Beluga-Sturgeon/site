@@ -332,7 +332,7 @@ def run(companyTicker: str):
     stats = readstats(companyTicker)
     log = readlog(companyTicker)    
 
-    if (stats is None and log is None):
+    if (stats is None or log is None):
         return "Not Ready"
     else:
         price = get_value(companyTicker)

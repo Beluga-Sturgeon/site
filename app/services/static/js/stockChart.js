@@ -77,6 +77,14 @@ function createCandlestickChart(data, name) {
   changeTableStyle();
   $('#loadingText').fadeOut("slow");
   chart.draw();
+  $('#graph').on('mouseup', function(e) {
+    console.log('Works'); 
+    
+    let min = chart.xScale().getMinimum()
+    reward.xScale().transform(min);
+    reward.draw()
+    console.log('Works');
+  });
 }
 
 // Main function to fetch data and create the chart
