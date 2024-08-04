@@ -40,6 +40,10 @@ def get_profile(ticker):
 def get_value(ticker):
     return get_jsonparsed_data(f"https://financialmodelingprep.com/api/v3/quote-short/{ticker}?apikey={constants.FMP_API_KEY}")[0]["price"]
 
+def get_historical(ticker):
+    """https://financialmodelingprep.com/api/v3/historical-price-full/NVDA?apikey=LQ4Ifyu8MVzmtmXbL5e6pKte89lZhXcT"""
+    return get_jsonparsed_data(f"https://financialmodelingprep.com/api/v3/historical-price-full/{ticker}?apikey={constants.FMP_API_KEY}")["historical"]
+
 def getNews(ticker:str) -> dict:
     """Scrapes the news articles off of fmp in the form of a dictionary
     EXAPMLE:

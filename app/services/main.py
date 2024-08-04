@@ -277,7 +277,62 @@ def getInfo(ticker:str) -> dict:
     return info_we_need
 
 
+@app.route("/reward/<string:ticker>/<string:start_date>")
+def calculate_reward(ticker: str, start_date: str):
+    # Convert start_date to datetime64[ns]
+    try:
+        start_date = pd.to_datetime(start_date, format="%Y-%m-%d")
+    except ValueError:
+        return "Invalid date format. Use YYYY-MM-DD."
 
+    # Ensure start_date is within the past year
+    current_date = pd.to_datetime(datetime.now().date())
+    if not (current_date - timedelta(days=365) <= start_date <= current_date):
+        return "Start date must be within the past year."
+
+    # Load log and historical data
+    try:
+        log = readlog(ticker)
+        log = log.iloc[::-1]
+        historical = pd.DataFrame.from_dict(get_historical(ticker))
+        print(historical)
+        print(log)
+    except Exception as e:
+        return f"Error loading data: {e}"
+    
+    
+    
+    historical['action'] = pd.NA
+
+    # Get the common indices between historical and log
+    common_indices = historical.index.intersection(log.index)
+
+    # Update historical 'action' column with values from log only for common indices
+    historical.loc[common_indices, 'action'] = log.loc[common_indices, 'action']
+    print(historical)
+
+    # Initialize total reward
+    total_reward = 0.0
+
+    # Apply actions and calculate reward
+    for index, row in log.iterrows():
+        if index not in historical.index:
+            print(f"Date {index} not in historical data. Skipping...")
+            continue  # Skip dates not in historical data
+
+        action = row['action']
+        change = historical.loc[index, 'change']
+
+        print(f"Action: {action}, Change: {change}, Total Reward: {total_reward}")
+        action = int(action)
+        if action == 0:  # Short
+            total_reward -= change
+        elif action == 1:  # Sell
+            total_reward -= change
+        elif action == 2:  # Long
+            total_reward += change
+
+    return f"Total Reward: ${total_reward:.3f}"
 
 @app.route("/getFinancials/<string:ticker>")
 @cross_origin()
