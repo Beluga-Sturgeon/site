@@ -115,84 +115,27 @@ function human_format(num) {
     return num.toFixed(2).replace(/\.00$/, '') + ['', 'K', 'M', 'B', 'T'][magnitude];
   }
 
-async function getBalanceSheet(){
-    data = await fetch("https://financialmodelingprep.com/api/v3/balance-sheet-statement/" + document.URL.split("/").pop() + "?period=quarter&limit=120&apikey=b0446da02c01a0943a01730dc2343e34")
-    data = await data.json()
-    try {
-        var latest = data[data.length - 1];
-        var older = data[data.length - 2];
-      } 
-    catch {
-        var latest = data[data.length - 1];
-        var older = data[data.length - 1];
-      }
-      
-    var balanceSheet = {};
-    
-    for (var key in latest) {
-        var newAmount = latest[key];
-        var oldAmount = older[key];
-        
-        try {
-            var change = ((newAmount - oldAmount) / oldAmount) * 100;
-            console.log(change)
-            if (!isNaN(change)) {
-                var formattedChange = change > 0 ? `+${change.toFixed(2)}%` : `${change.toFixed(2)}%`;
-                var formattedValue = human_format(newAmount);
-                balanceSheet[key] = {
-                value: formattedValue,
-                change: formattedChange,
-                };
-    
-            }
-        } catch (error) {
-            // Handle errors if necessary
-            console.error('Error updating values:', error);
-        }
-    }
-    return balanceSheet
+async function getBalanceSheet() {
+    balanceSheet = fetchData("balance-sheet-statement");
+    return balanceSheet;
 }
 
 async function getCashFlow(){
-    data = await fetch("https://financialmodelingprep.com/api/v3/cash-flow-statement/" + document.URL.split("/").pop() + "?period=quarter&limit=120&apikey=b0446da02c01a0943a01730dc2343e34")
-    data = await data.json()
-    try {
-        var latest = data[data.length - 1];
-        var older = data[data.length - 2];
-      } 
-    catch {
-        var latest = data[data.length - 1];
-        var older = data[data.length - 1];
-      }
-      
-    var cashFlow = {};
-    
-    for (var key in latest) {
-        var newAmount = latest[key];
-        var oldAmount = older[key];
-        
-        try {
-            var change = ((newAmount - oldAmount) / oldAmount) * 100;
-            console.log(change)
-            if (!isNaN(change)) {
-                var formattedChange = change > 0 ? `+${change.toFixed(2)}%` : `${change.toFixed(2)}%`;
-                var formattedValue = human_format(newAmount);
-                cashFlow[key] = {
-                value: formattedValue,
-                change: formattedChange,
-                };
-    
-            }
-        } catch (error) {
-            // Handle errors if necessary
-            console.error('Error updating values:', error);
-        }
-    }
-    return cashFlow
+    cashFlowStatement = fetchData("cash-flow-statement");
+    return cashFlowStatement;
 }
 
 async function getIncomeStatement(){
-    data = await fetch("https://financialmodelingprep.com/api/v3/income-statement/" + document.URL.split("/").pop() + "?period=quarter&limit=120&apikey=b0446da02c01a0943a01730dc2343e34")
+    incomestatement = fetchData("income-statement");
+    return incomestatement;
+}
+
+
+async function fetchData(dataCategory){
+    url = "https://financialmodelingprep.com/api/v3/";
+    url += dataCategory;
+    url += "/"
+    data = await fetch(url + document.URL.split("/").pop() + "?period=quarter&limit=120&apikey=b0446da02c01a0943a01730dc2343e34")
     data = await data.json()
     try {
         var latest = data[data.length - 1];
@@ -203,7 +146,7 @@ async function getIncomeStatement(){
         var older = data[data.length - 1];
       }
       
-    var incomestatement = {};
+    var output = {};
     
     for (var key in latest) {
         var newAmount = latest[key];
@@ -215,7 +158,7 @@ async function getIncomeStatement(){
             if (!isNaN(change)) {
                 var formattedChange = change > 0 ? `+${change.toFixed(2)}%` : `${change.toFixed(2)}%`;
                 var formattedValue = human_format(newAmount);
-                incomestatement[key] = {
+                output[key] = {
                 value: formattedValue,
                 change: formattedChange,
                 };
@@ -226,7 +169,7 @@ async function getIncomeStatement(){
             console.error('Error updating values:', error);
         }
     }
-    return incomestatement
+    return output 
 }
 
 console.log(createTableRow("USD", "VALUE", "Y/Y CHANGE"))
