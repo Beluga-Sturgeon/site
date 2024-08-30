@@ -1,8 +1,14 @@
 # Beluga-Sturgeon website
 
-This is a readme change to test webhook
-![Alt text](app/services/static/images/homescreen.png)
 
-![Alt text](app/services/static/images/datapage.png)
+![alt text](image.png)
 
-![Alt text](app/services/static/images/graphspage.png)
+![alt text](image-5.png)
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)
+
+![alt text](image-3.png)
+
+![alt text](image-4.png)
